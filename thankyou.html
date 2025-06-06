@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thanks!</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.75rem;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 2rem;
+    }
+    a {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 2rem;
+      background: #0366d6;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    a:hover, a:focus {
+      background: #004b87;
+      outline: none;
+    }
+    @media (max-width: 600px) {
+      .container {
+        max-width: 100%;
+      }
+      a {
+        padding: 0.6rem 1.25rem;
+        font-size: 0.98rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Thanks!</h2>
+    <p>Your message has been sent. I’ll be in touch soon.</p>
+    <a href="index.html" aria-label="Back to Home">Back to Home</a>
+  </div>
+</body>
+</html>
