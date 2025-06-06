@@ -110,15 +110,19 @@
   </style>
 </head>
 <body>
-  <a href="index.html" class="contact-link" aria-label="Back to Home">Home</a>
-  <form action="https://formsubmit.co/kevinsund@aol.com" method="POST">
-    <input type="hidden" name="_next" value="https://kevinsundstrom.com/thankyou.html" />
-    <h2>Contact Me</h2>
-    <input type="text" name="name" placeholder="Your name" required />
-    <input type="email" name="email" placeholder="Your email" required />
-    <textarea name="message" placeholder="Your message" rows="5" required></textarea>
-    <button type="submit">Send</button>
-  </form>
+  <div class="nav-buttons">
+    <a href="/" class="nav-link" aria-label="Back to Home">Home</a>
+  </div>
+  <main class="contact-container">
+    <form action="https://formsubmit.co/kevinsund@aol.com" method="POST">
+      <input type="hidden" name="_next" value="https://kevinsundstrom.com/thankyou.html" />
+      <h2>Contact Me</h2>
+      <input type="text" name="name" placeholder="Your name" required />
+      <input type="email" name="email" placeholder="Your email" required />
+      <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </main>
 </body>
 </html>
 
