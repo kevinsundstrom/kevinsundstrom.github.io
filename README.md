@@ -1,2 +1,2 @@
-# kevinsundstrom.github.com
+# kevinsundstrom.github.io
 Resume website
