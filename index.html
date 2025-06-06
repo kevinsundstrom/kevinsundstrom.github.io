@@ -33,6 +33,15 @@
 </head>
 <body>
   <h1>Kevin Sundstrom</h1>
+  <form id="searchForm" style="margin: 2rem 0;">
+    <input type="text" id="searchInput" placeholder="Tell me your problems and I will provide solutions." style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px;" />
+  </form>
+  <script>
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      window.location.href = 'resume.html';
+    });
+  </script>
   <p><strong>Email:</strong> <a href="mailto:kevinsund@aol.com">kevinsund@aol.com</a></p>
   <p><strong>Website:</strong> kevinsundstrom.com</p>
 
