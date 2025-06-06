@@ -7,45 +7,43 @@
   <style>
     body {
       font-family: system-ui, sans-serif;
-      margin: 2rem;
-      line-height: 1.6;
+      margin: 0;
+      min-height: 100vh;
       background: #f9f9f9;
       color: #333;
-      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     h1 {
       font-size: 2rem;
-      margin-bottom: 0;
+      margin-bottom: 2rem;
+      text-align: center;
     }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-      color: #555;
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    p {
-      margin: 0.5rem 0;
+    .search-bar {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 2rem;
+      width: 300px;
+      outline: none;
+      transition: border 0.2s;
     }
-    a {
-      color: #0366d6;
-      text-decoration: none;
+    .search-bar:focus {
+      border: 1.5px solid #0366d6;
     }
   </style>
 </head>
 <body>
-  <h1>Kevin Sundstrom</h1>
-  <form id="searchForm" style="margin: 2rem 0;">
-    <input type="text" id="searchInput" placeholder="Tell me your problems and I will provide solutions." style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px;" />
-  </form>
-  <script>
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      window.location.href = 'resume.html';
-    });
-  </script>
-  <p><strong>Email:</strong> <a href="mailto:kevinsund@aol.com">kevinsund@aol.com</a></p>
-  <p><strong>Website:</strong> kevinsundstrom.com</p>
-
-  <h2>About Me</h2>
-  <p>Content strategist and marketing lead helping organizations translate complex tech into clear, actionable content.</p>
+  <h1>Kevin Sundstrom | Marketing & Content Strategist</h1>
+  <div class="search-container">
+    <input class="search-bar" type="text" placeholder="Search..." />
+  </div>
 </body>
 </html>
