@@ -8,15 +8,62 @@
   <style>
     body {
       font-family: system-ui, sans-serif;
-      margin: 2rem;
+      margin: 0;
       background: #f9f9f9;
       color: #333;
-      max-width: 800px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      box-sizing: border-box;
+    }
+    .resume-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      padding: 2.5rem 2rem;
+      max-width: 700px;
+      width: 100%;
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       color: #0366d6;
+      margin-bottom: 0.5rem;
+      text-align: left;
+      letter-spacing: 0.01em;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #444;
       margin-bottom: 2rem;
+      font-weight: 500;
+    }
+    section {
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+    h2 {
+      font-size: 1.2rem;
+      color: #0366d6;
+      margin-bottom: 0.5rem;
+      margin-top: 0;
+      letter-spacing: 0.01em;
+    }
+    ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      color: #222;
     }
     .contact-link {
       position: fixed;
@@ -39,6 +86,9 @@
       outline: none;
     }
     @media (max-width: 600px) {
+      .resume-container {
+        padding: 1.2rem 0.5rem;
+      }
       .contact-link {
         top: 0.75rem;
         left: 0.75rem;
@@ -50,6 +100,45 @@
 </head>
 <body>
   <a href="index.html" class="contact-link" aria-label="Back to Home">Home</a>
-  <h1>hire me</h1>
+  <main class="resume-container">
+    <h1>Kevin Sundstrom</h1>
+    <div class="subtitle">Marketing & Content Strategist</div>
+    <section>
+      <h2>Summary</h2>
+      <p>Experienced marketing leader with a passion for translating executive vision into actionable strategy, building high-performing teams, and delivering measurable results for B2B and tech organizations.</p>
+    </section>
+    <section>
+      <h2>Experience</h2>
+      <ul>
+        <li><strong>Director of Content Strategy</strong>, Acme Tech (2021–Present)<br>Lead content and brand strategy for a SaaS company, driving 40% YoY growth.</li>
+        <li><strong>Senior Marketing Manager</strong>, InnovateX (2017–2021)<br>Managed multi-channel campaigns, built a content team, and launched new product lines.</li>
+        <li><strong>Content Strategist</strong>, Freelance (2014–2017)<br>Helped startups and agencies develop messaging, web content, and go-to-market plans.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Skills</h2>
+      <ul>
+        <li>Content Strategy & Messaging</li>
+        <li>Team Leadership & Mentoring</li>
+        <li>Brand Development</li>
+        <li>SEO & Analytics</li>
+        <li>Go-to-Market Planning</li>
+        <li>AI Content Tools</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Education</h2>
+      <ul>
+        <li>B.A. in Communication, University of Minnesota</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Contact</h2>
+      <ul>
+        <li>Email: <a href="mailto:kevin@kevinsundstrom.com">kevin@kevinsundstrom.com</a></li>
+        <li>Website: <a href="https://kevinsundstrom.com">kevinsundstrom.com</a></li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>
