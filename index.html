@@ -8,7 +8,7 @@
     body {
       font-family: system-ui, sans-serif;
       margin: 0;
-      min-height: 100vh;
+      padding: 2rem;
       background: #f9f9f9;
       color: #333;
       display: flex;
@@ -16,78 +16,93 @@
       align-items: center;
       justify-content: center;
     }
+
     h1 {
       font-size: 2rem;
-      margin-bottom: 2rem;
       text-align: center;
+      margin-bottom: 2rem;
     }
+
     .search-container {
       display: flex;
       justify-content: center;
-      align-items: center;
+      width: 100%;
+      max-width: 600px;
     }
+
     .search-bar {
       padding: 0.75rem 1.5rem;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 2rem;
-      width: 300px;
+      width: 100%;
       outline: none;
       transition: border 0.2s;
     }
+
     .search-bar:focus {
       border: 1.5px solid #0366d6;
     }
+
     .suggested-terms {
-      margin-top: 1rem;
-      text-align: center;
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      max-width: 900px;
     }
-    .suggested-terms p {
-      margin: 0 0 0.5rem 0;
-      font-weight: bold;
+
+    .suggested-terms button {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      background-color: #e5e7eb;
+      color: #333;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      max-width: 100%;
     }
-    .suggested-terms ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    .suggested-terms li {
-      margin: 0.5rem 0;
-    }
-    .suggested-terms a {
-      text-decoration: none;
-      color: #0366d6;
-      transition: color 0.2s;
-    }
-    .suggested-terms a:hover {
-      color: #004b87;
+
+    .suggested-terms button:hover {
+      background-color: #d1d5db;
     }
   </style>
 </head>
 <body>
   <h1>Kevin Sundstrom | Marketing & Content Strategist</h1>
   <div class="search-container">
-    <input class="search-bar" id="searchInput" type="text" placeholder="What do you need help solving?" />
+    <input
+      class="search-bar"
+      id="searchInput"
+      type="text"
+      placeholder="What do you need help solving?"
+    />
   </div>
-  <div class="flex flex-wrap justify-center gap-3 mt-6">
-    <button type="button" class="px-4 py-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300 transition whitespace-pre-line text-center">
+
+  <div class="suggested-terms">
+    <button onclick="searchAndGo('How do I translate exec vision into something usable?')">
       How do I translate exec vision into something usable?
     </button>
-    <button type="button" class="px-4 py-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300 transition whitespace-pre-line text-center">
+    <button onclick="searchAndGo('Why does everyone think a blog post is a strategy?')">
       Why does everyone think a blog post is a strategy?
     </button>
-    <button type="button" class="px-4 py-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300 transition whitespace-pre-line text-center">
+    <button onclick="searchAndGo('Can I fix the funnel without breaking the brand?')">
       Can I fix the funnel without breaking the brand?
     </button>
-    <button type="button" class="px-4 py-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300 transition whitespace-pre-line text-center">
+    <button onclick="searchAndGo('How do I get actual value out of AI, not draft-shaped garbage?')">
       How do I get actual value out of AI, not draft-shaped garbage?
     </button>
   </div>
+
   <script>
     function searchAndGo(term) {
       document.getElementById('searchInput').value = term;
       window.location.href = 'resume.html';
     }
-    document.getElementById('searchInput').addEventListener('keydown', function(event) {
+
+    document.getElementById('searchInput').addEventListener('keydown', function (event) {
       if (event.key === 'Enter' && this.value.trim() !== '') {
         window.location.href = 'resume.html';
       }
