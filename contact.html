@@ -14,7 +14,7 @@
       min-height: 100vh;
       background: #f9f9f9;
       margin: 0;
-      padding: 1.5rem;
+      padding: 1.5rem 0; /* Only vertical padding on body */
       box-sizing: border-box;
     }
     form {
@@ -22,12 +22,13 @@
       max-width: 800px; /* Increased from 600px for a wider form */
       margin: 0 auto;
       background: none;
-      padding: 0;
+      padding: 0 1.5rem; /* Move horizontal padding to form */
       border-radius: 0;
       box-shadow: none;
       display: flex;
       flex-direction: column;
       align-items: stretch;
+      box-sizing: border-box;
     }
     h2 {
       margin-top: 0;
@@ -102,8 +103,12 @@
       outline: none;
     }
     @media (max-width: 600px) {
+      body {
+        padding: 0.75rem 0; /* Reduce vertical padding on mobile */
+      }
       form {
         max-width: 100%;
+        padding: 0 0.75rem; /* Reduce horizontal padding on mobile */
       }
       .nav-buttons {
         top: 0.75rem;
