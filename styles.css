@@ -16,6 +16,8 @@ body {
   left: 0;
   width: 100%;
   background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 1px 4px rgba(0,0,0,0.03);
   z-index: 1000;
   display: flex;
@@ -36,7 +38,7 @@ body {
   font-size: 0.98rem;
   margin-right: 0.2rem;
   box-shadow: none;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .slim-navbar .nav-link:hover, 
@@ -73,7 +75,7 @@ body {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -98,7 +100,7 @@ input, textarea {
   background: #fff;
   color: #222;
   box-sizing: border-box;
-  transition: border 0.2s;
+  transition: border 0.2s ease;
 }
 
 textarea {
@@ -110,24 +112,6 @@ textarea {
 input:focus, textarea:focus {
   border: 1.5px solid #0366d6;
   outline: none;
-}
-
-/* Mobile responsive navbar */
-@media (max-width: 700px) {
-  .slim-navbar {
-    padding: 0.15rem 0.5rem;
-    min-height: 2.1rem;
-  }
-  
-  .slim-navbar .nav-link {
-    padding: 0.18rem 0.7rem;
-    font-size: 0.96rem;
-  }
-  
-  .nav-name {
-    font-size: 0.98rem;
-    max-width: 50vw;
-  }
 }
 
 /* Typography */
@@ -159,6 +143,34 @@ p {
   margin-bottom: 1.2rem;
 }
 
+/* Optimized images for performance */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  display: block;
+  object-fit: cover;
+}
+
+/* Mobile responsive navbar */
+@media (max-width: 700px) {
+  .slim-navbar {
+    padding: 0.15rem 0.5rem;
+    min-height: 2.1rem;
+  }
+  
+  .slim-navbar .nav-link {
+    padding: 0.18rem 0.7rem;
+    font-size: 0.96rem;
+  }
+  
+  .nav-name {
+    font-size: 0.98rem;
+    max-width: 50vw;
+  }
+}
+
 /* Utilities */
 .text-center {
   text-align: center;
@@ -168,4 +180,19 @@ p {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+/* Performance optimizations */
+.slim-navbar {
+  will-change: transform;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Focus improvements for accessibility */
+:focus-visible {
+  outline: 2px solid #0366d6;
+  outline-offset: 2px;
 }
