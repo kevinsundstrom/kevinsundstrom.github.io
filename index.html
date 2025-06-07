@@ -66,10 +66,8 @@
       background-color: #d1d5db;
     }
     .contact-link {
-      position: fixed;
-      top: 1.5rem;
-      left: 1.5rem;
-      z-index: 1000;
+      display: inline-block;
+      margin-bottom: 1.5rem;
       font-family: system-ui, sans-serif;
       font-size: 1rem;
       color: #0366d6;
@@ -85,21 +83,94 @@
       color: #004b87;
       outline: none;
     }
-    @media (max-width: 600px), (max-width: 900px) and (orientation: landscape) {
-      .contact-link {
-        position: static;
-        display: inline-block;
-        margin-bottom: 1.5rem;
-        top: unset;
-        left: unset;
-        z-index: unset;
+    .navbar {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+    .nav-logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #0366d6;
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-link {
+      color: #0366d6;
+      background: #e5e7eb;
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: inline-block;
+    }
+    .nav-link:hover, .nav-link:focus {
+      background: #d1d5db;
+      color: #004b87;
+      outline: none;
+    }
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #0366d6;
+      margin-left: 1rem;
+    }
+    @media (max-width: 700px) {
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        gap: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        display: none;
+      }
+      .nav-links li {
+        border-bottom: 1px solid #eee;
+      }
+      .nav-links li:last-child {
+        border-bottom: none;
+      }
+      .nav-toggle {
+        display: block;
+      }
+      body.nav-open .nav-links {
+        display: flex;
       }
     }
   </style>
 </head>
 <body>
-  <a href="/contact" class="contact-link" aria-label="Contact Me">Contact Me</a>
-  <h1>Kevin Sundstrom | Marketing & Content Strategist</h1>
+  <nav class="navbar">
+    <a href="/" class="nav-logo">Kevin Sundstrom</a>
+    <button class="nav-toggle" aria-label="Open navigation menu" onclick="document.body.classList.toggle('nav-open')">
+      &#9776;
+    </button>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/resume.html" class="nav-link">Resume</a></li>
+      <li><a href="/contact" class="nav-link">Contact Me</a></li>
+    </ul>
+  </nav>
+  <h1>Marketing & Content Strategist</h1>
   <div class="search-container">
     <input class="search-bar" id="searchInput" type="text" placeholder="What do you need help solving?" />
   </div>
