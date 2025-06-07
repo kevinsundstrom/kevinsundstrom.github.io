@@ -19,11 +19,15 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .home-link {
+    .nav-buttons {
       position: fixed;
       top: 1.5rem;
       left: 1.5rem;
       z-index: 1000;
+      display: flex;
+      gap: 0.75rem;
+    }
+    .nav-link {
       font-family: system-ui, sans-serif;
       font-size: 1rem;
       color: #0366d6;
@@ -33,24 +37,9 @@
       text-decoration: none;
       box-shadow: 0 1px 4px rgba(0,0,0,0.06);
       transition: background 0.2s, color 0.2s;
-      margin-right: 0.75rem;
+      display: inline-block;
     }
-    .contact-link {
-      position: fixed;
-      top: 1.5rem;
-      left: calc(1.5rem + 1.25rem * 2 + 0.5rem + 0.5rem + 0.5rem); /* Home left + Home padding + Home border + gap */
-      z-index: 1000;
-      font-family: system-ui, sans-serif;
-      font-size: 1rem;
-      color: #0366d6;
-      background: #e5e7eb;
-      padding: 0.5rem 1.25rem;
-      border-radius: 9999px;
-      text-decoration: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      transition: background 0.2s, color 0.2s;
-    }
-    .home-link:hover, .home-link:focus, .contact-link:hover, .contact-link:focus {
+    .nav-link:hover, .nav-link:focus {
       background: #d1d5db;
       color: #004b87;
       outline: none;
@@ -101,16 +90,12 @@
       article {
         padding: 1.2rem 0.5rem;
       }
-      .home-link {
+      .nav-buttons {
         top: 0.75rem;
         left: 0.75rem;
-        padding: 0.4rem 1rem;
-        font-size: 0.98rem;
-        margin-right: 0.5rem;
+        gap: 0.4rem;
       }
-      .contact-link {
-        top: 0.75rem;
-        left: calc(0.75rem + 1rem * 2 + 0.4rem * 2 + 0.5rem + 0.5rem);
+      .nav-link {
         padding: 0.4rem 1rem;
         font-size: 0.98rem;
       }
@@ -118,8 +103,10 @@
   </style>
 </head>
 <body>
-  <a href="/" class="home-link" aria-label="Back to Home">Home</a>
-  <a href="/contact" class="contact-link" aria-label="Contact Me">Contact Me</a>
+  <div class="nav-buttons">
+    <a href="/" class="nav-link" aria-label="Back to Home">Home</a>
+    <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
+  </div>
   <article>
     <h1>How AI is Transforming Content Development in Marketing Organizations</h1>
     <div class="meta">By Kevin Sundstrom | June 7, 2025</div>
