@@ -146,16 +146,17 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
+      width: 100%;
       background: rgba(255,255,255,0.92);
       box-shadow: 0 1px 4px rgba(0,0,0,0.03);
       z-index: 1000;
       display: flex;
-      gap: 0.5rem;
       align-items: center;
+      justify-content: space-between;
       padding: 0.25rem 1.25rem;
       min-height: 2.5rem;
       border-bottom: 1px solid #eee;
+      box-sizing: border-box;
     }
     .slim-navbar .nav-link {
       background: none;
@@ -172,6 +173,18 @@
       background: #e5e7eb;
       color: #004b87;
       outline: none;
+    }
+    .nav-name {
+      font-weight: 600;
+      color: #0366d6;
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      max-width: 40vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: 1rem;
+      flex-shrink: 0;
     }
     @media (max-width: 700px) {
       body {
@@ -219,15 +232,20 @@
         padding: 0.18rem 0.7rem;
         font-size: 0.96rem;
       }
+      .nav-name {
+        font-size: 0.98rem;
+        max-width: 50vw;
+      }
     }
   </style>
 </head>
 <body>
   <nav class="slim-navbar">
-    <!-- Home link only if not on home -->
-    <!-- no Home link on index.html -->
-    <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
-    <a href="/article/" class="nav-link" aria-label="Articles">Articles</a>
+    <div style="display: flex; gap: 0.5rem;">
+      <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
+      <a href="/article/" class="nav-link" aria-label="Articles">Articles</a>
+    </div>
+    <span class="nav-name">Kevin Sundstrom</span>
   </nav>
   <div style="height:2.7rem;"></div> <!-- Spacer for nav -->
   <h1 class="page-title">Kevin Sundstrom | Marketing & Content Strategist</h1>
