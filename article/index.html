@@ -3,53 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How AI is Transforming Content Development in Marketing Organizations</title>
+  <title>How AI is Transforming Content Development in Marketing Organizations - Kevin Sundstrom</title>
   <meta name="description" content="Discover how AI is revolutionizing content development for marketing teams. Learn strategies, tools, and best practices for leveraging AI in your marketing organization." />
   <meta name="keywords" content="AI, content development, marketing, SEO, artificial intelligence, marketing strategy, content marketing, automation, marketing teams, digital marketing" />
+  <meta name="author" content="Kevin Sundstrom" />
+  <link rel="canonical" href="https://kevinsundstrom.com/article/" />
+  <meta property="og:title" content="How AI is Transforming Content Development in Marketing Organizations" />
+  <meta property="og:description" content="Discover how AI is revolutionizing content development for marketing teams. Learn strategies, tools, and best practices for leveraging AI in your marketing organization." />
+  <meta property="og:url" content="https://kevinsundstrom.com/article/" />
+  <meta property="og:type" content="article" />
+  <meta property="article:author" content="Kevin Sundstrom" />
+  <meta property="article:published_time" content="2025-06-07" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/styles.css" />
   <style>
+    /* Page-specific styles for article */
     body {
-      font-family: system-ui, sans-serif;
-      margin: 0;
-      background: #f9f9f9;
       color: #222;
       padding: 0 1.5rem 2rem 1.5rem;
-      box-sizing: border-box;
       max-width: 800px;
       margin-left: auto;
       margin-right: auto;
     }
-    .navbar-solid {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      z-index: 1000;
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      padding: 0.5rem 2rem;
-      min-height: 3.5rem;
-    }
-    .nav-link {
-      font-family: system-ui, sans-serif;
-      font-size: 1rem;
-      color: #0366d6;
-      background: #e5e7eb;
-      padding: 0.5rem 1.25rem;
-      border-radius: 9999px;
-      text-decoration: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      transition: background 0.2s, color 0.2s;
-      display: inline-block;
-    }
-    .nav-link:hover, .nav-link:focus {
-      background: #d1d5db;
-      color: #004b87;
-      outline: none;
-    }
+    
     article {
       background: #fff;
       border-radius: 1.5rem;
@@ -58,6 +34,7 @@
       margin-top: 4.5rem;
       margin-bottom: 2rem;
     }
+    
     .article-content {
       margin-top: 4.5rem; /* space for navbar */
       max-width: 700px;
@@ -65,106 +42,31 @@
       margin-right: auto;
       padding: 0 1.5rem 2rem 1.5rem;
     }
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 1.2rem;
-      color: #0366d6;
-      line-height: 1.2;
-    }
+    
     .meta {
       color: #666;
       font-size: 1rem;
       margin-bottom: 2rem;
     }
-    h2 {
-      color: #004b87;
-      margin-top: 2.2rem;
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-    }
-    p {
-      line-height: 1.7;
-      margin-bottom: 1.2rem;
-    }
+    
     ul, ol {
       margin-left: 1.5rem;
       margin-bottom: 1.2rem;
     }
+    
     img {
       max-width: 100%;
       border-radius: 1rem;
       margin: 2rem 0;
       display: block;
     }
+    
     @media (max-width: 700px) {
       body {
         padding: 0 0.5rem 1.5rem 0.5rem;
       }
       article {
         padding: 1.2rem 0.5rem;
-      }
-      .nav-link {
-        padding: 0.4rem 1rem;
-        font-size: 0.98rem;
-      }
-    }
-    /* Slim, subtle nav bar for all pages */
-    .slim-navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(255,255,255,0.92);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.25rem 1.25rem;
-      min-height: 2.5rem;
-      border-bottom: 1px solid #eee;
-      box-sizing: border-box;
-    }
-    .slim-navbar .nav-link {
-      background: none;
-      color: #0366d6;
-      border-radius: 9999px;
-      padding: 0.25rem 0.9rem;
-      text-decoration: none;
-      font-size: 0.98rem;
-      margin-right: 0.2rem;
-      box-shadow: none;
-      transition: background 0.2s, color 0.2s;
-    }
-    .slim-navbar .nav-link:hover, .slim-navbar .nav-link:focus {
-      background: #e5e7eb;
-      color: #004b87;
-      outline: none;
-    }
-    .nav-name {
-      font-weight: 600;
-      color: #0366d6;
-      font-size: 1.05rem;
-      letter-spacing: 0.01em;
-      white-space: nowrap;
-      max-width: 40vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-left: 1rem;
-      flex-shrink: 0;
-    }
-    @media (max-width: 700px) {
-      .slim-navbar {
-        padding: 0.15rem 0.5rem;
-        min-height: 2.1rem;
-      }
-      .slim-navbar .nav-link {
-        padding: 0.18rem 0.7rem;
-        font-size: 0.96rem;
-      }
-      .nav-name {
-        font-size: 0.98rem;
-        max-width: 50vw;
       }
     }
   </style>
@@ -177,7 +79,7 @@
     </div>
     <span class="nav-name">Kevin Sundstrom</span>
   </nav>
-  <div style="height:2.7rem;"></div> <!-- Spacer for nav -->
+  <div class="navbar-spacer"></div>
   <main class="article-content">
     <article>
       <h1>How AI is Transforming Content Development in Marketing Organizations</h1>
