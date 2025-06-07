@@ -141,6 +141,38 @@
       font-weight: bold;
       color: #0366d6;
     }
+    /* Slim, subtle nav bar for all pages */
+    .slim-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+      z-index: 1000;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.25rem 1.25rem;
+      min-height: 2.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .slim-navbar .nav-link {
+      background: none;
+      color: #0366d6;
+      border-radius: 9999px;
+      padding: 0.25rem 0.9rem;
+      text-decoration: none;
+      font-size: 0.98rem;
+      margin-right: 0.2rem;
+      box-shadow: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .slim-navbar .nav-link:hover, .slim-navbar .nav-link:focus {
+      background: #e5e7eb;
+      color: #004b87;
+      outline: none;
+    }
     @media (max-width: 700px) {
       body {
         padding-top: 0.5rem;
@@ -178,14 +210,26 @@
       body.nav-open .nav-links {
         display: flex;
       }
+      .slim-navbar {
+        padding: 0.15rem 0.5rem;
+        min-height: 2.1rem;
+        gap: 0.2rem;
+      }
+      .slim-navbar .nav-link {
+        padding: 0.18rem 0.7rem;
+        font-size: 0.96rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="nav-buttons">
+  <nav class="slim-navbar">
+    <!-- Home link only if not on home -->
+    <!-- no Home link on index.html -->
     <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
     <a href="/article/" class="nav-link" aria-label="Articles">Articles</a>
-  </div>
+  </nav>
+  <div style="height:2.7rem;"></div> <!-- Spacer for nav -->
   <h1 class="page-title">Kevin Sundstrom | Marketing & Content Strategist</h1>
   <div class="search-container">
     <input class="search-bar" id="searchInput" type="text" placeholder="What do you need help solving?" />

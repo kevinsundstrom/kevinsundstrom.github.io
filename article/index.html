@@ -19,13 +19,19 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .nav-buttons {
+    .navbar-solid {
       position: fixed;
-      top: 1.5rem;
-      left: 1.5rem;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       z-index: 1000;
       display: flex;
       gap: 0.75rem;
+      align-items: center;
+      padding: 0.5rem 2rem;
+      min-height: 3.5rem;
     }
     .nav-link {
       font-family: system-ui, sans-serif;
@@ -51,6 +57,13 @@
       padding: 2.5rem 2rem;
       margin-top: 4.5rem;
       margin-bottom: 2rem;
+    }
+    .article-content {
+      margin-top: 4.5rem; /* space for navbar */
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 1.5rem 2rem 1.5rem;
     }
     h1 {
       font-size: 2.2rem;
@@ -90,46 +103,88 @@
       article {
         padding: 1.2rem 0.5rem;
       }
-      .nav-buttons {
-        top: 0.75rem;
-        left: 0.75rem;
-        gap: 0.4rem;
-      }
       .nav-link {
         padding: 0.4rem 1rem;
         font-size: 0.98rem;
       }
     }
+    /* Slim, subtle nav bar for all pages */
+    .slim-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+      z-index: 1000;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.25rem 1.25rem;
+      min-height: 2.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .slim-navbar .nav-link {
+      background: none;
+      color: #0366d6;
+      border-radius: 9999px;
+      padding: 0.25rem 0.9rem;
+      text-decoration: none;
+      font-size: 0.98rem;
+      margin-right: 0.2rem;
+      box-shadow: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .slim-navbar .nav-link:hover, .slim-navbar .nav-link:focus {
+      background: #e5e7eb;
+      color: #004b87;
+      outline: none;
+    }
+    @media (max-width: 700px) {
+      .slim-navbar {
+        padding: 0.15rem 0.5rem;
+        min-height: 2.1rem;
+        gap: 0.2rem;
+      }
+      .slim-navbar .nav-link {
+        padding: 0.18rem 0.7rem;
+        font-size: 0.96rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="nav-buttons">
-    <a href="/" class="nav-link" aria-label="Back to Home">Home</a>
+  <nav class="slim-navbar">
+    <a href="/" class="nav-link" aria-label="Home">Home</a>
     <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
-  </div>
-  <article>
-    <h1>How AI is Transforming Content Development in Marketing Organizations</h1>
-    <div class="meta">By Kevin Sundstrom | June 7, 2025</div>
-    <p><strong>Summary:</strong> Artificial intelligence is rapidly changing how marketing teams create, optimize, and scale content. In this article, we explore the latest AI-driven strategies, tools, and best practices for content development in modern marketing organizations.</p>
-    <h2>Why AI Matters for Content Marketing</h2>
-    <p>AI-powered tools can help marketers generate ideas, draft copy, personalize messaging, and analyze performance at scale. This not only saves time but also enables teams to deliver more relevant, high-quality content to their audiences.</p>
-    <h2>Key Benefits of AI in Content Development</h2>
-    <ul>
-      <li>Faster content ideation and creation</li>
-      <li>Improved SEO through data-driven keyword research</li>
-      <li>Personalized content for different audience segments</li>
-      <li>Automated editing and optimization</li>
-      <li>Actionable analytics for continuous improvement</li>
-    </ul>
-    <h2>Best Practices for Implementing AI in Your Marketing Team</h2>
-    <ol>
-      <li>Start with clear goals and KPIs for your content strategy.</li>
-      <li>Choose AI tools that integrate with your existing workflows.</li>
-      <li>Train your team on how to use AI responsibly and creatively.</li>
-      <li>Continuously monitor results and adjust your approach.</li>
-    </ol>
-    <h2>Conclusion</h2>
-    <p>AI is not a replacement for human creativity, but a powerful partner for marketers looking to scale their content efforts. By embracing AI-driven tools and strategies, marketing organizations can stay ahead in a rapidly evolving digital landscape.</p>
-  </article>
+    <!-- no Articles link on article page -->
+  </nav>
+  <div style="height:2.7rem;"></div> <!-- Spacer for nav -->
+  <main class="article-content">
+    <article>
+      <h1>How AI is Transforming Content Development in Marketing Organizations</h1>
+      <div class="meta">By Kevin Sundstrom | June 7, 2025</div>
+      <p><strong>Summary:</strong> Artificial intelligence is rapidly changing how marketing teams create, optimize, and scale content. In this article, we explore the latest AI-driven strategies, tools, and best practices for content development in modern marketing organizations.</p>
+      <h2>Why AI Matters for Content Marketing</h2>
+      <p>AI-powered tools can help marketers generate ideas, draft copy, personalize messaging, and analyze performance at scale. This not only saves time but also enables teams to deliver more relevant, high-quality content to their audiences.</p>
+      <h2>Key Benefits of AI in Content Development</h2>
+      <ul>
+        <li>Faster content ideation and creation</li>
+        <li>Improved SEO through data-driven keyword research</li>
+        <li>Personalized content for different audience segments</li>
+        <li>Automated editing and optimization</li>
+        <li>Actionable analytics for continuous improvement</li>
+      </ul>
+      <h2>Best Practices for Implementing AI in Your Marketing Team</h2>
+      <ol>
+        <li>Start with clear goals and KPIs for your content strategy.</li>
+        <li>Choose AI tools that integrate with your existing workflows.</li>
+        <li>Train your team on how to use AI responsibly and creatively.</li>
+        <li>Continuously monitor results and adjust your approach.</li>
+      </ol>
+      <h2>Conclusion</h2>
+      <p>AI is not a replacement for human creativity, but a powerful partner for marketers looking to scale their content efforts. By embracing AI-driven tools and strategies, marketing organizations can stay ahead in a rapidly evolving digital landscape.</p>
+    </article>
+  </main>
 </body>
 </html>
