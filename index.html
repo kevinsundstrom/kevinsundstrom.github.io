@@ -85,12 +85,14 @@
       color: #004b87;
       outline: none;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 600px), (max-width: 900px) and (orientation: landscape) {
       .contact-link {
-        top: 0.75rem;
-        left: 0.75rem;
-        padding: 0.4rem 1rem;
-        font-size: 0.98rem;
+        position: static;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        top: unset;
+        left: unset;
+        z-index: unset;
       }
     }
   </style>
