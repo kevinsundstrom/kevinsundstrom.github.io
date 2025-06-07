@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0366d6" />
+  <link rel="preconnect" href="https://formsubmit.co" />
+  <link rel="dns-prefetch" href="https://formsubmit.co" />
+  <title>Contact Kevin Sundstrom - Marketing & Content Strategist</title>
+  <meta name="description" content="Get in touch with Kevin Sundstrom for marketing strategy consultation and content development. Contact form available for inquiries." />
+  <meta name="keywords" content="contact Kevin Sundstrom, marketing consultant, content strategist contact, marketing strategy consultation" />
+  <meta name="author" content="Kevin Sundstrom" />
+  <link rel="canonical" href="https://kevinsundstrom.com/contact" />
+  <meta property="og:title" content="Contact Kevin Sundstrom - Marketing & Content Strategist" />
+  <meta property="og:description" content="Get in touch with Kevin Sundstrom for marketing strategy consultation and content development." />
+  <meta property="og:url" content="https://kevinsundstrom.com/contact" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* Page-specific styles for contact */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 3.2rem 1.5rem 1.5rem;
+    }
+    
+    form {
+      width: 100%;
+      margin: 0 auto;
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-align: center;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 1.5rem;
+    }
+    
+    button {
+      width: 100%;
+    }
+    
+    .contact-container {
+      width: 100%;
+      max-width: 800px;
+    }
+    
+    @media (max-width: 700px) {
+      body {
+        padding-top: 2.1rem;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      form {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="slim-navbar">
+    <div style="display: flex; gap: 0.5rem;">
+      <a href="/" class="nav-link" aria-label="Home">Home</a>
+      <a href="/article/" class="nav-link" aria-label="Articles">Articles</a>
+    </div>
+    <span class="nav-name">Kevin Sundstrom</span>
+  </nav>
+  <div class="navbar-spacer"></div>
+  <main class="contact-container">
+    <form action="https://formsubmit.co/kevinsund@aol.com" method="POST">
+      <input type="hidden" name="_next" value="https://kevinsundstrom.com/thankyou" />
+      <h2>Contact Me</h2>
+      <input type="text" name="name" placeholder="Your name" required />
+      <input type="email" name="email" placeholder="Your email" required />
+      <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+      <button type="submit" class="btn-primary">Send</button>
+    </form>
+  </main>
+</body>
+</html>
+

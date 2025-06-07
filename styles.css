@@ -1,0 +1,198 @@
+/* Kevin Sundstrom Website - Shared Styles */
+
+/* Base styles */
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  background: #f9f9f9;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Slim navbar - consistent across all pages */
+.slim-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 1.25rem;
+  min-height: 2.5rem;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+}
+
+.slim-navbar .nav-link {
+  background: none;
+  color: #0366d6;
+  border-radius: 9999px;
+  padding: 0.25rem 0.9rem;
+  text-decoration: none;
+  font-size: 0.98rem;
+  margin-right: 0.2rem;
+  box-shadow: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.slim-navbar .nav-link:hover, 
+.slim-navbar .nav-link:focus {
+  background: #e5e7eb;
+  color: #004b87;
+  outline: none;
+}
+
+.nav-name {
+  font-weight: 600;
+  color: #0366d6;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  max-width: 40vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+/* Consistent navbar spacer */
+.navbar-spacer {
+  height: 2.7rem;
+}
+
+/* Standard button styles */
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  background: #0366d6;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-block;
+}
+
+.btn-primary:hover, 
+.btn-primary:focus {
+  background: #004b87;
+  outline: none;
+}
+
+/* Form elements */
+input, textarea {
+  width: 100%;
+  margin-bottom: 1.2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fff;
+  color: #222;
+  box-sizing: border-box;
+  transition: border 0.2s ease;
+}
+
+textarea {
+  border-radius: 1.25rem;
+  resize: vertical;
+  min-height: 120px;
+}
+
+input:focus, textarea:focus {
+  border: 1.5px solid #0366d6;
+  outline: none;
+}
+
+/* Typography */
+h1 {
+  font-size: 2.2rem;
+  color: #0366d6;
+  margin-bottom: 1.2rem;
+  line-height: 1.2;
+}
+
+h2 {
+  color: #004b87;
+  margin-top: 2.2rem;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+/* Resume-specific h2 styling */
+.resume-container h2 {
+  font-size: 1.2rem;
+  color: #0366d6;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  letter-spacing: 0.01em;
+}
+
+p {
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+/* Optimized images for performance */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  display: block;
+  object-fit: cover;
+}
+
+/* Mobile responsive navbar */
+@media (max-width: 700px) {
+  .slim-navbar {
+    padding: 0.15rem 0.5rem;
+    min-height: 2.1rem;
+  }
+  
+  .slim-navbar .nav-link {
+    padding: 0.18rem 0.7rem;
+    font-size: 0.96rem;
+  }
+  
+  .nav-name {
+    font-size: 0.98rem;
+    max-width: 50vw;
+  }
+}
+
+/* Utilities */
+.text-center {
+  text-align: center;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Performance optimizations */
+.slim-navbar {
+  will-change: transform;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Focus improvements for accessibility */
+:focus-visible {
+  outline: 2px solid #0366d6;
+  outline-offset: 2px;
+}
