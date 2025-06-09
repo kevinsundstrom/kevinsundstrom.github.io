@@ -19,14 +19,22 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     /* Page-specific styles for homepage */
+    :root {
+      /* Configurable positioning variables for easy manual adjustment */
+      --homepage-vertical-offset: 0rem; /* Adjust this to move content up (-2rem) or down (+2rem) */
+      --homepage-horizontal-padding: 1.5rem; /* Adjust horizontal padding */
+    }
+    
     body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding: var(--homepage-horizontal-padding);
       min-height: 100vh;
       height: auto;
+      /* Apply vertical offset for manual positioning control */
+      transform: translateY(var(--homepage-vertical-offset));
     }
     
     .search-container {
