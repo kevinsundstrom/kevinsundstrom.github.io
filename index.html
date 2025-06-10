@@ -29,7 +29,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: var(--homepage-horizontal-padding);
+      /* padding: var(--homepage-horizontal-padding); */
+      padding: 0; /* Ensure body does not add padding around footer */
       min-height: 100vh;
       height: auto;
       /* Apply vertical offset for manual positioning control */
@@ -43,6 +44,7 @@
       justify-content: center;
       flex: 1;
       width: 100%;
+      padding: var(--homepage-horizontal-padding); /* Apply page padding here */
     }
     
     .search-container {
@@ -100,10 +102,19 @@
       color: #000;
     }
     
-    @media (max-width: 700px) {
+    /* @media (max-width: 700px) {
       body {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
+      }
+    } */
+
+    /* Added media query for .main-content padding on mobile */
+    @media (max-width: 700px) {
+      .main-content {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        /* padding-left and padding-right will remain var(--homepage-horizontal-padding) */
       }
     }
   </style>
