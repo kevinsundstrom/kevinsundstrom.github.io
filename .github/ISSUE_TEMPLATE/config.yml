@@ -1,0 +1,7 @@
+blank_issues_enabled: false
+contact_links: []
+issue_templates:
+  - name: 📝 New Article
+    description: Submit a new article to be published on the site.
+    labels: ["article"]
+    file: article.yml
