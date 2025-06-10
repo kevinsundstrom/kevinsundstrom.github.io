@@ -24,16 +24,10 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 2rem 1rem 0;
-      box-sizing: border-box;
-    }
-    
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 2rem 1rem;
+      box-sizing: border-box;
     }
     .resume-container {
       background: #fff;
@@ -217,18 +211,5 @@
       </ul>
     </section>
   </main>
-  
-  <footer class="site-footer">
-    <p class="footer-copyright">© Kevin Sundstrom <span id="copyright-year">2025</span></p>
-    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="footer-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
-  </footer>
-  
-  <script>
-    // Update copyright year
-    document.addEventListener('DOMContentLoaded', function() {
-      const currentYear = new Date().getFullYear();
-      document.getElementById('copyright-year').textContent = currentYear;
-    });
-  </script>
 </body>
 </html>
