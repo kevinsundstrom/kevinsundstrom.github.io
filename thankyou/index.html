@@ -21,9 +21,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      padding: 1.5rem;
+      padding: 1.5rem 1.5rem 0;
+    }
+    
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      width: 100%;
     }
     
     .container {
@@ -65,10 +73,23 @@
     <span class="nav-name">Kevin Sundstrom</span>
   </nav>
   <div class="navbar-spacer"></div> <!-- Spacer for nav -->
+  
+  <div class="main-content">
   <div class="container">
     <h2>Thanks!</h2>
     <p>Your message has been sent. I’ll be in touch soon.</p>
     <a href="/" class="btn-primary" aria-label="Back to Home">Back to Home</a>
   </div>
+  </div>
+  
+  <footer class="site-footer">
+    <div class="copyright">© Kevin Sundstrom <span id="current-year"></span></div>
+    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
+  </footer>
+  
+  <script>
+    // Update copyright year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
