@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0366d6" />
+  <title>Articles - Kevin Sundstrom</title>
+  <meta name="description" content="Expert insights on marketing strategy, content development, and business growth. Explore articles on content strategy, AI applications, and marketing operations." />
+  <meta name="keywords" content="marketing articles, content strategy, marketing strategy, AI marketing, business growth, digital marketing, content development" />
+  <meta name="author" content="Kevin Sundstrom" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kevinsundstrom.com/articles/" />
+  
+  <!-- Open Graph meta tags -->
+  <meta property="og:title" content="Articles - Kevin Sundstrom" />
+  <meta property="og:description" content="Expert insights on marketing strategy, content development, and business growth. Explore articles on content strategy, AI applications, and marketing operations." />
+  <meta property="og:url" content="https://kevinsundstrom.com/articles/" />
+  <meta property="og:type" content="website" />
+  
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/styles.css" />
+  
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #ffffff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .main-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      padding-top: 4rem; /* Account for fixed navbar */
+      flex: 1;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
+      text-align: center;
+    }
+    
+    .intro-text {
+      font-size: 1.2em;
+      color: #666;
+      text-align: center;
+      margin-bottom: 4rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .categories-section {
+      margin-bottom: 4rem;
+    }
+    
+    .categories-section h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .category-card {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 2rem;
+      background: #fafafa;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .category-card h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1.5em;
+      color: #333;
+    }
+    
+    .category-card h3 a {
+      color: #333;
+      text-decoration: none;
+    }
+    
+    .category-card h3 a:hover {
+      color: #0366d6;
+    }
+    
+    .category-card p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .category-card .article-count {
+      color: #888;
+      font-size: 0.9em;
+      font-style: italic;
+    }
+    
+    .latest-articles-section h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    
+    .article-list {
+      border-top: 1px solid #eee;
+    }
+    
+    .article-item {
+      border-bottom: 1px solid #eee;
+      padding: 2.5rem 0;
+    }
+    
+    .article-item:last-child {
+      border-bottom: none;
+    }
+    
+    .article-title {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .article-title a {
+      color: #333;
+      text-decoration: none;
+    }
+    
+    .article-title a:hover {
+      color: #0366d6;
+    }
+    
+    .article-meta {
+      color: #666;
+      font-size: 0.9em;
+      margin-bottom: 1rem;
+    }
+    
+    .article-category {
+      color: #0366d6;
+      font-size: 0.85em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .article-category a {
+      color: inherit;
+      text-decoration: none;
+    }
+    
+    .article-category a:hover {
+      text-decoration: underline;
+    }
+    
+    .article-excerpt {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .read-more {
+      color: #0366d6;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .read-more:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 1.5rem;
+        padding-top: 3.5rem;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .category-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="slim-navbar">
+    <div style="display: flex; gap: 0.5rem;">
+      <a href="/" class="nav-link" aria-label="Home">Home</a>
+      <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
+      <a href="/articles/" class="nav-link" aria-label="Articles">Articles</a>
+    </div>
+    <span class="nav-name">Kevin Sundstrom</span>
+  </nav>
+  
+  <main class="main-content">
+    <h1>Articles</h1>
+    <p class="intro-text">
+      Expert insights on marketing strategy, content development, and business growth. Discover actionable frameworks, tools, and methodologies for building effective marketing programs.
+    </p>
+    
+    <section class="latest-articles-section">
+      <h2>Latest Articles</h2>
+      <div class="article-list">
+        <!-- Showing most recent 5 articles -->
+        <article class="article-item">
+          <div class="article-category">
+            <a href="/articles/content-strategy/">Content Strategy</a> > <a href="/articles/content-strategy/ai/">AI</a>
+          </div>
+          <h3 class="article-title">
+            <a href="/articles/content-strategy/ai/ai-transforming-content-development/">How AI is Transforming Content Development in Marketing Organizations</a>
+          </h3>
+          <div class="article-meta">By Kevin Sundstrom | June 7, 2025</div>
+          <div class="article-excerpt">
+            Artificial intelligence is rapidly changing how marketing teams create, optimize, and scale content. In this article, we explore the latest AI-driven strategies, tools, and best practices for content development in modern marketing organizations.
+          </div>
+          <a href="/articles/content-strategy/ai/ai-transforming-content-development/" class="read-more">Read more →</a>
+        </article>
+      </div>
+    </section>
+    
+    <section class="categories-section">
+      <h2>Categories</h2>
+      <div class="categories-grid">
+        <div class="category-card">
+          <h3><a href="/articles/content-strategy/">Content Strategy</a></h3>
+          <p>Strategic approaches to content development, optimization, and management. Frameworks and methodologies for building effective content programs that drive business results.</p>
+          <div class="article-count">1 article</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="site-footer">
+    <div class="copyright">© Kevin Sundstrom <span id="current-year"></span></div>
+    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
+  </footer>
+  
+  <script>
+    // Update copyright year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
