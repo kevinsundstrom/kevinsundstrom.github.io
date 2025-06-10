@@ -20,16 +20,20 @@
     body {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      padding: 1.5rem;
+      padding: 1.5rem 1.5rem 0;
     }
     
     .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       max-width: 600px;
       text-align: center;
+      margin: 0 auto;
     }
     
     h2 {
@@ -70,5 +74,18 @@
     <p>Your message has been sent. I’ll be in touch soon.</p>
     <a href="/" class="btn-primary" aria-label="Back to Home">Back to Home</a>
   </div>
+  
+  <footer class="site-footer">
+    <p class="footer-copyright">© Kevin Sundstrom <span id="copyright-year">2025</span></p>
+    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="footer-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
+  </footer>
+  
+  <script>
+    // Update copyright year
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentYear = new Date().getFullYear();
+      document.getElementById('copyright-year').textContent = currentYear;
+    });
+  </script>
 </body>
 </html>

@@ -177,6 +177,11 @@
     </article>
   </main>
   
+  <footer class="site-footer">
+    <p class="footer-copyright">© Kevin Sundstrom <span id="copyright-year">2025</span></p>
+    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="footer-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
+  </footer>
+  
   <script>
     // Navbar hide/show on scroll behavior
     let lastScrollTop = 0;
@@ -194,6 +199,12 @@
       }
       
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+    });
+    
+    // Update copyright year
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentYear = new Date().getFullYear();
+      document.getElementById('copyright-year').textContent = currentYear;
     });
   </script>
 </body>
