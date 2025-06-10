@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0366d6" />
+  <title>Page Not Found - Kevin Sundstrom</title>
+  <meta name="description" content="The page you're looking for could not be found. Explore other content on Kevin Sundstrom's website." />
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/styles.css" />
+  
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #ffffff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .main-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      padding-top: 4rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #666;
+    }
+    
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: #0366d6;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border: 1px solid #0366d6;
+      border-radius: 4px;
+      display: inline-block;
+      min-width: 120px;
+      transition: background-color 0.2s ease;
+    }
+    
+    .nav-links a:hover {
+      background-color: #0366d6;
+      color: white;
+    }
+    
+    @media (min-width: 600px) {
+      .nav-links {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        padding-top: 3.5rem;
+      }
+      
+      h1 {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="slim-navbar">
+    <div style="display: flex; gap: 0.5rem;">
+      <a href="/" class="nav-link" aria-label="Home">Home</a>
+      <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
+      <a href="/articles/" class="nav-link" aria-label="Articles">Articles</a>
+    </div>
+    <span class="nav-name">Kevin Sundstrom</span>
+  </nav>
+  
+  <main class="main-content">
+    <h1>404</h1>
+    <h2>Page Not Found</h2>
+    <p>The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/articles/">Articles</a>
+      <a href="/contact/">Contact</a>
+      <a href="/resume/">Resume</a>
+    </nav>
+  </main>
+  
+  <footer class="site-footer">
+    <div class="copyright">© Kevin Sundstrom <span id="current-year"></span></div>
+    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
+  </footer>
+  
+  <script>
+    // Update copyright year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
