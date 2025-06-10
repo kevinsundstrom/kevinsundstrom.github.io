@@ -1,0 +1,38 @@
+name: 📝 New Article
+description: Use this to publish a new article on kevinsundstrom.com
+labels: [article]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: Example: Why content metrics matter
+  - type: input
+    id: slug
+    attributes:
+      label: URL Slug
+      placeholder: why-content-metrics-matter
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      placeholder: content-strategy
+  - type: input
+    id: topic
+    attributes:
+      label: Optional Topic
+      placeholder: ai
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      default: Kevin Sundstrom
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: 2025-06-09
+  - type: textarea
+    id: body
+    attributes:
+      label: Article Content (HTML or Markdown)
