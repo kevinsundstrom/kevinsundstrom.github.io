@@ -1,0 +1,50 @@
+name: "Bug Report or Feature Request"
+description: "Report a bug or request a new feature for the site."
+title: "[Bug/Feature] <Brief Description>"
+labels: ["bug", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please use this template to report bugs or request new features for the site.
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: "Type of Issue"
+      options:
+        - Bug
+        - Feature Request
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Briefly describe the bug or feature."
+      placeholder: "e.g. Navigation bar not responsive on mobile."
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: "Details"
+      description: "Provide detailed steps to reproduce the bug or describe the feature you want."
+      placeholder: "Steps to reproduce, expected behavior, screenshots, etc."
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: "Relevant URL (if any)"
+      description: "Link to the page where the issue occurs."
+      placeholder: "e.g. /articles/content-strategy/ai/"
+    validations:
+      required: false
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: "Additional Information"
+      description: "Any other context, error messages, or suggestions."
+      placeholder: "Optional."
+    validations:
+      required: false

@@ -1,0 +1,84 @@
+name: "Publish Article"
+description: "Template for submitting new articles or drafts. Only title and content are required. Other fields are optional."
+title: "[Article] <Enter Article Title Here>"
+labels: ["article", "content-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Instructions:**
+        - Only the Article Title and Article Content fields are required for draft submissions.
+        - Fill in SEO, category, and other fields if available, but they are optional.
+        - Use this template for both drafts and ready-to-publish articles.
+  - type: input
+    id: article-title
+    attributes:
+      label: "Article Title"
+      description: "Enter the title of the article."
+      placeholder: "e.g. How AI is Transforming Content Development"
+    validations:
+      required: true
+  - type: textarea
+    id: article-content
+    attributes:
+      label: "Article Content (Markdown)"
+      description: "Paste the full article content here in Markdown format. For drafts, a summary or outline is fine."
+      placeholder: "Write your article or draft here..."
+    validations:
+      required: true
+  - type: input
+    id: seo-title
+    attributes:
+      label: "SEO Title (Optional)"
+      description: "Enter the SEO-friendly title for the article. Leave blank if not ready."
+      placeholder: "e.g. AI Transforming Content Development"
+    validations:
+      required: false
+  - type: input
+    id: seo-description
+    attributes:
+      label: "SEO Description (Optional)"
+      description: "Enter a short SEO description (max 160 characters). Leave blank if not ready."
+      placeholder: "A brief summary for search engines."
+    validations:
+      required: false
+  - type: input
+    id: seo-keywords
+    attributes:
+      label: "SEO Keywords (Optional)"
+      description: "Comma-separated keywords for SEO. Leave blank if not ready."
+      placeholder: "AI, content, development, technology"
+    validations:
+      required: false
+  - type: input
+    id: category
+    attributes:
+      label: "Category/Topic (Optional)"
+      description: "Specify the main category or topic for this article. Leave blank if not sure."
+      placeholder: "e.g. AI, Content Strategy, Marketing"
+    validations:
+      required: false
+  - type: input
+    id: author
+    attributes:
+      label: "Author Name (Optional)"
+      description: "Who wrote this article? Leave blank if not ready."
+      placeholder: "e.g. Kevin Sundstrom"
+    validations:
+      required: false
+  - type: input
+    id: publish-date
+    attributes:
+      label: "Publish Date (Optional)"
+      description: "Target publish date (YYYY-MM-DD). Leave blank if not set."
+      placeholder: "2025-06-10"
+    validations:
+      required: false
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: "Additional Notes (Optional)"
+      description: "Any extra information or instructions."
+      placeholder: "Optional notes for the publishing team."
+    validations:
+      required: false
