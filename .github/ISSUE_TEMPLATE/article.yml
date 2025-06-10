@@ -1,38 +1,127 @@
 name: 📝 New Article
 description: Use this to publish a new article on kevinsundstrom.com
+title: "[ARTICLE] "
 labels: [article]
+assignees:
+  - kevinsundstrom
 body:
   - type: input
     id: title
     attributes:
-      label: Title
-      placeholder: Example: Why content metrics matter
+      label: Article Title
+      description: The main headline of your article
+      placeholder: "Example: How AI is Transforming Content Development in Marketing Organizations"
+    validations:
+      required: true
+  
   - type: input
     id: slug
     attributes:
       label: URL Slug
-      placeholder: why-content-metrics-matter
+      description: The URL-friendly version of your title (lowercase, hyphens instead of spaces)
+      placeholder: "ai-transforming-content-development"
+    validations:
+      required: true
+  
   - type: input
+    id: description
+    attributes:
+      label: Meta Description
+      description: Brief description for SEO and social sharing (150-160 characters recommended)
+      placeholder: "Discover how AI is revolutionizing content development for marketing teams. Learn strategies, tools, and best practices."
+    validations:
+      required: true
+  
+  - type: input
+    id: keywords
+    attributes:
+      label: SEO Keywords
+      description: Comma-separated list of keywords for SEO
+      placeholder: "AI, content development, marketing, SEO, artificial intelligence, marketing strategy"
+    validations:
+      required: true
+  
+  - type: dropdown
     id: category
     attributes:
       label: Category
-      placeholder: content-strategy
+      description: Primary category for the article
+      options:
+        - content-strategy
+        - marketing
+        - seo
+        - analytics
+        - automation
+        - business-strategy
+    validations:
+      required: true
+  
   - type: input
     id: topic
     attributes:
-      label: Optional Topic
-      placeholder: ai
+      label: Topic (Optional)
+      description: Subcategory or specific topic within the category
+      placeholder: "ai, tools, frameworks, best-practices"
+  
   - type: input
     id: author
     attributes:
       label: Author
-      default: Kevin Sundstrom
+      description: Article author name
+      value: "Kevin Sundstrom"
+    validations:
+      required: true
+  
   - type: input
     id: date
     attributes:
-      label: Date
-      placeholder: 2025-06-09
+      label: Publication Date
+      description: Date in YYYY-MM-DD format
+      placeholder: "2025-06-10"
+    validations:
+      required: true
+  
+  - type: input
+    id: tags
+    attributes:
+      label: Article Tags
+      description: Comma-separated list of tags for article:tag meta properties
+      placeholder: "AI, Content Development, Marketing, Automation"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: excerpt
+    attributes:
+      label: Article Excerpt
+      description: Brief excerpt for article previews and listings (2-3 sentences)
+      placeholder: "Artificial intelligence is rapidly changing how marketing teams create, optimize, and scale content. In this article, we explore the latest AI-driven strategies and tools."
+    validations:
+      required: true
+  
+  - type: input
+    id: og_image
+    attributes:
+      label: Social Media Image URL (Optional)
+      description: "URL to image for Open Graph sharing (recommended: 1200x630px)"
+      placeholder: "https://kevinsundstrom.com/images/articles/ai-content-development.jpg"
+  
   - type: textarea
     id: body
     attributes:
-      label: Article Content (HTML or Markdown)
+      label: Article Content
+      description: Full article content in HTML or Markdown format
+      placeholder: |
+        <h2>Introduction</h2>
+        <p>Your article content goes here...</p>
+        
+        <h2>Key Points</h2>
+        <ul>
+          <li>Point 1</li>
+          <li>Point 2</li>
+        </ul>
+        
+        <h2>Conclusion</h2>
+        <p>Wrap up your article...</p>
+    validations:
+      required: true
