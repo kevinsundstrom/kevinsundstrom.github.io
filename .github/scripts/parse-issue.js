@@ -44,11 +44,15 @@ function parseIssueBody(issueBody) {
   data.publishDate = data.publishDate || new Date().toISOString().split('T')[0];
   data.category = data.category || 'General';
   
+  // Parse multiple categories separated by commas
+  data.categories = data.category.split(',').map(cat => cat.trim()).filter(cat => cat.length > 0);
+  data.primaryCategory = data.categories[0] || 'General';
+  
   return data;
 }
 
 // Generate URL-friendly slug and paths
-function generatePaths(title, category) {
+function generatePaths(title, primaryCategory) {
   const slug = slugify(title, { 
     lower: true, 
     strict: true, 
@@ -56,7 +60,7 @@ function generatePaths(title, category) {
   });
   
   // Normalize category for URL
-  const categorySlug = slugify(category, { 
+  const categorySlug = slugify(primaryCategory, { 
     lower: true, 
     strict: true 
   });
@@ -88,7 +92,7 @@ try {
   console.log('Issue title:', issueTitle);
   
   const parsedData = parseIssueBody(issueBody);
-  const paths = generatePaths(parsedData.title, parsedData.category);
+  const paths = generatePaths(parsedData.title, parsedData.primaryCategory);
   
   const articleData = {
     ...parsedData,

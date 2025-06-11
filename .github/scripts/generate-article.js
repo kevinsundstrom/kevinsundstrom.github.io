@@ -103,7 +103,7 @@ function generateArticleHtml(articleData) {
   <meta property="og:type" content="article" />
   <meta property="article:author" content="${articleData.author}" />
   <meta property="article:published_time" content="${articleData.publishDate}" />
-  <meta property="article:section" content="${articleData.category}" />
+  <meta property="article:section" content="${articleData.primaryCategory}" />
 ${articleTags}
   
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -133,7 +133,7 @@ ${articleTags}
     "dateModified": "${articleData.dateModified.split('T')[0]}",
     "mainEntityOfPage": "https://kevinsundstrom.com${articleData.url}",
     "url": "https://kevinsundstrom.com${articleData.url}",
-    "articleSection": "${articleData.category}",
+    "articleSection": "${articleData.primaryCategory}",
     "keywords": ${keywordsArray}
   }
   </script>
@@ -293,7 +293,7 @@ ${articleTags}
   <main class="article-content">
     <article>
       <div class="category-topic">
-        <a href="/articles/${articleData.categorySlug}/">${articleData.category}</a>
+        <a href="/articles/${articleData.categorySlug}/">${articleData.categories.join(', ')}</a>
       </div>
       <h1>${articleData.title}</h1>
       <div class="meta">By ${articleData.author} | ${new Date(articleData.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
