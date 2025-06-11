@@ -39,10 +39,6 @@
       padding: 0 1rem; /* Added horizontal padding */
     }
     .resume-container {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-      padding: 2.5rem 2rem;
       max-width: 700px;
       width: 100%;
       margin-top: 1.5rem;
@@ -54,15 +50,9 @@
     h1 {
       font-size: 2.2rem;
       color: #000;
-      margin-bottom: 0.5rem;
+      margin-bottom: 2rem;
       text-align: left;
       letter-spacing: 0.01em;
-    }
-    .subtitle {
-      font-size: 1.1rem;
-      color: #444;
-      margin-bottom: 2rem;
-      font-weight: 500;
     }
     section {
       margin-bottom: 2rem;
@@ -85,9 +75,84 @@
       color: #333;
     }
     
+    /* Timeline styles */
+    .timeline {
+      position: relative;
+      margin: 2rem 0;
+      padding-left: 1.5rem;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: #ccc;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .timeline-dot {
+      position: absolute;
+      left: -1.2rem;
+      top: 0.3rem;
+      width: 8px;
+      height: 8px;
+      background: #333;
+      border-radius: 50%;
+    }
+    
+    .timeline-content {
+      padding-left: 0.5rem;
+    }
+    
+    .timeline-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #000;
+      margin: 0 0 0.3rem 0;
+      letter-spacing: 0.01em;
+    }
+    
+    .timeline-company {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+    
+    .timeline-date {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.8rem;
+      font-weight: 400;
+    }
+    
+    .timeline-description {
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
     @media (max-width: 600px) {
-      .resume-container {
-        padding: 1.2rem 0.5rem;
+      .timeline {
+        padding-left: 1.2rem;
+      }
+      
+      .timeline-dot {
+        left: -1rem;
+        width: 6px;
+        height: 6px;
       }
     }
   </style>
@@ -105,31 +170,40 @@
   
   <div class="main-content">
     <main class="resume-container">
-    <h1>Kevin Sundstrom</h1>
-    <div class="subtitle">Marketing & Content Strategist</div>
-    <section>
-      <h2>Summary</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisi nec erat. Suspendisse potenti.</p>
-    </section>
-    <section>
-      <h2>Experience</h2>
-      <ul>
-        <li><strong>Lorem Ipsum Position</strong>, Lorem Company (2022–Present)<br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</li>
-        <li><strong>Dolor Sit Amet</strong>, Ipsum Inc. (2018–2022)<br>Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</li>
-        <li><strong>Consectetur Adipiscing</strong>, Freelance (2015–2018)<br>Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.</li>
-      </ul>
-    </section>
-    <section>
-      <h2>Skills</h2>
-      <ul>
-        <li>Lorem ipsum</li>
-        <li>Dolor sit amet</li>
-        <li>Consectetur adipiscing</li>
-        <li>Vestibulum lacinia</li>
-        <li>Praesent libero</li>
-        <li>Integer nec odio</li>
-      </ul>
-    </section>
+    <h1>Hire Me</h1>
+    <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">Lorem Ipsum Position</h3>
+            <div class="timeline-company">Lorem Company</div>
+            <div class="timeline-date">2022–Present</div>
+            <div class="timeline-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">Dolor Sit Amet</h3>
+            <div class="timeline-company">Ipsum Inc.</div>
+            <div class="timeline-date">2018–2022</div>
+            <div class="timeline-description">Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">Consectetur Adipiscing</h3>
+            <div class="timeline-company">Freelance</div>
+            <div class="timeline-date">2015–2018</div>
+            <div class="timeline-description">Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 3rem;">
+        <a href="/contact" style="display: inline-block; padding: 0.8rem 1.5rem; background: #333; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">Contact Me</a>
+      </div>
   </main>
   </div>
   
