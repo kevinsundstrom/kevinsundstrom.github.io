@@ -148,3 +148,39 @@ After publication, articles can be manually edited by:
 3. Committing the changes
 
 The automated system won't overwrite manual changes unless the original issue is edited.
+
+## Cleanup After Article Deletion
+
+When articles are manually deleted, use the cleanup script to remove stale references:
+
+### Running the Cleanup Script
+
+Option 1 - Using the convenience script:
+```bash
+.github/scripts/cleanup-articles.sh
+```
+
+Option 2 - Direct execution:
+```bash
+node .github/scripts/cleanup-indexes.js
+```
+
+### What the Cleanup Does
+
+The cleanup script:
+- Scans the actual file system for existing articles
+- Removes stale article references from the main articles index  
+- Updates category article counts to reflect actual articles
+- Fixes category pages to show correct article listings
+- Creates missing category index pages
+- Removes empty category directories (if they only contain index.html)
+
+### When to Run Cleanup
+
+Run the cleanup script whenever you:
+- Delete articles manually from the repository
+- Notice 404 errors on category pages  
+- See incorrect article counts on the main articles page
+- Want to ensure index pages are synchronized with actual content
+
+After running the cleanup, commit the changes to fix any 404 issues.
