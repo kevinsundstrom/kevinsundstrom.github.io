@@ -21,19 +21,19 @@ function parseIssueBody(issueBody) {
     } else if (header.includes('Article Content')) {
       data.content = content;
     } else if (header.includes('SEO Title')) {
-      data.seoTitle = content || data.title;
+      data.seoTitle = (content && content !== '_No response_') ? content : data.title;
     } else if (header.includes('SEO Description')) {
-      data.seoDescription = content;
+      data.seoDescription = (content && content !== '_No response_') ? content : '';
     } else if (header.includes('SEO Keywords')) {
-      data.seoKeywords = content;
+      data.seoKeywords = (content && content !== '_No response_') ? content : '';
     } else if (header.includes('Category/Topic')) {
-      data.category = content || 'General';
+      data.category = (content && content !== '_No response_') ? content : 'General';
     } else if (header.includes('Author Name')) {
-      data.author = content || 'Kevin Sundstrom';
+      data.author = (content && content !== '_No response_') ? content : 'Kevin Sundstrom';
     } else if (header.includes('Publish Date')) {
-      data.publishDate = content || new Date().toISOString().split('T')[0];
+      data.publishDate = (content && content !== '_No response_') ? content : new Date().toISOString().split('T')[0];
     } else if (header.includes('Additional Notes')) {
-      data.notes = content;
+      data.notes = (content && content !== '_No response_') ? content : '';
     }
   }
   

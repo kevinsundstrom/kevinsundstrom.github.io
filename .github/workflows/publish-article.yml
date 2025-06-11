@@ -8,6 +8,9 @@ jobs:
   publish-article:
     runs-on: ubuntu-latest
     if: contains(github.event.issue.labels.*.name, 'article')
+    permissions:
+      contents: write
+      issues: write
     
     steps:
     - name: Checkout repository
@@ -21,9 +24,7 @@ jobs:
         node-version: '18'
         
     - name: Install dependencies
-      run: |
-        npm init -y
-        npm install js-yaml slugify
+      run: npm install
         
     - name: Parse issue and generate article
       id: parse-issue
