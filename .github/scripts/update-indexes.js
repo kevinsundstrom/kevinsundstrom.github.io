@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const slugify = require('slugify');
 
 // Parse existing HTML to extract article data
 function parseExistingArticles(htmlContent) {
@@ -34,7 +35,7 @@ function parseExistingArticles(htmlContent) {
 }
 
 // Generate article HTML for listing
-function generateArticleListItem(articleData) {
+function generateArticleListItem(articleData, forCategory = null) {
   const publishDate = new Date(articleData.publishDate);
   const formattedDate = publishDate.toLocaleDateString('en-US', { 
     year: 'numeric', 
@@ -46,9 +47,15 @@ function generateArticleListItem(articleData) {
     (articleData.content && articleData.content.substring(0, 150) + '...') || 
     'Read more about this article.';
   
+  // For category pages, show the specific category. For main page, show all categories
+  const displayCategory = forCategory || articleData.categories.join(', ');
+  const categoryLink = forCategory ? 
+    `/articles/${slugify(forCategory, { lower: true, strict: true })}/` :
+    `/articles/${articleData.categorySlug}/`;
+  
   return `        <article class="article-item">
           <div class="article-category">
-            <a href="/articles/${articleData.categorySlug}/">${articleData.category}</a>
+            <a href="${categoryLink}">${displayCategory}</a>
           </div>
           <h3 class="article-title">
             <a href="${articleData.url}">${articleData.title}</a>
@@ -104,29 +111,32 @@ function updateMainArticlesIndex(articleData) {
   }
   
   // Update category count if needed
-  const categoryPattern = new RegExp(`(<div class="category-card">.*?<h3><a href="/articles/${articleData.categorySlug}/">${articleData.category}</a></h3>.*?<div class="article-count">)(\\d+)( article(?:s)?)(</div>)`, 's');
-  const categoryMatch = content.match(categoryPattern);
-  
-  if (categoryMatch) {
-    const currentCount = parseInt(categoryMatch[2]);
-    const newCount = existingIndex >= 0 ? currentCount : currentCount + 1;
-    const plural = newCount === 1 ? 'article' : 'articles';
-    content = content.replace(categoryPattern, `$1${newCount} ${plural}$4`);
-    console.log(`Updated category count to ${newCount}`);
-  } else {
-    // Add new category if it doesn't exist
-    const categoriesGridMatch = content.match(/(<div class="categories-grid">)(.*?)(<\/div>\s*<\/section>)/s);
-    if (categoriesGridMatch) {
-      const newCategoryCard = `
+  for (const category of articleData.categories) {
+    const categorySlug = slugify(category, { lower: true, strict: true });
+    const categoryPattern = new RegExp(`(<div class="category-card">.*?<h3><a href="/articles/${categorySlug}/">${category}</a></h3>.*?<div class="article-count">)(\\d+)( article(?:s)?)(</div>)`, 's');
+    const categoryMatch = content.match(categoryPattern);
+    
+    if (categoryMatch) {
+      const currentCount = parseInt(categoryMatch[2]);
+      const newCount = existingIndex >= 0 ? currentCount : currentCount + 1;
+      const plural = newCount === 1 ? 'article' : 'articles';
+      content = content.replace(categoryPattern, `$1${newCount} ${plural}$4`);
+      console.log(`Updated ${category} category count to ${newCount}`);
+    } else {
+      // Add new category if it doesn't exist
+      const categoriesGridMatch = content.match(/(<div class="categories-grid">)(.*?)(<\/div>\s*<\/section>)/s);
+      if (categoriesGridMatch) {
+        const newCategoryCard = `
         <div class="category-card">
-          <h3><a href="/articles/${articleData.categorySlug}/">${articleData.category}</a></h3>
-          <p>Articles in the ${articleData.category} category.</p>
+          <h3><a href="/articles/${categorySlug}/">${category}</a></h3>
+          <p>Articles in the ${category} category.</p>
           <div class="article-count">1 article</div>
         </div>`;
-      
-      const updatedGrid = categoriesGridMatch[1] + categoriesGridMatch[2] + newCategoryCard + categoriesGridMatch[3];
-      content = content.replace(categoriesGridMatch[0], updatedGrid);
-      console.log('Added new category to main index');
+        
+        const updatedGrid = categoriesGridMatch[1] + categoriesGridMatch[2] + newCategoryCard + categoriesGridMatch[3];
+        content = content.replace(categoriesGridMatch[0], updatedGrid);
+        console.log(`Added new ${category} category to main index`);
+      }
     }
   }
   
@@ -135,8 +145,9 @@ function updateMainArticlesIndex(articleData) {
 }
 
 // Create or update category index
-function updateCategoryIndex(articleData) {
-  const categoryDir = path.join(process.cwd(), 'articles', articleData.categorySlug);
+function updateCategoryIndex(articleData, category) {
+  const categorySlug = slugify(category, { lower: true, strict: true });
+  const categoryDir = path.join(process.cwd(), 'articles', categorySlug);
   const categoryIndexPath = path.join(categoryDir, 'index.html');
   
   // Create category directory if it doesn't exist
@@ -150,18 +161,18 @@ function updateCategoryIndex(articleData) {
     existingArticles = parseExistingArticles(content);
   } else {
     // Create new category index
-    content = generateCategoryIndexTemplate(articleData);
+    content = generateCategoryIndexTemplate({ ...articleData, category, categorySlug });
   }
   
   // Check if this article already exists
   const existingIndex = existingArticles.findIndex(article => article.url === articleData.url);
   
-  const newArticleHtml = generateArticleListItem(articleData);
+  const newArticleHtml = generateArticleListItem(articleData, category);
   
   if (existingIndex >= 0) {
     // Replace existing article
     content = content.replace(existingArticles[existingIndex].html, newArticleHtml);
-    console.log('Updated existing article in category index');
+    console.log(`Updated existing article in ${category} category index`);
   } else {
     // Add new article to the list
     const articleListMatch = content.match(/(<div class="article-list">)(.*?)(<\/div>\s*<\/section>)/s);
@@ -172,12 +183,12 @@ function updateCategoryIndex(articleData) {
       
       const updatedList = beforeList + '\n' + newArticleHtml + existingList + afterList;
       content = content.replace(articleListMatch[0], updatedList);
-      console.log('Added new article to category index');
+      console.log(`Added new article to ${category} category index`);
     }
   }
   
   fs.writeFileSync(categoryIndexPath, content);
-  console.log('Updated category index');
+  console.log(`Updated ${category} category index`);
 }
 
 // Generate category index template
@@ -255,8 +266,10 @@ try {
   // Update main articles index
   updateMainArticlesIndex(articleData);
   
-  // Update category index
-  updateCategoryIndex(articleData);
+  // Update category indexes for all categories
+  for (const category of articleData.categories) {
+    updateCategoryIndex(articleData, category);
+  }
   
   console.log('Successfully updated all indexes');
   
