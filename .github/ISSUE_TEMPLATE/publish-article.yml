@@ -50,12 +50,16 @@ body:
       placeholder: "AI, content, development, technology"
     validations:
       required: false
-  - type: input
+  - type: dropdown
     id: category
     attributes:
       label: "Category/Topic (Optional)"
-      description: "Specify the main category or topic for this article. Leave blank if not sure."
-      placeholder: "e.g. AI, Content Strategy, Marketing"
+      description: "Select the main category for this article. Choose 'Other' to suggest a new category in Additional Notes."
+      options:
+        - "Content Strategy"
+        - "Marketing" 
+        - "AI"
+        - "Other"
     validations:
       required: false
   - type: input
@@ -78,7 +82,7 @@ body:
     id: additional-notes
     attributes:
       label: "Additional Notes (Optional)"
-      description: "Any extra information or instructions."
-      placeholder: "Optional notes for the publishing team."
+      description: "Any extra information or instructions. If you selected 'Other' for category, please suggest your new category name here."
+      placeholder: "Optional notes for the publishing team or new category suggestions."
     validations:
       required: false
