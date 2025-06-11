@@ -39,10 +39,6 @@
       padding: 0 1rem; /* Added horizontal padding */
     }
     .resume-container {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-      padding: 2.5rem 2rem;
       max-width: 700px;
       width: 100%;
       margin-top: 1.5rem;
@@ -89,22 +85,22 @@
     .timeline {
       position: relative;
       margin: 2rem 0;
-      padding-left: 2rem;
+      padding-left: 1.5rem;
     }
     
     .timeline::before {
       content: '';
       position: absolute;
-      left: 0.6rem;
+      left: 0.5rem;
       top: 0;
       bottom: 0;
-      width: 2px;
-      background: #e5e7eb;
+      width: 1px;
+      background: #ccc;
     }
     
     .timeline-item {
       position: relative;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
     
     .timeline-item:last-child {
@@ -113,14 +109,12 @@
     
     .timeline-dot {
       position: absolute;
-      left: -1.9rem;
+      left: -1.2rem;
       top: 0.3rem;
-      width: 12px;
-      height: 12px;
+      width: 8px;
+      height: 8px;
       background: #333;
       border-radius: 50%;
-      border: 2px solid #fff;
-      box-shadow: 0 0 0 2px #e5e7eb;
     }
     
     .timeline-content {
@@ -157,18 +151,14 @@
     }
     
     @media (max-width: 600px) {
-      .resume-container {
-        padding: 1.2rem 0.5rem;
-      }
-      
       .timeline {
-        padding-left: 1.5rem;
+        padding-left: 1.2rem;
       }
       
       .timeline-dot {
-        left: -1.4rem;
-        width: 10px;
-        height: 10px;
+        left: -1rem;
+        width: 6px;
+        height: 6px;
       }
     }
   </style>
@@ -188,13 +178,7 @@
     <main class="resume-container">
     <h1>Kevin Sundstrom</h1>
     <div class="subtitle">Marketing & Content Strategist</div>
-    <section>
-      <h2>Summary</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisi nec erat. Suspendisse potenti.</p>
-    </section>
-    <section>
-      <h2>Experience</h2>
-      <div class="timeline">
+    <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -223,18 +207,6 @@
           </div>
         </div>
       </div>
-    </section>
-    <section>
-      <h2>Skills</h2>
-      <ul>
-        <li>Lorem ipsum</li>
-        <li>Dolor sit amet</li>
-        <li>Consectetur adipiscing</li>
-        <li>Vestibulum lacinia</li>
-        <li>Praesent libero</li>
-        <li>Integer nec odio</li>
-      </ul>
-    </section>
   </main>
   </div>
   
