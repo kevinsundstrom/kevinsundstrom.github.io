@@ -230,6 +230,13 @@ img {
 
 /* Mobile responsive footer */
 @media (max-width: 700px) {
+  body {
+    background: #f9f9f9 !important; /* Remove any blue on mobile top/bottom */
+  }
+  .site-footer {
+    background: #f9f9f9 !important; /* Remove any blue on mobile footer */
+  }
+  
   .site-footer {
     flex-direction: column;
     align-items: center;
