@@ -33,7 +33,7 @@ function parseIssueBody(issueBody) {
     } else if (header.includes('Publish Date')) {
       data.publishDate = (content && content !== '_No response_') ? content : new Date().toISOString().split('T')[0];
     } else if (header.includes('Additional Notes')) {
-      data.notes = content;
+      data.notes = (content && content !== '_No response_') ? content : '';
     }
   }
   
