@@ -56,17 +56,20 @@
     }
     
     .search-bar {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 2rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.95rem;
+      border: 1.5px solid #e1e1e1;
+      border-radius: 8px;
       width: 100%;
       outline: none;
-      transition: border 0.2s;
+      transition: all 0.2s ease;
+      font-family: inherit;
     }
     
     .search-bar:focus {
-      border: 1.5px solid #0366d6;
+      border: 1.5px solid #1a1a1a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
     .suggested-terms {
@@ -81,25 +84,29 @@
     .suggested-terms button {
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
-      background-color: #e5e7eb;
-      color: #333;
+      background-color: rgba(0, 0, 0, 0.05);
+      color: #1a1a1a;
       border: none;
-      border-radius: 9999px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: all 0.2s ease;
       max-width: 100%;
+      font-weight: 500;
     }
     
     .suggested-terms button:hover {
-      background-color: #d1d5db;
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
     }
     
     .page-title {
-      font-size: 2rem;
+      font-size: 2.25rem;
       margin-bottom: 2rem;
       text-align: center;
-      font-weight: bold;
-      color: #000;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
     }
     
     /* @media (max-width: 700px) {

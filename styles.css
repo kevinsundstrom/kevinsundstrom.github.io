@@ -2,11 +2,13 @@
 
 /* Base styles */
 body {
-  font-family: system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   margin: 0;
-  background: #f9f9f9;
-  color: #333;
+  background: #fafafa;
+  color: #1a1a1a;
   box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* Slim navbar - consistent across all pages */
@@ -31,28 +33,30 @@ body {
 
 .slim-navbar .nav-link {
   background: none;
-  color: #000;
-  border-radius: 9999px;
-  padding: 0.25rem 0.9rem;
+  color: #1a1a1a;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
   text-decoration: none;
-  font-size: 0.98rem;
-  margin-right: 0.2rem;
+  font-size: 0.95rem;
+  margin-right: 0.25rem;
   box-shadow: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .slim-navbar .nav-link:hover, 
 .slim-navbar .nav-link:focus {
-  background: #e5e7eb;
-  color: #000;
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a1a1a;
   outline: none;
+  transform: translateY(-1px);
 }
 
 .nav-name {
   font-weight: 600;
-  color: #000;
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
+  color: #1a1a1a;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   max-width: 40vw;
   overflow: hidden;
@@ -69,23 +73,26 @@ body {
 /* Standard button styles */
 .btn-primary {
   padding: 0.75rem 1.5rem;
-  border-radius: 2rem;
-  background: #000;
-  color: #fff;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #ffffff;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
   border: none;
   cursor: pointer;
   font-family: inherit;
   display: inline-block;
+  letter-spacing: -0.01em;
 }
 
 .btn-primary:hover, 
 .btn-primary:focus {
-  background: #222;
+  background: #333333;
   outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Form elements */
@@ -93,61 +100,79 @@ input, textarea {
   width: 100%;
   margin-bottom: 1.2rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 2rem;
-  font-size: 1rem;
+  border: 1.5px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-family: inherit;
-  background: #fff;
-  color: #222;
+  background: #ffffff;
+  color: #1a1a1a;
   box-sizing: border-box;
-  transition: border 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 textarea {
-  border-radius: 1.25rem;
+  border-radius: 8px;
   resize: vertical;
   min-height: 120px;
 }
 
 input:focus, textarea:focus {
-  border: 1.5px solid #000;
+  border: 1.5px solid #1a1a1a;
   outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Typography */
 h1 {
-  font-size: 2.2rem;
-  color: #000;
-  margin-bottom: 1.2rem;
+  font-size: 2.25rem;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
   line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 h2 {
-  color: #000;
-  margin-top: 2.2rem;
+  color: #1a1a1a;
+  margin-top: 2.5rem;
   margin-bottom: 1rem;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+h3 {
+  color: #1a1a1a;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 /* Resume-specific h2 styling */
 .resume-container h2 {
   font-size: 1.2rem;
-  color: #000;
+  color: #1a1a1a;
   margin-bottom: 0.5rem;
   margin-top: 0;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
 
 p {
-  line-height: 1.7;
+  line-height: 1.6;
   margin-bottom: 1.2rem;
+  color: #4a4a4a;
 }
 
 /* Optimized images for performance */
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 1rem;
+  border-radius: 8px;
   margin: 2rem 0;
   display: block;
   object-fit: cover;
@@ -161,12 +186,12 @@ img {
   }
   
   .slim-navbar .nav-link {
-    padding: 0.18rem 0.7rem;
-    font-size: 0.96rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
   }
   
   .nav-name {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
     max-width: 50vw;
   }
 }
@@ -193,7 +218,7 @@ img {
 
 /* Focus improvements for accessibility */
 :focus-visible {
-  outline: 2px solid #000;
+  outline: 2px solid #1a1a1a;
   outline-offset: 2px;
 }
 
@@ -204,7 +229,7 @@ img {
   align-items: center;
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
-  color: #666;
+  color: #6a6a6a;
   background: transparent;
   border-top: none;
   margin-top: auto;
@@ -214,27 +239,28 @@ img {
 
 .site-footer .copyright {
   margin: 0;
+  color: #6a6a6a;
 }
 
 .site-footer .linkedin-link {
-  color: #666;
+  color: #6a6a6a;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .site-footer .linkedin-link:hover,
 .site-footer .linkedin-link:focus {
-  color: #333;
+  color: #1a1a1a;
   outline: none;
 }
 
 /* Mobile responsive footer */
 @media (max-width: 700px) {
   body {
-    background: #f9f9f9 !important; /* Remove any blue on mobile top/bottom */
+    background: #fafafa !important; /* Remove any blue on mobile top/bottom */
   }
   .site-footer {
-    background: #f9f9f9 !important; /* Remove any blue on mobile footer */
+    background: #fafafa !important; /* Remove any blue on mobile footer */
   }
   
   .site-footer {
