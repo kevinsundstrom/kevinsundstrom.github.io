@@ -150,11 +150,23 @@
     @media (max-width: 768px) {
       .main-content {
         padding: 1.5rem;
-        padding-top: 3.5rem;
+        padding-top: 4rem; /* Increased to match other pages */
       }
       
       h1 {
         font-size: 2rem;
+      }
+    }
+    
+    /* Extra small screens */
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 1rem;
+        padding-top: 3.5rem; /* Adjusted for smaller navbar */
+      }
+      
+      h1 {
+        font-size: 1.75rem;
       }
     }
   </style>

@@ -129,7 +129,7 @@
       .article-content {
         /* padding: 1.5rem; */
         padding: 1.5rem; /* Keep existing mobile padding, or adjust if needed */
-        padding-top: 3.5rem; /* Account for fixed navbar on mobile */
+        padding-top: 4rem; /* Increased from 3.5rem to account for navbar overlap */
         max-width: 100%;
       }
       
@@ -148,6 +148,19 @@
       
       body {
         font-size: 16px;
+      }
+    }
+    
+    /* Extra small screens need even more top padding */
+    @media (max-width: 480px) {
+      .article-content {
+        padding: 1rem;
+        padding-top: 3.5rem; /* Adjusted for smaller navbar height */
+      }
+      
+      h1 {
+        font-size: 24px;
+        margin: 1.5rem 0 0.75rem 0;
       }
     }
   </style>
@@ -196,23 +209,53 @@
     // Update copyright year
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
-    // Navbar hide/show on scroll behavior
+    // Navbar hide/show on scroll behavior - improved for mobile
     let lastScrollTop = 0;
+    let scrollTimeout;
     const navbar = document.querySelector('.slim-navbar');
+    const isMobile = window.innerWidth <= 700;
     
     window.addEventListener('scroll', function() {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      if (scrollTop > lastScrollTop && scrollTop > 100) {
-        // Scrolling down and past 100px - hide navbar
-        navbar.classList.add('hidden');
-      } else {
-        // Scrolling up - show navbar
-        navbar.classList.remove('hidden');
+      // Clear any existing timeout
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
       }
       
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+      // On mobile, be less aggressive with hiding and add debouncing
+      const scrollThreshold = isMobile ? 150 : 100;
+      const hideDelay = isMobile ? 300 : 0;
+      
+      function handleScroll() {
+        if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+          // Scrolling down and past threshold - hide navbar
+          navbar.classList.add('hidden');
+        } else if (scrollTop < lastScrollTop || scrollTop <= 50) {
+          // Scrolling up or near top - show navbar
+          navbar.classList.remove('hidden');
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      }
+      
+      if (hideDelay > 0) {
+        scrollTimeout = setTimeout(handleScroll, hideDelay);
+      } else {
+        handleScroll();
+      }
     });
+    
+    // Also show navbar when touch/scroll ends on mobile
+    if (isMobile) {
+      let scrollEndTimer;
+      window.addEventListener('scroll', function() {
+        clearTimeout(scrollEndTimer);
+        scrollEndTimer = setTimeout(function() {
+          navbar.classList.remove('hidden');
+        }, 1000);
+      });
+    }
   </script>
 </body>
 </html>
