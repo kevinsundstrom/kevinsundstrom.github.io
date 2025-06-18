@@ -49,6 +49,14 @@ function findExistingArticle(articleUrl) {
   // Clean up the URL - remove leading/trailing slashes and normalize
   let cleanUrl = articleUrl.trim().replace(/^\/+|\/+$/g, '');
   
+  // Handle full URLs (e.g., https://kevinsundstrom.com/articles/...)
+  if (cleanUrl.includes('kevinsundstrom.com/')) {
+    cleanUrl = cleanUrl.split('kevinsundstrom.com/')[1];
+    if (cleanUrl) {
+      cleanUrl = cleanUrl.replace(/^\/+|\/+$/g, '');
+    }
+  }
+  
   // If it's just a slug, we need to search for it
   if (!cleanUrl.includes('/')) {
     // It's just a slug, search all articles
