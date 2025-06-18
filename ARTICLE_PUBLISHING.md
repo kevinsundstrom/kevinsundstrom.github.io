@@ -1,13 +1,13 @@
 # Article Publishing Automation
 
-This repository includes a GitHub Actions workflow that automatically publishes articles from GitHub issues using the article issue template.
+This repository includes a GitHub Actions workflow that automatically publishes and edits articles from GitHub issues using the article issue templates.
 
 ## How It Works
 
-1. **Create an Issue**: Use the "Publish Article" issue template to submit a new article
+1. **Create an Issue**: Use the "Publish Article" issue template to submit a new article OR use the "Edit Article" template to update an existing one
 2. **Automatic Processing**: GitHub Actions will automatically:
    - Parse the issue content and metadata
-   - Generate a properly formatted HTML article page
+   - Generate a properly formatted HTML article page (for new articles) or update an existing one (for edits)
    - Create the necessary directory structure
    - Update the articles index pages
    - Commit and push the changes to the repository
@@ -104,15 +104,17 @@ The workflow (`.github/workflows/publish-article.yml`) triggers on:
 - Issue creation (`opened`)
 - Issue editing (`edited`)
 
-It only processes issues with the "article" label.
+It processes issues with either the "article" label (for new articles) or "article-edit" label (for editing existing articles).
 
 ### Scripts
 
-Three main scripts handle the automation:
+Four main scripts handle the automation:
 
-1. **parse-issue.js**: Parses the GitHub issue template format and extracts article data
-2. **generate-article.js**: Creates the HTML article file with proper structure and SEO
-3. **update-indexes.js**: Updates the main articles index and category pages
+1. **parse-issue.js**: Parses the GitHub issue template format and extracts article data for new articles
+2. **parse-edit-issue.js**: Parses edit requests and extracts changes for existing articles
+3. **generate-article.js**: Creates the HTML article file with proper structure and SEO for new articles
+4. **update-article.js**: Updates existing articles with new content and metadata
+5. **update-indexes.js**: Updates the main articles index and category pages
 
 ### Dependencies
 
@@ -142,7 +144,40 @@ The workflow uses Node.js with these packages:
 
 ## Manual Editing
 
-After publication, articles can be manually edited by:
+### Easy Article Editing via GitHub Issues
+
+The easiest way to edit published articles is using the "Edit Article" issue template:
+
+1. Go to the GitHub repository's Issues tab
+2. Click "New issue"
+3. Select the "Edit Article" template
+4. Fill in the required fields:
+   - **Article URL** (required): The URL path or just the slug of the article you want to edit
+     - Full URL: `/articles/content-strategy/article-title/`
+     - Just the slug: `article-title`
+     - You can find this from the article's web URL or by browsing the `/articles/` directory structure
+5. Fill in only the fields you want to change:
+   - **New Article Title**: Update the main title
+   - **New Article Content**: Replace the entire article content with new Markdown
+   - **New Author Name**: Change the author
+   - **New SEO Title, Description, Keywords**: Update SEO metadata
+   - **New Category**: Move the article to a different category
+   - **Edit Notes**: Describe what changes you're making
+
+6. Make sure the issue has the "article-edit" label
+7. Submit the issue
+
+The system will automatically:
+- Find the existing article
+- Update only the fields you specified
+- Preserve all existing metadata for unchanged fields
+- Handle URL changes if the title or category changes
+- Update article indexes
+- Comment back with the updated article URL
+
+### Advanced Manual Editing
+
+After publication, articles can also be manually edited by:
 1. Navigating to the generated HTML file
 2. Making changes directly in the repository
 3. Committing the changes

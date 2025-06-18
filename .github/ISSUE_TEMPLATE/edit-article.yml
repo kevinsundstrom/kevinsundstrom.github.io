@@ -1,0 +1,99 @@
+name: "Edit Article"
+description: "Template for editing existing published articles. Identify the article by URL and provide the new content."
+title: "[Edit] <Enter Article Title or URL Here>"
+labels: ["article-edit", "content-update"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Instructions:**
+        - Use this template to edit existing published articles on the website.
+        - Provide the article URL to identify which article to update.
+        - Fill in the fields you want to change. Leave blank to keep existing values.
+        - All fields except Article URL are optional - only changed fields will be updated.
+        
+  - type: input
+    id: article-url
+    attributes:
+      label: "Article URL"
+      description: "The URL or path of the article you want to edit (e.g., /articles/content-strategy/article-title/ or just the slug)"
+      placeholder: "e.g., /articles/content-strategy/content-strategy-is-collaboration-not-control/ or content-strategy-is-collaboration-not-control"
+    validations:
+      required: true
+      
+  - type: input
+    id: new-title
+    attributes:
+      label: "New Article Title (Optional)"
+      description: "Enter a new title for the article. Leave blank to keep existing title."
+      placeholder: "e.g. Updated Article Title"
+    validations:
+      required: false
+      
+  - type: textarea
+    id: new-content
+    attributes:
+      label: "New Article Content (Optional)"
+      description: "Paste the updated article content here in Markdown format. Leave blank to keep existing content."
+      placeholder: "Updated article content in Markdown..."
+    validations:
+      required: false
+      
+  - type: input
+    id: new-author
+    attributes:
+      label: "New Author Name (Optional)"
+      description: "Enter a new author name. Leave blank to keep existing author."
+      placeholder: "e.g. Kevin Sundstrom"
+    validations:
+      required: false
+      
+  - type: input
+    id: new-seo-title
+    attributes:
+      label: "New SEO Title (Optional)"
+      description: "Enter a new SEO-friendly title. Leave blank to keep existing or use new article title."
+      placeholder: "e.g. Updated SEO Title"
+    validations:
+      required: false
+      
+  - type: input
+    id: new-seo-description
+    attributes:
+      label: "New SEO Description (Optional)"
+      description: "Enter a new SEO description (max 160 characters). Leave blank to keep existing."
+      placeholder: "A brief updated summary for search engines."
+    validations:
+      required: false
+      
+  - type: input
+    id: new-seo-keywords
+    attributes:
+      label: "New SEO Keywords (Optional)"
+      description: "Comma-separated keywords for SEO. Leave blank to keep existing."
+      placeholder: "updated, keywords, content"
+    validations:
+      required: false
+      
+  - type: dropdown
+    id: new-category
+    attributes:
+      label: "New Category/Topic (Optional)"
+      description: "Select a new category for this article. Leave blank to keep existing category."
+      options:
+        - ""
+        - "Content Strategy"
+        - "Marketing" 
+        - "AI"
+        - "Other"
+    validations:
+      required: false
+      
+  - type: textarea
+    id: edit-notes
+    attributes:
+      label: "Edit Notes (Optional)"
+      description: "Describe what changes you're making and why. This helps track the edit history."
+      placeholder: "e.g., Updated content to reflect new insights, fixed typos, added new section on..."
+    validations:
+      required: false

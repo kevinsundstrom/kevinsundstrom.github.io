@@ -1,4 +1,4 @@
-name: Publish Article from Issue
+name: Publish or Edit Article from Issue
 
 on:
   issues:
@@ -7,7 +7,7 @@ on:
 jobs:
   publish-article:
     runs-on: ubuntu-latest
-    if: contains(github.event.issue.labels.*.name, 'article')
+    if: contains(github.event.issue.labels.*.name, 'article') || contains(github.event.issue.labels.*.name, 'article-edit')
     permissions:
       contents: write
       issues: write
@@ -26,23 +26,38 @@ jobs:
     - name: Install dependencies
       run: npm install
         
-    - name: Parse issue and generate article
+    - name: Parse issue and generate article data
       id: parse-issue
       run: |
-        node .github/scripts/parse-issue.js
+        # Check if this is an edit request
+        if echo "${{ github.event.issue.labels.*.name }}" | grep -q "article-edit"; then
+          echo "Processing article edit request"
+          node .github/scripts/parse-edit-issue.js
+        else
+          echo "Processing new article request"
+          node .github/scripts/parse-issue.js
+        fi
       env:
         ISSUE_BODY: ${{ github.event.issue.body }}
         ISSUE_TITLE: ${{ github.event.issue.title }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
         
-    - name: Generate article files
+    - name: Generate or update article files
       run: |
-        node .github/scripts/generate-article.js
+        # Check if this is an edit request
+        if echo "${{ github.event.issue.labels.*.name }}" | grep -q "article-edit"; then
+          echo "Updating existing article"
+          node .github/scripts/update-article.js
+        else
+          echo "Generating new article"
+          node .github/scripts/generate-article.js
+        fi
       env:
         ARTICLE_DATA: ${{ steps.parse-issue.outputs.article-data }}
         
     - name: Update article indexes
       run: |
+        # Always update indexes after article changes (both new and edited)
         node .github/scripts/update-indexes.js
       env:
         ARTICLE_DATA: ${{ steps.parse-issue.outputs.article-data }}
@@ -55,7 +70,12 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
-          git commit -m "Publish article from issue #${{ github.event.issue.number }}"
+          # Check if this is an edit request
+          if echo "${{ github.event.issue.labels.*.name }}" | grep -q "article-edit"; then
+            git commit -m "Update article from issue #${{ github.event.issue.number }}"
+          else
+            git commit -m "Publish article from issue #${{ github.event.issue.number }}"
+          fi
           git push
         fi
         
@@ -64,12 +84,22 @@ jobs:
       with:
         script: |
           const articleData = JSON.parse(process.env.ARTICLE_DATA);
-          const comment = `✅ Article published successfully!
+          const isEdit = "${{ github.event.issue.labels.*.name }}".includes("article-edit");
           
-          **Article URL:** https://kevinsundstrom.com${articleData.url}
-          **Category:** ${articleData.category}
-          
-          The article has been automatically generated and published to the website.`;
+          const comment = isEdit ? 
+            `✅ Article updated successfully!
+            
+            **Article URL:** https://kevinsundstrom.com${articleData.url}
+            **Category:** ${articleData.category || 'General'}
+            ${articleData.editNotes ? `**Edit Notes:** ${articleData.editNotes}` : ''}
+            
+            The article has been automatically updated and republished to the website.` :
+            `✅ Article published successfully!
+            
+            **Article URL:** https://kevinsundstrom.com${articleData.url}
+            **Category:** ${articleData.category}
+            
+            The article has been automatically generated and published to the website.`;
           
           github.rest.issues.createComment({
             issue_number: context.issue.number,
