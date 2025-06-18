@@ -137,6 +137,26 @@ The workflow uses Node.js with these packages:
 - Verify the issue template format is correct
 - Check the GitHub Actions tab to see if the workflow ran at all
 
+#### Debugging Unlabeled Issues
+
+If an issue should have been auto-labeled but wasn't, you can run the diagnostic script:
+
+```bash
+node .github/scripts/check-article-labels.js
+```
+
+This script will:
+- Test the auto-labeling detection logic
+- Show exactly why an issue was or wasn't detected
+- Provide manual steps to fix missing labels
+- Help diagnose issues like #66 where auto-labeling failed
+
+**Manual Fix Steps:**
+1. Go to the issue page on GitHub
+2. Click the gear icon next to "Labels" 
+3. Add the "article-edit" label (for edits) or "article" label (for new articles)
+4. The workflow will automatically run once the label is added
+
 ### Article Not Found (Edit Requests)
 
 - Verify the article URL is correct

@@ -19,17 +19,28 @@ jobs:
           const title = issue.title.toLowerCase();
           const body = issue.body || '';
           
+          console.log(`🔍 Checking issue #${issue.number}: ${issue.title}`);
+          console.log(`Title (lowercase): ${title}`);
+          console.log(`Body contains '### Article URL': ${body.includes('### Article URL')}`);
+          console.log(`Body contains '### Article Title': ${body.includes('### Article Title')}`);
+          
           // Check if this looks like an article issue but lacks proper labels
           const hasArticleLabel = issue.labels.some(label => 
             label.name === 'article' || label.name === 'article-edit'
           );
           
+          console.log(`Current labels: ${issue.labels.map(l => l.name).join(', ') || 'none'}`);
+          console.log(`Has article label: ${hasArticleLabel}`);
+          
           // Check for article-related patterns
           const isArticleIssue = title.includes('[article]') || body.includes('### Article Title');
           const isEditIssue = title.includes('[edit]') || body.includes('### Article URL');
           
+          console.log(`isArticleIssue: ${isArticleIssue}`);
+          console.log(`isEditIssue: ${isEditIssue}`);
+          
           if (!hasArticleLabel && (isArticleIssue || isEditIssue)) {
-            console.log('Found unlabeled article issue:', issue.number);
+            console.log('✅ Found unlabeled article issue:', issue.number);
             
             // Determine which label to add
             const labelToAdd = isEditIssue ? 'article-edit' : 'article';
