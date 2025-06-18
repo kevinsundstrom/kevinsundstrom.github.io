@@ -29,12 +29,44 @@ jobs:
     - name: Parse issue and generate article data
       id: parse-issue
       run: |
-        # Check if this is an edit request
-        if echo "${{ github.event.issue.labels.*.name }}" | grep -q "article-edit"; then
-          echo "Processing article edit request"
+        # Check if this is an edit request - use multiple methods to be robust
+        LABELS="${{ github.event.issue.labels.*.name }}"
+        TITLE="${{ github.event.issue.title }}"
+        BODY="${{ github.event.issue.body }}"
+        
+        echo "Labels: $LABELS"
+        echo "Title: $TITLE"
+        echo "Checking for edit indicators..."
+        
+        # Method 1: Check labels for article-edit
+        EDIT_BY_LABEL=false
+        if echo "$LABELS" | grep -q "article-edit"; then
+          echo "✓ Found article-edit label"
+          EDIT_BY_LABEL=true
+        fi
+        
+        # Method 2: Check title for [Edit] prefix
+        EDIT_BY_TITLE=false
+        if echo "$TITLE" | grep -iq "^\[edit\]"; then
+          echo "✓ Found [Edit] in title"
+          EDIT_BY_TITLE=true
+        fi
+        
+        # Method 3: Check body for Article URL field (unique to edit template)
+        EDIT_BY_BODY=false
+        if echo "$BODY" | grep -q "### Article URL"; then
+          echo "✓ Found Article URL field in body"
+          EDIT_BY_BODY=true
+        fi
+        
+        # Determine if this is an edit (any method indicates edit)
+        if [ "$EDIT_BY_LABEL" = true ] || [ "$EDIT_BY_TITLE" = true ] || [ "$EDIT_BY_BODY" = true ]; then
+          echo "==> Processing as ARTICLE EDIT"
+          echo "is_edit=true" >> $GITHUB_OUTPUT
           node .github/scripts/parse-edit-issue.js
         else
-          echo "Processing new article request"
+          echo "==> Processing as NEW ARTICLE"
+          echo "is_edit=false" >> $GITHUB_OUTPUT
           node .github/scripts/parse-issue.js
         fi
       env:
@@ -44,8 +76,8 @@ jobs:
         
     - name: Generate or update article files
       run: |
-        # Check if this is an edit request
-        if echo "${{ github.event.issue.labels.*.name }}" | grep -q "article-edit"; then
+        # Use the is_edit output from the previous step for consistency
+        if [ "${{ steps.parse-issue.outputs.is_edit }}" = "true" ]; then
           echo "Updating existing article"
           node .github/scripts/update-article.js
         else
@@ -70,8 +102,8 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
-          # Check if this is an edit request
-          if echo "${{ github.event.issue.labels.*.name }}" | grep -q "article-edit"; then
+          # Use the is_edit output for consistent commit messages
+          if [ "${{ steps.parse-issue.outputs.is_edit }}" = "true" ]; then
             git commit -m "Update article from issue #${{ github.event.issue.number }}"
           else
             git commit -m "Publish article from issue #${{ github.event.issue.number }}"
@@ -84,7 +116,7 @@ jobs:
       with:
         script: |
           const articleData = JSON.parse(process.env.ARTICLE_DATA);
-          const isEdit = "${{ github.event.issue.labels.*.name }}".includes("article-edit");
+          const isEdit = "${{ steps.parse-issue.outputs.is_edit }}" === "true";
           
           const comment = isEdit ? 
             `✅ Article updated successfully!

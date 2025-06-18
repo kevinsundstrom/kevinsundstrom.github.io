@@ -168,6 +168,7 @@ node .github/scripts/analyze-article-edit.js <issue-number>
 Example:
 ```bash
 node .github/scripts/analyze-article-edit.js 66
+node .github/scripts/analyze-article-edit.js 71
 ```
 
 This tool will:
@@ -175,6 +176,7 @@ This tool will:
 - Identify if the edit was applied successfully
 - Detect any additional content beyond what was requested
 - Help diagnose content replacement issues
+- For issue #71: Analyze whether automation incorrectly created new content vs editing existing
 
 ### Article Not Found (Edit Requests)
 
