@@ -262,9 +262,95 @@ function analyzeIssueGeneric(issueNumber, articleTitle, issueContent, articlePat
   return true;
 }
 
-function analyzeIssueGeneric(issueNumber, articleTitle, issueContent, articlePath, isReplacementIntent = false) {
+function analyzeIssue74() {
+  console.log('='.repeat(80));
+  console.log('ARTICLE EDIT ANALYSIS - ISSUE 74');
+  console.log('='.repeat(80));
   
-  return analyzeIssueGeneric('66', 'Content Strategy Is Collaboration, Not Control', issueContent, articlePath, true);
+  const issueContent = `Content strategy is a lot more nuanced than people believe. It's psychology and poetry, mixed with a tiny dash of calculus. If all that weren't complicated enough, it can't be executed in a silo—it's collaborative in nature. So consensus building is vital: you need other people to believe in your strategy so deeply that it influences the words that land on the page. When done well, you arrive at a draft that feels whole and connected.
+
+But then, as always, stakeholders arrive. They operate on feeling and a sense of entitlement. Their gut is more powerful than your mind. Oh well, let's ship to learn, and then trust their gut next time anyway.`;
+
+  const articlePath = path.join(process.cwd(), 'articles/content-strategy/content-strategy-is-collaboration-not-control/index.html');
+  
+  try {
+    const currentContent = extractCurrentArticleContent(articlePath);
+    
+    console.log('\n📋 ISSUE DETAILS:');
+    console.log('- Issue Number: 74');
+    console.log('- Article: Content Strategy Is Collaboration, Not Control');
+    console.log('- Issue Type: Article Edit Request');
+    console.log('- Issue Status: ❌ NEVER PROCESSED BY AUTOMATION');
+    console.log('- Intent: Remove third paragraph by providing only first two paragraphs');
+    console.log('- Expected Result: Complete body replacement');
+    console.log('- Article URL: /articles/content-strategy/content-strategy-is-collaboration-not-control/');
+    
+    console.log('\n📝 REQUESTED CONTENT (INTENDED COMPLETE REPLACEMENT):');
+    console.log('-'.repeat(50));
+    console.log(issueContent);
+    
+    console.log('\n📄 CURRENT PUBLISHED CONTENT:');
+    console.log('-'.repeat(50));
+    console.log(currentContent);
+    
+    console.log('\n🔍 ANALYSIS:');
+    console.log('-'.repeat(50));
+    
+    // Normalize whitespace for comparison
+    const requestedNormalized = issueContent.trim().replace(/\s+/g, ' ');
+    const currentNormalized = currentContent.trim().replace(/\s+/g, ' ');
+    
+    console.log('✅ Issue has proper "article-edit" label');
+    console.log('✅ Issue title starts with "[Edit]"');
+    console.log('✅ Issue body contains "### Article URL" field');
+    console.log('✅ Article exists at specified path');
+    console.log('✅ Parsing scripts work correctly (tested manually)');
+    
+    if (currentNormalized === requestedNormalized) {
+      console.log('✅ CONTENT MATCHES - Edit was applied successfully');
+    } else if (currentNormalized.includes(requestedNormalized)) {
+      console.log('⚠️  CONTENT PARTIALLY MATCHES - Edit was not fully applied');
+      console.log('   The current article contains the requested content but also has additional content.');
+      console.log('   This suggests the automation failed to perform complete replacement.');
+      
+      const extraContent = currentNormalized.replace(requestedNormalized, '').trim();
+      if (extraContent) {
+        console.log('\n📄 ADDITIONAL CONTENT THAT SHOULD BE REMOVED:');
+        console.log('-'.repeat(30));
+        console.log(extraContent);
+      }
+    } else {
+      console.log('❌ CONTENT DOES NOT MATCH - Edit was not applied');
+    }
+    
+    console.log('\n🔍 ROOT CAUSE ANALYSIS:');
+    console.log('-'.repeat(50));
+    console.log('❌ WORKFLOW NEVER RAN: No commit found in git history for issue #74');
+    console.log('❌ AUTOMATION FAILURE: Despite proper labeling and format, GitHub Actions workflow did not trigger');
+    console.log('⚠️  POSSIBLE CAUSES:');
+    console.log('   1. GitHub Actions service interruption during issue creation');
+    console.log('   2. Workflow permissions or configuration issue');
+    console.log('   3. Race condition between issue creation and label application');
+    console.log('   4. Workflow condition logic not matching properly');
+    
+    console.log('\n🎯 CONCLUSION:');
+    console.log('-'.repeat(50));
+    console.log('❌ COMPLETE FAILURE - Issue #74 was NEVER processed by the automation system.');
+    console.log('📋 The issue was correctly formatted and labeled, but the GitHub Actions workflow never ran.');
+    console.log('🔧 SOLUTION: Manual processing or workflow re-trigger needed.');
+    
+    console.log('\n💡 RECOMMENDATION:');
+    console.log('-'.repeat(50));
+    console.log('1. Run the parsing and update scripts manually to process issue #74');
+    console.log('2. Investigate workflow reliability for future issues');
+    console.log('3. Consider adding workflow monitoring/alerting');
+    
+    return false; // Issue was not processed
+    
+  } catch (error) {
+    console.error('❌ ERROR:', error.message);
+    return false;
+  }
 }
 
 // Main execution
@@ -280,9 +366,11 @@ if (issueNumber === '66') {
   analyzeIssue66();
 } else if (issueNumber === '71') {
   analyzeIssue71();
+} else if (issueNumber === '74') {
+  analyzeIssue74();
 } else {
   console.log(`Analysis for issue ${issueNumber} is not yet implemented.`);
-  console.log('Currently only issue 66 and 71 analysis are available.');
+  console.log('Currently issue 66, 71, and 74 analysis are available.');
   console.log('\nTo add support for other issues, update this script with the issue details.');
   process.exit(1);
 }

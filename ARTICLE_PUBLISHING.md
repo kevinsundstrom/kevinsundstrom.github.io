@@ -136,6 +136,23 @@ The workflow uses Node.js with these packages:
   - Article edits: article URL is required
 - Verify the issue template format is correct
 - Check the GitHub Actions tab to see if the workflow ran at all
+- **Workflow Reliability Issues**: If properly labeled issues don't process (like issue #74), use the workflow reliability checker:
+
+```bash
+node .github/scripts/workflow-reliability-checker.js
+```
+
+#### Manual Processing for Missed Issues
+
+If an issue was correctly formatted and labeled but never processed by automation (like issue #74):
+
+```bash
+# For issue #74 specifically:
+node .github/scripts/manual-process-issue-74.js
+
+# For other issues, use manual steps:
+node .github/scripts/workflow-reliability-checker.js  # Shows manual instructions
+```
 
 #### Debugging Unlabeled Issues
 
@@ -169,6 +186,7 @@ Example:
 ```bash
 node .github/scripts/analyze-article-edit.js 66
 node .github/scripts/analyze-article-edit.js 71
+node .github/scripts/analyze-article-edit.js 74
 ```
 
 This tool will:
@@ -177,6 +195,7 @@ This tool will:
 - Detect any additional content beyond what was requested
 - Help diagnose content replacement issues
 - For issue #71: Analyze whether automation incorrectly created new content vs editing existing
+- For issue #74: Analyze why the workflow never ran and confirm manual processing results
 
 ### Article Not Found (Edit Requests)
 
