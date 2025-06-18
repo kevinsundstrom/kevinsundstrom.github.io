@@ -157,6 +157,25 @@ This script will:
 3. Add the "article-edit" label (for edits) or "article" label (for new articles)
 4. The workflow will automatically run once the label is added
 
+#### Analyzing Article Edit Results
+
+To verify whether an article edit issue was processed correctly, use the article edit analysis tool:
+
+```bash
+node .github/scripts/analyze-article-edit.js <issue-number>
+```
+
+Example:
+```bash
+node .github/scripts/analyze-article-edit.js 66
+```
+
+This tool will:
+- Compare the content requested in the issue vs current published content
+- Identify if the edit was applied successfully
+- Detect any additional content beyond what was requested
+- Help diagnose content replacement issues
+
 ### Article Not Found (Edit Requests)
 
 - Verify the article URL is correct
