@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Issue 66 content as recorded in GitHub
+// IMPORTANT: Issue 66 was intended to REMOVE the third paragraph by providing only the first two paragraphs
+// The expectation was that the entire body element would be REPLACED with this content
 const issue66Content = `Content strategy is a lot more nuanced than people believe. It's psychology and poetry, mixed with a tiny dash of calculus. If all that weren't complicated enough, it can't be executed in a silo—it's collaborative in nature. So consensus building is vital: you need other people to believe in your strategy so deeply that it influences the words that land on the page. When done well, you arrive at a draft that feels whole and connected.
 
 But then, as always, stakeholders arrive. They operate on feeling and a sense of entitlement. Their gut is more powerful than your mind. Oh well, let's ship to learn, and then trust their gut next time anyway.`;
@@ -48,7 +50,7 @@ function compareContent() {
   
   const currentContent = extractCurrentArticleContent();
   
-  console.log('\n1. CONTENT REQUESTED IN ISSUE 66:');
+  console.log('\n1. CONTENT REQUESTED IN ISSUE 66 (INTENDED REPLACEMENT):');
   console.log('-'.repeat(50));
   console.log(issue66Content);
   
@@ -65,18 +67,21 @@ function compareContent() {
   
   if (currentNormalized === issue66Normalized) {
     console.log('✅ EXACT MATCH: Current content exactly matches issue 66 request');
+    console.log('✅ Issue 66 successfully replaced the article content as intended');
   } else if (currentNormalized.includes(issue66Normalized)) {
     console.log('⚠️  PARTIAL MATCH: Issue 66 content is present but there is additional content');
+    console.log('❌ Issue 66 FAILED to replace the entire article body as intended');
     
-    // Find the additional content
+    // Find the additional content that should have been removed
     const additionalContent = currentNormalized.replace(issue66Normalized, '').trim();
     if (additionalContent) {
-      console.log('\nADDITIONAL CONTENT FOUND:');
-      console.log('------------------------');
+      console.log('\nCONTENT THAT SHOULD HAVE BEEN REMOVED:');
+      console.log('--------------------------------------');
       console.log(additionalContent);
     }
   } else {
-    console.log('❌ NO MATCH: Current content does not match issue 66 request');
+    console.log('❌ NO MATCH: Current content does not match issue 66 request at all');
+    console.log('❌ Issue 66 completely failed to update the article');
     
     // Try to find common parts
     const issue66Lines = issue66Normalized.split('\n\n');
@@ -102,21 +107,20 @@ function compareContent() {
   const issue66NormalizedForCheck = issue66Content.trim().replace(/\s+/g, ' ');
   const currentNormalizedForCheck = currentContent.trim().replace(/\s+/g, ' ');
   
-  if (currentNormalizedForCheck.includes(issue66NormalizedForCheck)) {
-    console.log('✅ YES - Issue 66 DID change the article body text.');
-    console.log('The content specified in issue 66 is present in the current article.');
-    if (currentNormalizedForCheck !== issue66NormalizedForCheck) {
-      console.log('\n⚠️  However, there is additional content beyond what was specified in issue 66.');
-      console.log('This suggests either:');
-      console.log('  a) The automation preserved some original content that wasn\'t replaced');
-      console.log('  b) Additional content was added manually after issue 66 processing');  
-      console.log('  c) The edit was designed to add to existing content, not replace it entirely');
-    } else {
-      console.log('The content matches exactly what was requested in issue 66.');
-    }
+  if (currentNormalizedForCheck === issue66NormalizedForCheck) {
+    console.log('✅ YES - Issue 66 DID successfully change the article body text.');
+    console.log('The content was replaced exactly as intended (third paragraph removed).');
+  } else if (currentNormalizedForCheck.includes(issue66NormalizedForCheck)) {
+    console.log('❌ NO - Issue 66 FAILED to change the article body text as intended.');
+    console.log('Issue 66 was supposed to REMOVE content by replacing the entire body,');
+    console.log('but the current article still contains additional content that should have been removed.');
+    console.log('\n🔍 ISSUE 66 INTENT: Remove third paragraph by providing only first two paragraphs');
+    console.log('📋 EXPECTED RESULT: Article body contains only the two paragraphs from issue 66');
+    console.log('❗ ACTUAL RESULT: Article body contains issue 66 content PLUS additional content');
+    console.log('\n💡 CONCLUSION: The automation did not perform a complete replacement as intended.');
   } else {
-    console.log('❌ NO - Issue 66 may have attempted to change the article body text, but the current');
-    console.log('content does not match what was requested in the issue.');
+    console.log('❌ NO - Issue 66 did not change the article body text.');
+    console.log('The current content does not match what was requested in the issue.');
   }
   
   console.log('\n' + '='.repeat(80));

@@ -8,6 +8,10 @@
  * - What content changes were requested vs what's currently published
  * - If there are discrepancies between requested and actual changes
  * 
+ * IMPORTANT: Issue 66 is a special case - it was intended as a REMOVAL operation
+ * by providing only partial content, expecting complete replacement of the article body.
+ * This tool handles such replacement operations differently from additive edits.
+ * 
  * Usage: node analyze-article-edit.js <issue-number>
  */
 
@@ -68,10 +72,11 @@ But then, as always, stakeholders arrive. They operate on feeling and a sense of
     console.log('\n📋 ISSUE DETAILS:');
     console.log('- Issue Number: 66');
     console.log('- Article: Content Strategy Is Collaboration, Not Control');
-    console.log('- Type: Article Edit Request');
-    console.log('- Field Changed: Article Content');
+    console.log('- Type: Article Edit Request (REMOVAL via replacement)');
+    console.log('- Intent: Remove third paragraph by providing only first two paragraphs');
+    console.log('- Expected Result: Complete body replacement');
     
-    console.log('\n📝 REQUESTED CONTENT:');
+    console.log('\n📝 REQUESTED CONTENT (INTENDED COMPLETE REPLACEMENT):');
     console.log('-'.repeat(50));
     console.log(issueContent);
     
@@ -88,14 +93,16 @@ But then, as always, stakeholders arrive. They operate on feeling and a sense of
     
     if (currentNormalized === requestedNormalized) {
       console.log('✅ EXACT MATCH');
-      console.log('   The current content exactly matches what was requested in issue 66.');
+      console.log('   Issue 66 successfully replaced the entire article body as intended.');
+      console.log('   The third paragraph was successfully removed.');
     } else if (currentNormalized.includes(requestedNormalized)) {
       console.log('⚠️  PARTIAL MATCH + ADDITIONAL CONTENT');
-      console.log('   The requested content is present, but there is additional content.');
+      console.log('   ❌ Issue 66 FAILED to replace the entire article body as intended.');
+      console.log('   ❌ The third paragraph was NOT removed.');
       
       const additionalContent = currentNormalized.replace(requestedNormalized, '').trim();
       if (additionalContent) {
-        console.log('\n📄 ADDITIONAL CONTENT FOUND:');
+        console.log('\n📄 CONTENT THAT SHOULD HAVE BEEN REMOVED:');
         console.log('-'.repeat(30));
         // Convert back to readable format
         const readableAdditional = additionalContent.replace(/\s+/g, ' ').trim();
@@ -103,27 +110,26 @@ But then, as always, stakeholders arrive. They operate on feeling and a sense of
       }
     } else {
       console.log('❌ NO MATCH');
-      console.log('   The current content does not contain the requested content.');
+      console.log('   Issue 66 completely failed to update the article.');
     }
     
     console.log('\n🎯 CONCLUSION:');
     console.log('-'.repeat(50));
     
-    if (currentNormalized.includes(requestedNormalized)) {
-      console.log('✅ YES - Issue 66 DID change the article body text.');
-      console.log('   The content specified in issue 66 is present in the current article.');
-      
-      if (currentNormalized !== requestedNormalized) {
-        console.log('\n⚠️  ADDITIONAL FINDINGS:');
-        console.log('   • There is extra content beyond what was requested in issue 66');
-        console.log('   • This could indicate:');
-        console.log('     - Manual editing after automated processing');
-        console.log('     - Multiple edit requests processed');
-        console.log('     - Automation preserving existing content');
-      }
+    if (currentNormalized === requestedNormalized) {
+      console.log('✅ YES - Issue 66 DID successfully change the article body text.');
+      console.log('   The content was replaced exactly as intended (third paragraph removed).');
+    } else if (currentNormalized.includes(requestedNormalized)) {
+      console.log('❌ NO - Issue 66 FAILED to change the article body text as intended.');
+      console.log('   Issue 66 was supposed to REMOVE content by replacing the entire body,');
+      console.log('   but the current article still contains content that should have been removed.');
+      console.log('\n🔍 ISSUE 66 INTENT: Remove third paragraph by providing only first two paragraphs');
+      console.log('📋 EXPECTED RESULT: Article body contains only the two paragraphs from issue 66');
+      console.log('❗ ACTUAL RESULT: Article body contains issue 66 content PLUS additional content');
+      console.log('\n💡 CONCLUSION: The automation did not perform a complete replacement as intended.');
     } else {
-      console.log('❌ INCONCLUSIVE - The current content does not match the issue 66 request.');
-      console.log('   This could indicate the issue was not processed or there were errors.');
+      console.log('❌ NO - Issue 66 did not change the article body text.');
+      console.log('   The current content does not match what was requested in the issue.');
     }
     
   } catch (error) {
