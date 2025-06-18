@@ -175,6 +175,30 @@ The system will automatically:
 - Update article indexes
 - Comment back with the updated article URL
 
+#### Example Editing Scenarios
+
+**Simple Content Update:**
+- Article URL: `content-strategy-is-collaboration-not-control`
+- New Article Content: `[your updated markdown content]`
+- Edit Notes: `Updated content to include new insights`
+
+**Title and Author Change:**
+- Article URL: `/articles/marketing/marketing-article-title/`
+- New Article Title: `Updated Marketing Article Title`
+- New Author Name: `Jane Smith`
+- Edit Notes: `Updated title for clarity and corrected author`
+
+**SEO Optimization:**
+- Article URL: `ai-article-slug`
+- New SEO Description: `Improved description for better search visibility`
+- New SEO Keywords: `ai, machine learning, automation, content`
+- Edit Notes: `Optimized SEO metadata`
+
+**Category Move:**
+- Article URL: `/articles/general/article-title/`
+- New Category: `Content Strategy`
+- Edit Notes: `Moved to more appropriate category`
+
 ### Advanced Manual Editing
 
 After publication, articles can also be manually edited by:
