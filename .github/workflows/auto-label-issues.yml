@@ -1,0 +1,68 @@
+name: Auto-label Article Issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    
+    steps:
+    - name: Check and auto-label article issues
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const issue = context.payload.issue;
+          const title = issue.title.toLowerCase();
+          const body = issue.body || '';
+          
+          // Check if this looks like an article issue but lacks proper labels
+          const hasArticleLabel = issue.labels.some(label => 
+            label.name === 'article' || label.name === 'article-edit'
+          );
+          
+          // Check for article-related patterns
+          const isArticleIssue = title.includes('[article]') || body.includes('### Article Title');
+          const isEditIssue = title.includes('[edit]') || body.includes('### Article URL');
+          
+          if (!hasArticleLabel && (isArticleIssue || isEditIssue)) {
+            console.log('Found unlabeled article issue:', issue.number);
+            
+            // Determine which label to add
+            const labelToAdd = isEditIssue ? 'article-edit' : 'article';
+            const additionalLabel = isEditIssue ? 'content-update' : 'content-submission';
+            
+            // Add the appropriate labels
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: [labelToAdd, additionalLabel]
+            });
+            
+            // Comment on the issue to explain what happened
+            const comment = `🤖 **Auto-labeling applied**
+            
+I detected that this issue appears to be an ${isEditIssue ? 'article edit' : 'article creation'} request but was missing the required "${labelToAdd}" label.
+
+I've automatically added the "${labelToAdd}" label so the article automation workflow can process your request.
+
+${isEditIssue ? 
+  'Your article edit request will now be processed automatically.' : 
+  'Your article will now be published automatically.'
+}
+
+*If this was added incorrectly, please remove the label and the automation won't run.*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: comment
+            });
+            
+            console.log(`Added "${labelToAdd}" label to issue #${issue.number}`);
+          }

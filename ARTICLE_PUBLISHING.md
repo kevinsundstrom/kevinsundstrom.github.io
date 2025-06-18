@@ -126,9 +126,25 @@ The workflow uses Node.js with these packages:
 
 ### Issue Not Processing
 
-- Ensure the issue has the "article" label
-- Check that required fields (title and content) are filled
+- **Missing Labels**: Ensure the issue has the correct label:
+  - New articles: "article" label
+  - Article edits: "article-edit" label
+  - If you used the issue template, labels should be added automatically
+  - If missing, you can add them manually or the auto-labeling workflow will detect and fix it
+- Check that required fields are filled:
+  - New articles: title and content are required
+  - Article edits: article URL is required
 - Verify the issue template format is correct
+- Check the GitHub Actions tab to see if the workflow ran at all
+
+### Article Not Found (Edit Requests)
+
+- Verify the article URL is correct
+- Try using just the article slug instead of the full URL
+  - Full URL: `https://kevinsundstrom.com/articles/content-strategy/article-title/`
+  - Slug only: `article-title` 
+- Check that the article actually exists in the repository
+- Ensure the URL format matches the existing article structure
 
 ### Article Not Appearing
 
