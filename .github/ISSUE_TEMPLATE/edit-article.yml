@@ -10,7 +10,9 @@ body:
         - Use this template to edit existing published articles on the website.
         - Provide the article URL to identify which article to update.
         - Fill in the fields you want to change. Leave blank to keep existing values.
-        - All fields except Article URL are optional - only changed fields will be updated.
+        - **IMPORTANT**: The "New Article Content" field performs **COMPLETE REPLACEMENT** - it will replace the entire article body with whatever you provide.
+        - **To remove content**: Paste only the content you want to keep in the "New Article Content" field.
+        - **To add content**: You'll need to include all existing content plus your additions in the "New Article Content" field.
         
   - type: input
     id: article-url
@@ -34,8 +36,8 @@ body:
     id: new-content
     attributes:
       label: "New Article Content (Optional)"
-      description: "Paste the updated article content here in Markdown format. Leave blank to keep existing content."
-      placeholder: "Updated article content in Markdown..."
+      description: "⚠️ **COMPLETE REPLACEMENT**: Providing content here will REPLACE the entire article body. To remove content, paste only the content you want to keep. Leave blank to keep existing content unchanged."
+      placeholder: "Complete article content in Markdown (this will replace all existing content)..."
     validations:
       required: false
       
