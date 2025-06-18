@@ -213,7 +213,10 @@ The easiest way to edit published articles is using the "Edit Article" issue tem
      - You can find this from the article's web URL or by browsing the `/articles/` directory structure
 5. Fill in only the fields you want to change:
    - **New Article Title**: Update the main title
-   - **New Article Content**: Replace the entire article content with new Markdown
+   - **New Article Content**: ⚠️ **IMPORTANT**: This performs **complete content replacement**. Whatever you provide here will replace the entire article body.
+     - **To remove content**: Paste only the content you want to keep
+     - **To add content**: Include all existing content plus your additions
+     - **Leave blank**: To keep existing content unchanged
    - **New Author Name**: Change the author
    - **New SEO Title, Description, Keywords**: Update SEO metadata
    - **New Category**: Move the article to a different category
@@ -237,13 +240,18 @@ The system will automatically:
 - New Article Content: `[your updated markdown content]`
 - Edit Notes: `Updated content to include new insights`
 
+**Content Removal (removing paragraphs):**
+- Article URL: `article-slug`
+- New Article Content: `[paste only the content you want to keep - this removes everything else]`
+- Edit Notes: `Removed third paragraph as requested`
+
 **Title and Author Change:**
 - Article URL: `/articles/marketing/marketing-article-title/`
 - New Article Title: `Updated Marketing Article Title`
 - New Author Name: `Jane Smith`
 - Edit Notes: `Updated title for clarity and corrected author`
 
-**SEO Optimization:**
+**SEO Optimization (without changing content):**
 - Article URL: `ai-article-slug`
 - New SEO Description: `Improved description for better search visibility`
 - New SEO Keywords: `ai, machine learning, automation, content`
