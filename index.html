@@ -58,18 +58,20 @@
     .search-bar {
       padding: 0.75rem 1.25rem;
       font-size: 0.95rem;
-      border: 1.5px solid #e1e1e1;
+      border: 1.5px solid var(--border-light);
       border-radius: 8px;
       width: 100%;
       outline: none;
       transition: all 0.2s ease;
       font-family: inherit;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
     }
     
     .search-bar:focus {
-      border: 1.5px solid #1a1a1a;
+      border: 1.5px solid var(--text-primary);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px var(--shadow-medium);
     }
     
     .suggested-terms {
@@ -84,8 +86,8 @@
     .suggested-terms button {
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
-      background-color: rgba(0, 0, 0, 0.05);
-      color: #1a1a1a;
+      background-color: var(--accent-hover);
+      color: var(--text-primary);
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -95,7 +97,7 @@
     }
     
     .suggested-terms button:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: var(--accent-hover-strong);
       transform: translateY(-1px);
     }
     
@@ -104,9 +106,10 @@
       margin-bottom: 2rem;
       text-align: center;
       font-weight: 700;
-      color: #1a1a1a;
+      color: var(--text-primary);
       letter-spacing: -0.02em;
       line-height: 1.2;
+      transition: color 0.3s ease;
     }
     
     /* @media (max-width: 700px) {
@@ -144,7 +147,12 @@
       <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
       <a href="/articles/" class="nav-link" aria-label="Articles">Articles</a>
     </div>
-    <span class="nav-name">Kevin Sundstrom</span>
+    <div style="display: flex; align-items: center;">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <span class="nav-name">Kevin Sundstrom</span>
+    </div>
   </nav>
   <div class="navbar-spacer"></div>
   
@@ -175,6 +183,45 @@
   </footer>
   
   <script>
+    // Theme Management
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const root = document.documentElement;
+    
+    // Check for saved theme preference or default to system preference
+    function getPreferredTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        return savedTheme;
+      }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    
+    // Set theme
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+    }
+    
+    // Initialize theme
+    setTheme(getPreferredTheme());
+    
+    // Theme toggle event listener
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = root.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+    
+    // Listen for system preference changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+    
     // Update copyright year
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
