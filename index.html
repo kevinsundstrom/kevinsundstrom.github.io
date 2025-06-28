@@ -182,46 +182,8 @@
     <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
   </footer>
   
+  <script src="theme.js"></script>
   <script>
-    // Theme Management
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const root = document.documentElement;
-    
-    // Check for saved theme preference or default to system preference
-    function getPreferredTheme() {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        return savedTheme;
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    
-    // Set theme
-    function setTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-      themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
-    }
-    
-    // Initialize theme
-    setTheme(getPreferredTheme());
-    
-    // Theme toggle event listener
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = root.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      setTheme(newTheme);
-    });
-    
-    // Listen for system preference changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
-    });
-    
     // Update copyright year
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
