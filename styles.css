@@ -1,5 +1,8 @@
 /* Kevin Sundstrom Website - Shared Styles */
 
+/* Optional modern font (falls back to system if blocked) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 /* CSS Custom Properties for Theme Support */
 :root {
   /* Light theme colors (default) */
@@ -14,8 +17,20 @@
   --shadow-light: rgba(0, 0, 0, 0.03);
   --shadow-medium: rgba(0, 0, 0, 0.1);
   --shadow-strong: rgba(0, 0, 0, 0.15);
-  --accent-hover: rgba(0, 0, 0, 0.05);
-  --accent-hover-strong: rgba(0, 0, 0, 0.1);
+  --accent-hover: rgba(0, 0, 0, 0.035);
+  --accent-hover-strong: rgba(0, 0, 0, 0.08);
+
+  /* Brand + motion tokens */
+  --brand: #4f46e5;
+  --brand-700: #4338ca;
+  --ring: color-mix(in oklab, var(--brand) 35%, transparent);
+  --transition-fast: 150ms ease;
+  --transition-med: 200ms ease;
+  /* Gradient accents */
+  --brand-gradient: linear-gradient(90deg, #4f46e5 0%, #22d3ee 50%, #10b981 100%);
+  --brand-spotlight: radial-gradient(600px 300px at 20% 10%, color-mix(in oklab, var(--brand) 25%, transparent) 0%, transparent 60%),
+                     radial-gradient(500px 250px at 80% 20%, color-mix(in oklab, #22d3ee 20%, transparent) 0%, transparent 60%),
+                     radial-gradient(600px 300px at 50% 80%, color-mix(in oklab, #10b981 18%, transparent) 0%, transparent 60%);
 }
 
 /* Dark theme colors */
@@ -31,8 +46,9 @@
   --shadow-light: rgba(0, 0, 0, 0.2);
   --shadow-medium: rgba(0, 0, 0, 0.3);
   --shadow-strong: rgba(0, 0, 0, 0.4);
-  --accent-hover: rgba(255, 255, 255, 0.1);
-  --accent-hover-strong: rgba(255, 255, 255, 0.15);
+  --accent-hover: rgba(255, 255, 255, 0.08);
+  --accent-hover-strong: rgba(255, 255, 255, 0.12);
+  --ring: color-mix(in oklab, var(--brand) 55%, transparent);
 }
 
 /* Respect user's system preference */
@@ -56,7 +72,7 @@
 
 /* Base styles */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   margin: 0;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -64,6 +80,56 @@ body {
   font-size: 16px;
   line-height: 1.6;
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Global layering: keep UI above decorative bg */
+.main-content, main, header, footer, nav { position: relative; z-index: 1; }
+
+/* Decorative background overlay */
+.bg-accent {
+  position: fixed;
+  top: 56px; /* Start below nav area to avoid weird tint behind controls */
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: var(--brand-spotlight);
+  filter: blur(30px) saturate(120%);
+  opacity: 0.55;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .bg-accent { opacity: 0.35; filter: blur(40px) saturate(110%); }
+}
+
+/* Mobile adjustment: nav is shorter, reduce top offset */
+@media (max-width: 700px) {
+  .bg-accent { top: 48px; }
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Scroll progress bar */
+#scrollProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: var(--brand-gradient);
+  box-shadow: 0 1px 4px var(--shadow-strong);
+  z-index: 2000;
 }
 
 /* Slim navbar - consistent across all pages */
@@ -96,16 +162,15 @@ body {
   font-size: 0.95rem;
   margin-right: 0.25rem;
   box-shadow: none;
-  transition: all 0.2s ease;
+  transition: color var(--transition-med), background var(--transition-med), transform var(--transition-fast), border-color var(--transition-med);
   font-weight: 500;
 }
 
-.slim-navbar .nav-link:hover, 
+.slim-navbar .nav-link:hover,
 .slim-navbar .nav-link:focus {
   background: var(--accent-hover);
   color: var(--text-primary);
   outline: none;
-  transform: translateY(-1px);
 }
 
 .nav-name {
@@ -131,7 +196,7 @@ body {
   border-radius: 8px;
   margin-left: 0.5rem;
   color: var(--text-primary);
-  transition: all 0.2s ease;
+  transition: background var(--transition-med), transform var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,7 +205,7 @@ body {
 }
 
 .theme-toggle:hover {
-  background: var(--accent-hover);
+  background: transparent;
   transform: translateY(-1px);
 }
 
@@ -171,12 +236,12 @@ body {
 .btn-primary {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: var(--brand);
+  color: #fff;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: background var(--transition-med), transform var(--transition-fast), box-shadow var(--transition-med);
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -186,7 +251,7 @@ body {
 
 .btn-primary:hover, 
 .btn-primary:focus {
-  background: var(--text-secondary);
+  background: var(--brand-700);
   outline: none;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px var(--shadow-strong);
@@ -204,7 +269,7 @@ input, textarea {
   background: var(--bg-secondary);
   color: var(--text-primary);
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: border-color var(--transition-med), box-shadow var(--transition-med), transform var(--transition-fast);
 }
 
 textarea {
@@ -214,15 +279,15 @@ textarea {
 }
 
 input:focus, textarea:focus {
-  border: 1.5px solid var(--text-primary);
+  border: 1.5px solid var(--brand);
   outline: none;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--shadow-medium);
+  box-shadow: 0 0 0 4px var(--ring), 0 4px 12px var(--shadow-medium);
 }
 
 /* Typography */
 h1 {
-  font-size: 2.25rem;
+  font-size: 2.4rem;
   color: var(--text-primary);
   margin-bottom: 1.5rem;
   line-height: 1.2;
@@ -269,6 +334,13 @@ p {
   color: var(--text-secondary);
   transition: color 0.3s ease;
 }
+
+/* Subtle link enhancement */
+a { color: inherit; }
+a:hover { color: var(--brand); }
+
+/* Selection color */
+::selection { background: color-mix(in oklab, var(--brand) 35%, transparent); color: #fff; }
 
 /* Optimized images for performance */
 img {
@@ -344,7 +416,7 @@ img {
 
 /* Focus improvements for accessibility */
 :focus-visible {
-  outline: 2px solid var(--text-primary);
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 
@@ -357,7 +429,7 @@ img {
   font-size: 0.875rem;
   color: var(--text-tertiary);
   background: transparent;
-  border-top: none;
+  border-top: 1px solid var(--border-light);
   margin-top: auto;
   width: 100%;
   box-sizing: border-box;
@@ -388,7 +460,7 @@ img {
     background: var(--bg-primary) !important; /* Remove any blue on mobile top/bottom */
   }
   .site-footer {
-    background: var(--bg-primary) !important; /* Remove any blue on mobile footer */
+  background: var(--bg-primary) !important; /* Ensure footer matches bg */
   }
   
   .site-footer {
@@ -397,4 +469,28 @@ img {
     gap: 0.5rem;
     padding: 1rem;
   }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Article callouts */
+blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid color-mix(in oklab, var(--brand) 45%, transparent);
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--brand) 6%, transparent) 0%,
+    transparent 60%
+  );
+  border-radius: 8px;
+  color: var(--text-secondary);
 }

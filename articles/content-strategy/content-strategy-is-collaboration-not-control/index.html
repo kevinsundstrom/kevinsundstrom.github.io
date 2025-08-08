@@ -62,8 +62,8 @@
       font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
       font-size: 18px;
       line-height: 1.6;
-      color: #2a2a2a;
-      background: #fafafa;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -85,22 +85,20 @@
     }
     
     .category-topic {
-      color: #6a6a6a;
+      color: var(--text-tertiary);
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.25px;
+      display: inline-block;
+      border: 1.5px solid var(--border-light);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
     }
     
-    .category-topic a {
-      color: #1a1a1a;
-      text-decoration: none;
-    }
+  .category-topic a { color: var(--text-primary); text-decoration: none; }
     
-    .category-topic a:hover {
-      text-decoration: underline;
-    }
+  .category-topic a:hover { text-decoration: underline; }
     
     h1 {
       font-size: 36px;
@@ -108,7 +106,7 @@
       text-align: left;
       margin: 1rem 0;
       line-height: 1.2;
-      color: #1a1a1a;
+      color: var(--text-primary);
       font-family: 'Merriweather', Georgia, serif;
     }
     
@@ -117,7 +115,7 @@
       font-weight: 700;
       margin: 2rem 0 1rem 0;
       line-height: 1.3;
-      color: #333333;
+      color: var(--text-primary);
     }
     
     h3 {
@@ -125,16 +123,13 @@
       font-weight: 700;
       margin: 2rem 0 1rem 0;
       line-height: 1.3;
-      color: #333333;
+      color: var(--text-primary);
     }
     
-    p {
-      margin-bottom: 1.5rem;
-      color: #444444;
-    }
+  p { margin-bottom: 1.5rem; color: var(--text-secondary); }
     
     .meta {
-      color: #666;
+      color: var(--text-tertiary);
       font-size: 16px;
       text-align: left;
       margin-bottom: 3rem;
@@ -162,7 +157,7 @@
     .slim-navbar,
     .slim-navbar .nav-link,
     .slim-navbar .nav-name {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
     }
     
     /* Navbar hiding behavior */
@@ -200,6 +195,8 @@
   </style>
 </head>
 <body>
+  <div class="bg-accent" aria-hidden="true"></div>
+  <div id="scrollProgress" aria-hidden="true"></div>
   <nav class="slim-navbar">
     <div style="display: flex; gap: 0.5rem;">
       <a href="/" class="nav-link" aria-label="Home">Home</a>
@@ -218,7 +215,7 @@
       <div class="category-topic">
         <a href="/articles/general/">Content Strategy</a>
       </div>
-      <h1>Content Strategy Is Collaboration, Not Control</h1>
+  <h1 class="gradient-text">Content Strategy Is Collaboration, Not Control</h1>
       <div class="meta">By Kevin Sundstrom | June 10, 2025</div>
       <p>Content strategy is a lot more nuanced than people believe. It's psychology and poetry, mixed with a tiny dash of calculus. If all that weren't complicated enough, it can't be executed in a silo—it's collaborative in nature. So consensus building is vital: you need other people to believe in your strategy so deeply that it influences the words that land on the page. When done well, you arrive at a draft that feels whole and connected.</p>
       <p>But then, as always, stakeholders arrive. They operate on feeling and a sense of entitlement. Their gut is more powerful than your mind. Oh well, let's ship to learn, and then trust their gut next time anyway.</p>

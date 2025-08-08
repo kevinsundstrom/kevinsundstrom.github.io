@@ -16,16 +16,18 @@
   <meta property="og:url" content="https://kevinsundstrom.com/" />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=dev-20250808-02" />
   <style>
     /* Page-specific styles for homepage */
     :root {
       /* Configurable positioning variables for easy manual adjustment */
       --homepage-vertical-offset: 0rem; /* Adjust this to move content up (-2rem) or down (+2rem) */
       --homepage-horizontal-padding: 1.5rem; /* Adjust horizontal padding */
+  --control-size: 44px; /* unified height for input/button */
+  --control-border-width: 1px; /* use whole pixels to avoid subpixel rounding */
     }
     
-    body {
+  body {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -44,7 +46,7 @@
       justify-content: center;
       flex: 1;
       width: 100%;
-      padding: var(--homepage-horizontal-padding); /* Apply page padding here */
+      padding: calc(var(--homepage-horizontal-padding) + 0.5rem); /* Apply page padding here */
     }
     
     .search-container {
@@ -52,57 +54,69 @@
       justify-content: center;
       align-items: center;
       width: 100%;
-      max-width: 600px;
+      max-width: 720px;
+      background: var(--bg-secondary);
+      border: 1.5px solid var(--border-light);
+      border-radius: 12px;
+      padding: 0.75rem;
+      box-shadow: 0 10px 24px var(--shadow-light);
+      gap: 0.75rem;
     }
     
+  /* Rebuilt search input with rotating prompt overlay */
+  .search-wrap { position: relative; width: 100%; height: var(--control-size); }
     .search-bar {
-      padding: 0.75rem 1.25rem;
+      padding: 0 1.1rem;
       font-size: 0.95rem;
-      border: 1.5px solid var(--border-light);
+      line-height: 1.4;
+      height: var(--control-size);
+      box-sizing: border-box;
+  border: var(--control-border-width) solid var(--border-light);
       border-radius: 8px;
       width: 100%;
       outline: none;
-      transition: all 0.2s ease;
+      transition: border-color var(--transition-med), box-shadow var(--transition-med), transform var(--transition-fast);
       font-family: inherit;
       background: var(--bg-secondary);
       color: var(--text-primary);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236a6a6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.5' cy='10.5' r='7.5'/%3E%3Cline x1='21' y1='21' x2='15.8' y2='15.8'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 0.75rem 50%;
+      background-size: 18px 18px;
+      padding-left: 2.4rem;
     }
     
     .search-bar:focus {
-      border: 1.5px solid var(--text-primary);
+      border: 1.5px solid var(--brand);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px var(--shadow-medium);
+      box-shadow: 0 0 0 4px var(--ring), 0 4px 12px var(--shadow-medium);
     }
     
-    .suggested-terms {
-      margin-top: 2rem;
-      display: flex;
-      flex-wrap: wrap;
+    /* Search button */
+    .search-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      gap: 0.75rem;
-      max-width: 900px;
-    }
-    
-    .suggested-terms button {
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      background-color: var(--accent-hover);
-      color: var(--text-primary);
-      border: none;
+      gap: 0.4rem;
+      padding: 0 0.95rem;
+      height: var(--control-size);
+      box-sizing: border-box;
+      font-size: 0.95rem;
+      font-weight: 600;
       border-radius: 8px;
+  border: var(--control-border-width) solid var(--border-light);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
       cursor: pointer;
-      transition: all 0.2s ease;
-      max-width: 100%;
-      font-weight: 500;
+      transition: transform var(--transition-fast), box-shadow var(--transition-med), border-color var(--transition-med), background var(--transition-med);
     }
-    
-    .suggested-terms button:hover {
-      background-color: var(--accent-hover-strong);
-      transform: translateY(-1px);
-    }
+    .search-btn:hover { transform: translateY(-1px); border-color: var(--brand); background: color-mix(in oklab, var(--bg-secondary) 92%, var(--brand) 8%); }
+    .search-btn:active { transform: translateY(0); }
+    .search-btn:focus-visible { box-shadow: 0 0 0 3px var(--ring); outline: none; }
     
     .page-title {
-      font-size: 2.25rem;
+      font-size: 2.6rem;
       margin-bottom: 2rem;
       text-align: center;
       font-weight: 700;
@@ -111,6 +125,32 @@
       line-height: 1.2;
       transition: color 0.3s ease;
     }
+
+  /* Hero lockup */
+  .hero-lockup { text-align: center; margin-bottom: 1.5rem; }
+  .hero-title { font-size: 2.7rem; margin: 0 0 0.35rem 0; font-weight: 800; letter-spacing: -0.02em; }
+  .hero-subtitle { font-size: 1rem; color: var(--text-secondary); margin: 0; }
+    @media (max-width: 700px) { .hero-title { font-size: 2.2rem; } }
+
+    /* Rotating prompt overlay styles */
+    .search-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center; /* true vertical centering */
+      pointer-events: none;
+      padding-left: 2.4rem; /* align with icon */
+      padding-right: 1.25rem;
+      color: var(--text-primary);
+      opacity: 0.88;
+      transition: opacity var(--transition-med);
+      overflow: hidden;
+    }
+  .prompt-viewport { height: 1.4em; overflow: hidden; width: 100%; display: block; }
+  .prompt-roller { will-change: transform; transition: transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+  .prompt-line { height: 1.4em; line-height: 1.4em; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 0.95rem; }
+  .search-wrap.typing .search-overlay,
+  .search-wrap.focused .search-overlay { opacity: 0; }
     
     /* @media (max-width: 700px) {
       body {
@@ -136,12 +176,32 @@
       }
       
       .page-title {
-        font-size: 1.9rem;
+  font-size: 2rem;
+      }
+      /* Mobile tweaks: smaller overlay text, tighter icon padding for more room */
+      .prompt-line { font-size: 0.9rem; }
+      .search-bar {
+        background-position: 0.6rem 50%;
+        background-size: 16px 16px;
+        padding-left: 2.1rem;
+      }
+      /* Allow two-line overlay on mobile */
+      :root { --control-size: 56px; }
+      .prompt-line {
+        white-space: normal;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+  line-clamp: 2;
+        -webkit-line-clamp: 2;
+        text-overflow: ellipsis;
       }
     }
   </style>
 </head>
 <body>
+  <div class="bg-accent" aria-hidden="true"></div>
+  <div id="scrollProgress" aria-hidden="true"></div>
   <nav class="slim-navbar">
     <div style="display: flex; gap: 0.5rem;">
       <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
@@ -157,24 +217,22 @@
   <div class="navbar-spacer"></div>
   
   <div class="main-content">
-    <h1 class="page-title">Kevin Sundstrom | Marketing & Content Strategist</h1>
+    <div class="hero-lockup">
+      <h1 class="hero-title gradient-text">Kevin Sundstrom</h1>
+      <p class="hero-subtitle">Marketing & Content Strategy</p>
+    </div>
     <div class="search-container">
-      <input class="search-bar" id="searchInput" type="text" placeholder="What do you need help solving?" />
+  <div class="search-wrap" id="searchWrap">
+        <input class="search-bar" id="searchInput" type="text" aria-label="Ask a question" placeholder="" />
+        <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+          <div class="prompt-viewport" id="promptViewport">
+            <div class="prompt-roller" id="promptRoller"></div>
+          </div>
+        </div>
+      </div>
+  <button class="search-btn" id="searchBtn" aria-label="Search">Search</button>
     </div>
-    <div class="suggested-terms">
-      <button onclick="searchAndGo('How do I translate exec vision into something usable?')">
-        How do I translate exec vision into something usable?
-      </button>
-      <button onclick="searchAndGo('Why does everyone think a blog post is a strategy?')">
-        Why does everyone think a blog post is a strategy?
-      </button>
-      <button onclick="searchAndGo('Can I fix the funnel without breaking the brand?')">
-        Can I fix the funnel without breaking the brand?
-      </button>
-      <button onclick="searchAndGo('How do I get actual value out of AI, not draft-shaped garbage?')">
-        How do I get actual value out of AI, not draft-shaped garbage?
-      </button>
-    </div>
+    
   </div>
   
   <footer class="site-footer">
@@ -182,7 +240,7 @@
     <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
   </footer>
   
-  <script src="theme.js"></script>
+  <script src="theme.js?v=dev-20250808-02"></script>
   <script>
     // Update copyright year
     document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -192,10 +250,153 @@
       window.location.href = '/resume';
     }
     document.getElementById('searchInput').addEventListener('keydown', function(event) {
-      if (event.key === 'Enter' && this.value.trim() !== '') {
-        window.location.href = '/resume';
+      if (event.key === 'Enter') {
+        const value = this.value.trim();
+        if (value !== '') {
+          searchAndGo(value);
+        } else {
+          const term = (window.__getActivePrompt && window.__getActivePrompt()) || '';
+          if (term) searchAndGo(term);
+        }
       }
     });
+
+    // Rotating example prompts in the search input
+    (function setupRotatingPrompts() {
+      const wrap = document.getElementById('searchWrap');
+      const input = document.getElementById('searchInput');
+      const overlay = document.getElementById('searchOverlay');
+      const viewport = document.getElementById('promptViewport');
+      const roller = document.getElementById('promptRoller');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Prompts to cycle through
+      const prompts = [
+        'How do I translate exec vision into something usable?',
+        'Why does everyone think a blog post is a strategy?',
+        'Can I fix the funnel without breaking the brand?',
+        'How do I get actual value out of AI, not draft-shaped garbage?'
+      ];
+
+      // Build lines
+      roller.innerHTML = '';
+      prompts.forEach(t => {
+        const line = document.createElement('div');
+        line.className = 'prompt-line';
+        line.textContent = t;
+        roller.appendChild(line);
+      });
+      // Clone first for seamless loop
+      const firstClone = document.createElement('div');
+      firstClone.className = 'prompt-line';
+      firstClone.textContent = prompts[0];
+      roller.appendChild(firstClone);
+
+  let idx = 0;
+  let timer = null;
+  let lineHeight = 0; // single line height in pixels
+  let viewportHeight = 0; // visible height (1 line desktop, 2 lines mobile)
+
+      function recalc() {
+        // Set viewport to the line height of a prompt-line for crisp masking
+        const cs = getComputedStyle(input);
+        const lh = parseFloat(cs.lineHeight);
+        lineHeight = Number.isFinite(lh) && lh > 0 ? lh : Math.ceil(parseFloat(cs.fontSize) * 1.4);
+        const twoLine = isMobile();
+        viewportHeight = twoLine ? Math.round(lineHeight * 2) : Math.round(lineHeight);
+        // Apply exact line height to viewport and each line so baseline matches input text
+        viewport.style.height = viewportHeight + 'px';
+        Array.from(roller.children).forEach(el => {
+          el.style.height = viewportHeight + 'px';
+          el.style.lineHeight = lineHeight + 'px';
+        });
+        roller.style.transform = `translateY(${-idx * viewportHeight}px)`;
+        // Pixel-perfect vertical centering inside the wrapper (avoids border rounding mismatches)
+        const r = wrap.getBoundingClientRect();
+        const top = Math.max(0, Math.round((r.height - viewportHeight) / 2));
+        overlay.style.top = top + 'px';
+        overlay.style.bottom = 'auto';
+        overlay.style.height = viewportHeight + 'px';
+      }
+
+      function next() {
+        if (!lineHeight) recalc();
+        idx += 1;
+        roller.style.transform = `translateY(${-idx * viewportHeight}px)`;
+      }
+
+      function start() {
+        if (reduceMotion) return; // Respect reduced motion
+        stop();
+        timer = setInterval(next, 3500);
+      }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+      // Seamless loop: when we hit the clone, jump back without animation
+      roller.addEventListener('transitionend', (e) => {
+        if (e.propertyName !== 'transform') return;
+        if (idx === prompts.length) {
+          roller.style.transition = 'none';
+          idx = 0;
+          roller.style.transform = 'translateY(0)';
+          // force reflow
+          void roller.offsetHeight;
+          roller.style.transition = '';
+        }
+  // After each step completes, nothing extra for wrap mode
+      });
+
+      // Expose current prompt getter for Enter key when empty
+      window.__getActivePrompt = () => prompts[idx % prompts.length];
+
+      // Search button uses typed value or current prompt
+      const btn = document.getElementById('searchBtn');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const value = input.value.trim();
+          const term = value !== '' ? value : window.__getActivePrompt();
+          if (term) searchAndGo(term);
+        });
+      }
+
+  // Helper to detect mobile for layout decisions (wrap mode)
+  const isMobile = () => window.matchMedia('(max-width: 480px)').matches;
+  // No marquee in wrap mode
+  function stopMarquee() {}
+  function maybeStartMarquee() { return; }
+
+      // Input interactions
+      input.addEventListener('focus', () => { wrap.classList.add('focused'); stop(); stopMarquee(); });
+      input.addEventListener('blur', () => {
+        wrap.classList.remove('focused');
+        if (input.value.trim() === '') { start(); }
+      });
+      input.addEventListener('input', () => {
+        if (input.value.trim() === '') {
+          wrap.classList.remove('typing');
+          if (!document.activeElement || document.activeElement !== input) { start(); }
+        } else {
+          wrap.classList.add('typing');
+          stop();
+          stopMarquee();
+        }
+      });
+
+      // Initial layout and start
+  window.addEventListener('resize', () => { recalc(); });
+      // Ensure fonts/layout are ready before measuring
+      (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => {
+  recalc();
+        // If input already has a value (e.g., browser autofill or back/forward cache), hide overlay to prevent double text
+        if (input.value.trim() !== '') {
+          wrap.classList.add('typing');
+          stop();
+          stopMarquee();
+        } else {
+          start();
+        }
+      });
+    })();
   </script>
 </body>
 </html>

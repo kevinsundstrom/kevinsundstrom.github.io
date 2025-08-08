@@ -56,3 +56,26 @@
     initTheme();
   }
 })();
+
+// Scroll progress bar (lightweight, respects reduced motion)
+(function() {
+  'use strict';
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const update = () => {
+    const doc = document.documentElement;
+    const scrollTop = doc.scrollTop || document.body.scrollTop;
+    const height = doc.scrollHeight - doc.clientHeight;
+    const progress = height > 0 ? scrollTop / height : 0;
+    const scale = Math.max(0, Math.min(1, progress));
+    if (reduce) {
+      bar.style.width = `${scale * 100}%`;
+    } else {
+      bar.style.transform = `scaleX(${scale})`;
+    }
+  };
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+})();
