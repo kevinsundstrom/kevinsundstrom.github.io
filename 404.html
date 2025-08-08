@@ -108,7 +108,12 @@
       <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
       <a href="/articles/" class="nav-link" aria-label="Articles">Articles</a>
     </div>
-    <span class="nav-name">Kevin Sundstrom</span>
+    <div style="display: flex; align-items: center;">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <span class="nav-name">Kevin Sundstrom</span>
+    </div>
   </nav>
   
   <main class="main-content">
@@ -128,6 +133,7 @@
     <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
   </footer>
   
+  <script src="theme.js"></script>
   <script>
     // Update copyright year
     document.getElementById('current-year').textContent = new Date().getFullYear();
