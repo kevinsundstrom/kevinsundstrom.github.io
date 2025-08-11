@@ -25,6 +25,10 @@
       --homepage-horizontal-padding: 1.5rem; /* Adjust horizontal padding */
   --control-size: 44px; /* unified height for input/button */
   --control-border-width: 1px; /* use whole pixels to avoid subpixel rounding */
+  /* Hero spacing presets */
+  --hero-top: clamp(5rem, 18vh, 10rem);
+  --hero-gap-after: 1.5rem;
+  --hero-gap-title-sub: 0.35rem;
     }
     
   body {
@@ -35,18 +39,20 @@
       padding: 0; /* Ensure body does not add padding around footer */
       min-height: 100vh;
       height: auto;
-      /* Apply vertical offset for manual positioning control */
-      transform: translateY(var(--homepage-vertical-offset));
+  /* Removed vertical centering translation; we now use top padding on main-content */
     }
     
     .main-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+  /* Top-weight the hero instead of perfect vertical center */
+  justify-content: flex-start;
       flex: 1;
       width: 100%;
-      padding: calc(var(--homepage-horizontal-padding) + 0.5rem); /* Apply page padding here */
+  padding: calc(var(--homepage-horizontal-padding) + 0.5rem);
+  /* Add generous top padding that scales with viewport height but is capped */
+  padding-top: var(--hero-top);
     }
     
     .search-container {
@@ -54,12 +60,13 @@
       justify-content: center;
       align-items: center;
       width: 100%;
-      max-width: 720px;
+      max-width: 680px; /* Slightly narrower for hierarchy */
       background: var(--bg-secondary);
       border: 1.5px solid var(--border-light);
       border-radius: 12px;
       padding: 0.75rem;
-      box-shadow: 0 10px 24px var(--shadow-light);
+      /* Tone down elevation so the name stays primary */
+      box-shadow: 0 4px 12px var(--shadow-light);
       gap: 0.75rem;
     }
     
@@ -127,8 +134,8 @@
     }
 
   /* Hero lockup */
-  .hero-lockup { text-align: center; margin-bottom: 1.5rem; }
-  .hero-title { font-size: 2.7rem; margin: 0 0 0.35rem 0; font-weight: 800; letter-spacing: -0.02em; }
+  .hero-lockup { text-align: center; margin-bottom: var(--hero-gap-after); }
+  .hero-title { font-size: 2.7rem; margin: 0 0 var(--hero-gap-title-sub) 0; font-weight: 800; letter-spacing: -0.02em; }
   .hero-subtitle { font-size: 1rem; color: var(--text-secondary); margin: 0; }
     @media (max-width: 700px) { .hero-title { font-size: 2.2rem; } }
 
@@ -162,7 +169,8 @@
     /* Added media query for .main-content padding on mobile */
     @media (max-width: 700px) {
       .main-content {
-        padding-top: 0.5rem;
+  /* On small screens keep hero high but allow tighter top spacing */
+  padding-top: 0.75rem;
         padding-bottom: 0.5rem;
         /* padding-left and padding-right will remain var(--homepage-horizontal-padding) */
       }
