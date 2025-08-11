@@ -254,7 +254,8 @@
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
     function searchAndGo(term) {
-      document.getElementById('searchInput').value = term;
+  document.getElementById('searchInput').value = term;
+  try { sessionStorage.setItem('heroSearchReturnReset', '1'); } catch(e) {}
       window.location.href = '/resume';
     }
     document.getElementById('searchInput').addEventListener('keydown', function(event) {
@@ -411,7 +412,19 @@
         const navEntries = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
         const isBackFwd = evt.persisted || (navEntries[0] && navEntries[0].type === 'back_forward');
         if (!isBackFwd) return;
+        let resetFlag = false;
+        try { resetFlag = sessionStorage.getItem('heroSearchReturnReset') === '1'; } catch(e) {}
+        if (resetFlag) {
+          // Clear previous query so rotating prompts return
+          input.value = '';
+          wrap.classList.remove('typing');
+          try { sessionStorage.removeItem('heroSearchReturnReset'); } catch(e) {}
+          // Restart rotation if motion allowed
+          if (!reduceMotion) { start(); }
+          return;
+        }
         if (input.value.trim() !== '') {
+          // Keep hidden if user truly left text intentionally
           wrap.classList.add('typing');
           stop();
           stopMarquee();
