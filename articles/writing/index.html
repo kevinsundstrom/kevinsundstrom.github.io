@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0366d6" />
+  <title>Writing Articles - Kevin Sundstrom</title>
+  <meta name="description" content="Explore concise perspectives and essays on writing, creativity, and how ideas move from mind to audience." />
+  <meta name="keywords" content="writing, creativity, essays, kevin sundstrom" />
+  <meta name="author" content="Kevin Sundstrom" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kevinsundstrom.com/articles/writing/" />
+  
+  <!-- Open Graph meta tags -->
+  <meta property="og:title" content="Writing Articles - Kevin Sundstrom" />
+  <meta property="og:description" content="Explore concise perspectives and essays on writing, creativity, and how ideas move from mind to audience." />
+  <meta property="og:url" content="https://kevinsundstrom.com/articles/writing/" />
+  <meta property="og:type" content="website" />
+  
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/styles.css?v=dev-20250808-02" />
+  
+  <style>
+    body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: var(--bg-primary); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+    .main-content { max-width: 800px; margin: 0 auto; padding: 1.5rem 1.5rem; padding-top: 4rem; flex: 1; }
+    .breadcrumb { margin-bottom: 2rem; color: var(--text-tertiary); font-size: 0.9rem; }
+    .breadcrumb a { color: var(--text-primary); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
+    .category-description { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 4rem; line-height: 1.6; }
+    section h2 { font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-primary); font-weight: 600; letter-spacing: -0.01em; }
+    .article-item { border: 1px solid var(--border-light); border-radius: 12px; padding: 1rem 1rem; background: var(--bg-secondary); margin-bottom: 0.75rem; transition: box-shadow 180ms ease, background 180ms ease, border-color 180ms ease; }
+    .article-item:hover { box-shadow: 0 6px 14px var(--shadow-light); background: color-mix(in oklab, var(--bg-secondary) 98%, var(--text-primary) 2%); border-color: color-mix(in oklab, var(--border-light) 85%, var(--text-primary) 15%); }
+    [data-theme="dark"] .article-item:hover { background: color-mix(in oklab, var(--bg-secondary) 96%, var(--text-primary) 4%); border-color: color-mix(in oklab, var(--border-light) 75%, var(--text-primary) 25%); }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .article-item:hover { background: color-mix(in oklab, var(--bg-secondary) 96%, var(--text-primary) 4%); border-color: color-mix(in oklab, var(--border-light) 75%, var(--text-primary) 25%); } }
+    .article-category { color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.25px; margin-bottom: 0.5rem; display: inline-block; border: 1px solid var(--border-light); border-radius: 999px; padding: 0.25rem 0.6rem; background: var(--bg-secondary); }
+    .article-category a { color: inherit; text-decoration: none; }
+    .article-category a:hover { text-decoration: underline; }
+    .article-title { font-size: 1.15rem; font-weight: 600; margin-top: 0; margin-bottom: 0.75rem; letter-spacing: -0.01em; line-height: 1.3; }
+    .article-title a { color: var(--text-primary); text-decoration: none; }
+    .article-title a:hover { color: var(--text-secondary); }
+    .article-excerpt { color: var(--text-secondary); line-height: 1.6; }
+    @media (max-width: 768px) { .main-content { padding: 1.5rem; padding-top: 4rem; } h1 { font-size: 2rem; } }
+    @media (max-width: 480px) { .main-content { padding: 1rem; padding-top: 3.5rem; } h1 { font-size: 1.75rem; } }
+  </style>
+</head>
+<body>
+  <div class="bg-accent" aria-hidden="true"></div>
+  <div id="scrollProgress" aria-hidden="true"></div>
+  <nav class="slim-navbar">
+    <div style="display: flex; gap: 0.5rem;">
+      <a href="/" class="nav-link" aria-label="Home">Home</a>
+      <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
+      <a href="/articles/" class="nav-link" aria-label="Articles">Articles</a>
+    </div>
+    <div style="display: flex; align-items: center;">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <span class="nav-name">Kevin Sundstrom</span>
+    </div>
+  </nav>
+  <main class="main-content">
+    <nav class="breadcrumb">
+      <a href="/articles/">Articles</a> > Writing
+    </nav>
+    <h1>Writing</h1>
+    <p class="category-description">Articles and thoughts on writing craft, clarity, and how technology changes the creative process.</p>
+    <section>
+      <h2>Latest Articles</h2>
+      <div class="article-list">
+        <article class="article-item">
+          <div class="article-category">
+            <a href="/articles/writing/">Writing</a>
+          </div>
+          <h3 class="article-title">
+            <a href="/articles/writing/175-words-history-of-writing-and-ai/">175 Words on the History of Writing & One Point on AI</a>
+          </h3>
+          <div class="article-excerpt">A fast 175-word history of writing, from clay tablets to social media—ending with one sharp point about AI’s role.</div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="copyright">© Kevin Sundstrom <span id="current-year"></span></div>
+  </footer>
+  <script src="/theme.js?v=dev-20250808-02"></script>
+  <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
