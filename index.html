@@ -404,6 +404,34 @@
           start();
         }
       });
+
+      // Handle returning via back/forward cache (pageshow with persisted) so overlay doesn't overlap existing value
+      window.addEventListener('pageshow', (evt) => {
+        // If coming from bfcache or a back/forward navigation, re-evaluate state
+        const navEntries = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
+        const isBackFwd = evt.persisted || (navEntries[0] && navEntries[0].type === 'back_forward');
+        if (!isBackFwd) return;
+        if (input.value.trim() !== '') {
+          wrap.classList.add('typing');
+          stop();
+          stopMarquee();
+        } else {
+          wrap.classList.remove('typing');
+          if (!document.activeElement || document.activeElement !== input) { start(); }
+        }
+      });
+
+      // Pause rotation when tab not visible; resume when returning if appropriate
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stop();
+          return;
+        }
+        // On becoming visible again, only restart if: no value, not focused, not typing, motion allowed
+        if (!reduceMotion && input.value.trim() === '' && !wrap.classList.contains('typing') && document.activeElement !== input) {
+          start();
+        }
+      });
     })();
   </script>
 </body>
