@@ -205,9 +205,84 @@
         text-overflow: ellipsis;
       }
     }
+
+    /* Mobile-only splash page (<= 768px) */
+    @media (max-width: 768px) {
+      /* Hide normal site chrome when splash active */
+      body.has-mobile-splash .slim-navbar,
+      body.has-mobile-splash .navbar-spacer,
+      body.has-mobile-splash .main-content,
+      body.has-mobile-splash .site-footer { display: none !important; }
+
+      .mobile-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1.75rem;
+        padding: 3rem 1.75rem 2.5rem 1.75rem;
+        background: #1a1a1a; /* Dark theme primary */
+        color: #ffffff;
+        z-index: 5000;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        text-align: center;
+      }
+      .mobile-splash h1 {
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        font-size: clamp(2.1rem, 7.2vw, 2.9rem);
+        background: var(--brand-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .mobile-splash p { margin: 0; font-size: clamp(0.95rem, 2.9vw, 1.05rem); line-height: 1.5; color: var(--text-secondary, #d1d1d1); }
+      .mobile-splash p + p { margin-top: 0.9rem; }
+      .mobile-splash-footer {
+        position: absolute;
+        bottom: 1rem;
+        left: 0; right: 0;
+        display: flex;
+        justify-content: center;
+        padding: 0 1rem;
+      }
+      .mobile-splash-footer a {
+        text-decoration: none;
+        color: var(--text-tertiary, #a1a1a1);
+        font-size: 0.85rem;
+        letter-spacing: 0.25px;
+        padding: 0.4rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-light, #404040);
+        transition: background var(--transition-med, 200ms ease), color var(--transition-med, 200ms ease), border-color var(--transition-med, 200ms ease);
+        background: rgba(255,255,255,0.02);
+      }
+      .mobile-splash-footer a:hover,
+      .mobile-splash-footer a:focus-visible {
+        background: rgba(255,255,255,0.08);
+        color: #fff;
+        outline: none;
+        border-color: color-mix(in oklab, var(--brand, #4f46e5) 55%, transparent);
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Mobile splash (only rendered on small screens via CSS) -->
+  <div class="mobile-splash" style="display:none" aria-hidden="true">
+    <h1>Look up — the world is waiting.</h1>
+    <div style="max-width:640px; display:flex; flex-direction:column; gap:0.5rem;">
+      <p>kevinsundstrom.com will be here when you’re back at your desk.</p>
+      <p>I look forward to helping you.</p>
+    </div>
+    <div class="mobile-splash-footer">
+      <a href="https://www.linkedin.com/in/kevinsundstrom/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </div>
   <div class="bg-accent" aria-hidden="true"></div>
   <div id="scrollProgress" aria-hidden="true"></div>
   <nav class="slim-navbar">
@@ -250,6 +325,27 @@
   
   <script src="theme.js?v=dev-20250808-02"></script>
   <script>
+    // Activate mobile splash logic: add class when viewport <= 768
+    (function(){
+      const SPLASH_BREAKPOINT = 768;
+      const body = document.body;
+      const splash = document.querySelector('.mobile-splash');
+      if(!splash) return;
+      function apply() {
+        const isMobile = window.innerWidth <= SPLASH_BREAKPOINT;
+        if (isMobile) {
+          splash.style.display = 'flex';
+          splash.setAttribute('aria-hidden','false');
+          body.classList.add('has-mobile-splash');
+        } else {
+          splash.style.display = 'none';
+          splash.setAttribute('aria-hidden','true');
+          body.classList.remove('has-mobile-splash');
+        }
+      }
+      window.addEventListener('resize', apply, { passive: true });
+      apply();
+    })();
     // Update copyright year
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
