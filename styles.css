@@ -28,9 +28,11 @@
   --transition-med: 200ms ease;
   /* Gradient accents */
   --brand-gradient: linear-gradient(90deg, #4f46e5 0%, #22d3ee 50%, #10b981 100%);
-  --brand-spotlight: radial-gradient(600px 300px at 20% 10%, color-mix(in oklab, var(--brand) 25%, transparent) 0%, transparent 60%),
-                     radial-gradient(500px 250px at 80% 20%, color-mix(in oklab, #22d3ee 20%, transparent) 0%, transparent 60%),
-                     radial-gradient(600px 300px at 50% 80%, color-mix(in oklab, #10b981 18%, transparent) 0%, transparent 60%);
+  /* Softer, larger, lower-intensity gradients to avoid blotchy patches */
+  --brand-spotlight:
+    radial-gradient(1000px 600px at 18% 8%, color-mix(in oklab, var(--brand) 12%, transparent) 0%, transparent 85%),
+    radial-gradient(900px 520px at 82% 6%, color-mix(in oklab, #22d3ee 10%, transparent) 0%, transparent 88%),
+    radial-gradient(1200px 700px at 50% 85%, color-mix(in oklab, #10b981 9%, transparent) 0%, transparent 92%);
 }
 
 /* Dark theme colors */
@@ -84,6 +86,9 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Ensure initial paint matches body to prevent edge flashes */
+html { background: var(--bg-primary); }
+
 /* Global layering: keep UI above decorative bg */
 .main-content, main, header, footer, nav { position: relative; z-index: 1; }
 
@@ -97,12 +102,12 @@ body {
   pointer-events: none;
   z-index: 0;
   background: var(--brand-spotlight);
-  filter: blur(30px) saturate(120%);
-  opacity: 0.55;
+  filter: blur(48px) saturate(105%);
+  opacity: 0.38;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .bg-accent { opacity: 0.35; filter: blur(40px) saturate(110%); }
+  :root:not([data-theme="light"]) .bg-accent { opacity: 0.28; filter: blur(56px) saturate(105%); }
 }
 
 /* Mobile adjustment: nav is shorter, reduce top offset */
