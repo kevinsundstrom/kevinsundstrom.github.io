@@ -441,7 +441,7 @@ img {
 /* Skip link styles */
 .skip-link {
   position: fixed;
-  top: -40px;
+  top: -100px;
   left: 8px;
   background: var(--brand);
   color: white;
@@ -453,10 +453,14 @@ img {
   font-size: 14px;
   transition: top var(--transition-fast);
   box-shadow: 0 4px 12px var(--shadow-strong);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .skip-link:focus {
   top: 8px;
+  opacity: 1;
+  pointer-events: auto;
   outline: 2px solid white;
   outline-offset: 2px;
 }
