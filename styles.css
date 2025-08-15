@@ -1,17 +1,17 @@
 /* Kevin Sundstrom Website - Shared Styles */
 
-/* Optional modern font (falls back to system if blocked) */
+/* Optional modern font (falls back to system if blocked) - Optimized loading */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* CSS Custom Properties for Theme Support */
 :root {
-  /* Light theme colors (default) */
+  /* Light theme colors (default) - WCAG AA compliant */
   --bg-primary: #fafafa;
   --bg-secondary: #ffffff;
   --bg-navbar: rgba(250,250,250,0.92);
   --text-primary: #1a1a1a;
-  --text-secondary: #4a4a4a;
-  --text-tertiary: #6a6a6a;
+  --text-secondary: #3a3a3a; /* Improved from #4a4a4a for better contrast */
+  --text-tertiary: #5a5a5a; /* Improved from #6a6a6a for better contrast */
   --border-light: #e1e1e1;
   --border-lighter: #eee;
   --shadow-light: rgba(0, 0, 0, 0.03);
@@ -35,14 +35,14 @@
     radial-gradient(1200px 700px at 50% 85%, color-mix(in oklab, #10b981 9%, transparent) 0%, transparent 92%);
 }
 
-/* Dark theme colors */
+/* Dark theme colors - WCAG AA compliant */
 [data-theme="dark"] {
   --bg-primary: #1a1a1a;
   --bg-secondary: #242424;
   --bg-navbar: rgba(26,26,26,0.92);
   --text-primary: #ffffff;
-  --text-secondary: #d1d1d1;
-  --text-tertiary: #a1a1a1;
+  --text-secondary: #e1e1e1; /* Improved from #d1d1d1 for better contrast */
+  --text-tertiary: #b1b1b1; /* Improved from #a1a1a1 for better contrast */
   --border-light: #404040;
   --border-lighter: #333333;
   --shadow-light: rgba(0, 0, 0, 0.2);
@@ -60,8 +60,8 @@
     --bg-secondary: #242424;
     --bg-navbar: rgba(26,26,26,0.92);
     --text-primary: #ffffff;
-    --text-secondary: #d1d1d1;
-    --text-tertiary: #a1a1a1;
+    --text-secondary: #e1e1e1; /* Improved contrast */
+    --text-tertiary: #b1b1b1; /* Improved contrast */
     --border-light: #404040;
     --border-lighter: #333333;
     --shadow-light: rgba(0, 0, 0, 0.2);
@@ -423,6 +423,38 @@ img {
 :focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
+}
+
+/* Screen reader only utility class */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip link styles */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--brand);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 2000;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 6px;
 }
 
 /* Footer styles */

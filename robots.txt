@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://kevinsundstrom.com/sitemap.xml
+
+# Disallow sensitive files
+Disallow: /*.md$
+Disallow: /.htaccess
+Disallow: /package.json
+Disallow: /README.md

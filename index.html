@@ -7,12 +7,16 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://formsubmit.co" />
   <title>Kevin Sundstrom | Marketing & Content Strategist</title>
   <meta name="description" content="Kevin Sundstrom is a marketing and content strategist helping organizations translate executive vision into actionable content strategies and drive meaningful results." />
   <meta name="keywords" content="marketing strategist, content strategist, marketing consultant, content development, marketing strategy, digital marketing, SEO, content marketing" />
   <meta name="author" content="Kevin Sundstrom" />
   <link rel="canonical" href="https://kevinsundstrom.com/" />
+  <!-- Preload critical resources -->
+  <link rel="preload" href="styles.css?v=dev-20250808-02" as="style" />
+  <link rel="preload" href="theme.js?v=dev-20250808-02" as="script" />
   <meta property="og:title" content="Kevin Sundstrom | Marketing & Content Strategist" />
   <meta property="og:description" content="Marketing and content strategist helping organizations translate executive vision into actionable content strategies." />
   <meta property="og:url" content="https://kevinsundstrom.com/" />
@@ -274,6 +278,7 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <!-- Mobile splash (only rendered on small screens via CSS) -->
   <div class="mobile-splash" style="display:none" aria-hidden="true">
     <h1>Look up — the world is waiting.</h1>
@@ -302,22 +307,23 @@
   <div class="navbar-spacer"></div>
   
   <div class="main-content">
-    <div class="hero-lockup">
-      <h1 class="hero-title gradient-text">Kevin Sundstrom</h1>
-      <p class="hero-subtitle">Marketing & Content Strategy</p>
-    </div>
-    <div class="search-container">
-  <div class="search-wrap" id="searchWrap">
-        <input class="search-bar" id="searchInput" type="text" aria-label="Ask a question" placeholder="" />
-        <div class="search-overlay" id="searchOverlay" aria-hidden="true">
-          <div class="prompt-viewport" id="promptViewport">
-            <div class="prompt-roller" id="promptRoller"></div>
+    <main id="main-content">
+      <div class="hero-lockup">
+        <h1 class="hero-title gradient-text">Kevin Sundstrom</h1>
+        <p class="hero-subtitle">Marketing & Content Strategy</p>
+      </div>
+      <div class="search-container">
+        <div class="search-wrap" id="searchWrap">
+          <input class="search-bar" id="searchInput" type="text" aria-label="Ask a question or search" placeholder="" />
+          <div class="search-overlay" id="searchOverlay" aria-hidden="true" aria-live="polite">
+            <div class="prompt-viewport" id="promptViewport">
+              <div class="prompt-roller" id="promptRoller"></div>
+            </div>
           </div>
         </div>
+        <button class="search-btn" id="searchBtn" aria-label="Search or submit question">Search</button>
       </div>
-  <button class="search-btn" id="searchBtn" aria-label="Search">Search</button>
-    </div>
-    
+    </main>
   </div>
   
   <footer class="site-footer">

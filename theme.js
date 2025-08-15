@@ -28,7 +28,18 @@
       root.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      themeIcon.setAttribute('aria-hidden', 'true');
       themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+      themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      
+      // Add screen reader announcement
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      announcement.textContent = `Switched to ${theme} mode`;
+      document.body.appendChild(announcement);
+      setTimeout(() => document.body.removeChild(announcement), 1000);
     }
     
     // Initialize theme
