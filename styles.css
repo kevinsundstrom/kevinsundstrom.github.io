@@ -179,7 +179,7 @@ html { background: var(--bg-primary); }
 }
 
 .nav-name {
-  font-weight: 600;
+  font-weight: 400;
   color: var(--text-primary);
   font-size: 1rem;
   letter-spacing: -0.01em;
