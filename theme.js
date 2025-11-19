@@ -27,7 +27,7 @@
     function setTheme(theme) {
       root.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
-      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌕';
       themeIcon.setAttribute('aria-hidden', 'true');
       themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
       themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
