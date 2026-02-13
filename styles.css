@@ -539,3 +539,33 @@ blockquote {
   border-radius: 8px;
   color: var(--text-secondary);
 }
+
+/* =================================================================
+   DEFENSIVE: Hide Product Listing Sections
+   ================================================================= */
+/* 
+   These rules prevent product listing sections from appearing,
+   similar to those found on GitHub customer story pages.
+   Even if HTML contains these sections, they won't be displayed.
+*/
+.product-list,
+.products-used,
+.products-section,
+.product-section,
+.tech-stack,
+.technologies,
+.technologies-used,
+.tools-used,
+.featured-tools,
+.featured-products,
+.related-products,
+.related-tools,
+[class*="product-list"],
+[class*="products-used"],
+[class*="tech-stack"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
