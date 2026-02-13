@@ -130,7 +130,7 @@ function main() {
   const targetPath = args[0] || process.cwd();
 
   console.log('🔍 Product Section Detector');
-  console.log('=' .repeat(50));
+  console.log('='.repeat(50));
   console.log();
 
   const stat = fs.statSync(targetPath);
