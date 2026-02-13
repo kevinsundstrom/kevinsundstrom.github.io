@@ -44,6 +44,11 @@ const PATTERNS = {
   ]
 };
 
+// Helper function to escape regex special characters
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function findProductSections(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
@@ -63,7 +68,8 @@ function findProductSections(filePath) {
 
     // Check for headings
     PATTERNS.headings.forEach(heading => {
-      const regex = new RegExp(`<h[1-6][^>]*>\\s*${heading}\\s*</h[1-6]>`, 'gi');
+      const escapedHeading = escapeRegex(heading);
+      const regex = new RegExp(`<h[1-6][^>]*>\\s*${escapedHeading}\\s*</h[1-6]>`, 'gi');
       if (regex.test(content)) {
         findings.push({
           type: 'heading',

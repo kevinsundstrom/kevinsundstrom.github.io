@@ -38,15 +38,6 @@ If you want to keep the HTML but hide the section visually:
 [class*="product-section"] {
   display: none !important;
 }
-
-/* Alternative: hide by heading text */
-h2:has(+ ul):is(:contains("Products used"), :contains("Technologies")) {
-  display: none;
-}
-
-h2:has(+ ul):is(:contains("Products used"), :contains("Technologies")) + ul {
-  display: none;
-}
 ```
 
 ### Method 2: Remove from HTML
@@ -94,7 +85,12 @@ node .github/scripts/detect-product-sections.js
 
 # Remove product sections from specific file
 node .github/scripts/remove-product-sections.js path/to/file.html
+
+# Preview changes without modifying (recommended first step)
+node .github/scripts/remove-product-sections.js path/to/file.html --dry-run
 ```
+
+**Note**: The removal script uses regex patterns which work well for most cases but may have limitations with deeply nested or complex HTML. Always use `--dry-run` first to preview changes, and backups are automatically created for safety.
 
 ## Common Patterns to Look For
 

@@ -5,6 +5,12 @@
  * 
  * Removes product listing sections from HTML files.
  * 
+ * LIMITATIONS:
+ * - Uses regex patterns which may not handle deeply nested or complex HTML perfectly
+ * - For complex HTML structures, consider using a proper HTML parser
+ * - Always use --dry-run first to preview changes
+ * - Automatic backups are created for safety
+ * 
  * Usage:
  *   node remove-product-sections.js <file-path> [--dry-run]
  * 
