@@ -16,8 +16,8 @@ content-workflow/
 │   ├── {slug}-metadata-{date}.yml  # SEO and metadata
 │   ├── {slug}-final-{date}.md      # Reviewed final content
 │   └── {slug}-review-notes-{date}.md # Editorial review notes
-├── content-writer.agent.yml         # Writer agent configuration
-├── content-editor.agent.yml         # Editor agent configuration
+├── content-writer.agent.md          # Writer agent configuration
+├── content-editor.agent.md          # Editor agent configuration
 └── README.md                        # This file
 ```
 
@@ -112,13 +112,13 @@ Or use the GitHub Actions UI:
 
 Both agent configuration files can be customized:
 
-**content-writer.agent.yml**
+**content-writer.agent.md**
 - Adjust tone and style preferences
 - Modify output formats
 - Add/remove quality checks
 - Change model or parameters
 
-**content-editor.agent.yml**
+**content-editor.agent.md**
 - Customize review criteria
 - Adjust editing principles
 - Modify checklist items
