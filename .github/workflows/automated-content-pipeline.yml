@@ -1,0 +1,393 @@
+name: Automated Multi-Phase Content Pipeline
+
+# Triggers on new briefs or manual dispatch
+on:
+  push:
+    paths:
+      - 'content-workflow/briefs/*.md'
+      - '!content-workflow/briefs/TEMPLATE-content-brief.md'
+  
+  workflow_dispatch:
+    inputs:
+      brief_file:
+        description: 'Brief filename (e.g., my-article-brief.md)'
+        required: true
+        type: string
+      phase:
+        description: 'Starting phase (or "all" for full pipeline)'
+        required: false
+        type: choice
+        options:
+          - all
+          - outline
+          - research
+          - draft
+          - refine
+          - polish
+          - qa
+          - copy-edit
+        default: all
+
+# Pipeline stages with review gates
+jobs:
+  # Setup: Create workflow PR and identify brief
+  setup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    outputs:
+      brief-slug: ${{ steps.setup.outputs.brief-slug }}
+      brief-file: ${{ steps.setup.outputs.brief-file }}
+      pr-number: ${{ steps.create-pr.outputs.pr-number }}
+      workflow-branch: ${{ steps.setup.outputs.workflow-branch }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup workflow
+      id: setup
+      run: |
+        # Identify brief file
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          BRIEF_FILE="content-workflow/briefs/${{ github.event.inputs.brief_file }}"
+        else
+          BRIEF_FILE=$(git diff --name-only HEAD^ HEAD | grep 'content-workflow/briefs/' | grep -v TEMPLATE | head -1)
+        fi
+        
+        if [ -z "$BRIEF_FILE" ] || [ ! -f "$BRIEF_FILE" ]; then
+          echo "Error: No valid brief file found"
+          exit 1
+        fi
+        
+        BRIEF_SLUG=$(basename "$BRIEF_FILE" .md)
+        WORKFLOW_BRANCH="content-pipeline/${BRIEF_SLUG}-$(date +%Y%m%d-%H%M%S)"
+        
+        echo "brief-file=$BRIEF_FILE" >> $GITHUB_OUTPUT
+        echo "brief-slug=$BRIEF_SLUG" >> $GITHUB_OUTPUT
+        echo "workflow-branch=$WORKFLOW_BRANCH" >> $GITHUB_OUTPUT
+        
+        echo "📝 Processing brief: $BRIEF_FILE"
+        echo "🏷️  Slug: $BRIEF_SLUG"
+        echo "🌿 Branch: $WORKFLOW_BRANCH"
+    
+    - name: Create workflow branch
+      run: |
+        git config user.name "Content Pipeline Bot"
+        git config user.email "pipeline@github.com"
+        git checkout -b ${{ steps.setup.outputs.workflow-branch }}
+        git push origin ${{ steps.setup.outputs.workflow-branch }}
+    
+    - name: Create workflow PR
+      id: create-pr
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: pr } = await github.rest.pulls.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `📝 Content Pipeline: ${{ steps.setup.outputs.brief-slug }}`,
+            head: '${{ steps.setup.outputs.workflow-branch }}',
+            base: context.ref.replace('refs/heads/', ''),
+            body: `## Multi-Phase Content Pipeline
+            
+            **Brief**: \`${{ steps.setup.outputs.brief-file }}\`
+            **Slug**: \`${{ steps.setup.outputs.brief-slug }}\`
+            **Started**: ${new Date().toISOString()}
+            
+            ### Pipeline Status
+            
+            - [ ] Phase 1: Outline Writing
+            - [ ] Phase 2: Research
+            - [ ] Phase 3: Drafting
+            - [ ] Phase 4: Refinement
+            - [ ] Phase 5: Polishing
+            - [ ] Phase 6: QA Check
+            - [ ] Phase 7: Copy Editing
+            - [ ] Phase 8: Ready for Publication
+            
+            ### How to Review
+            
+            Each phase will be committed to this PR. To review:
+            1. 📖 Review the output files in the \`Files changed\` tab
+            2. ✏️ Make edits directly in GitHub UI or locally:
+               - Click \`Edit file\` in GitHub, OR
+               - Check out this branch locally and edit
+            3. ✅ Approve the PR review when satisfied to proceed
+            4. 🔄 Or request changes to trigger re-processing
+            
+            ### Edit Tracking
+            
+            All edits are automatically tracked for the learning system!
+            - Original outputs saved to \`edits/\` folder
+            - Your edits analyzed for patterns
+            - Agent improvements recommended after 3-5 consistent patterns
+            
+            ---
+            
+            *This is an automated content pipeline. Each phase will update this PR.*`
+          });
+          
+          core.setOutput('pr-number', pr.number);
+          return pr.number;
+
+  # Phase 1: Outline Writing
+  phase-1-outline:
+    needs: setup
+    runs-on: ubuntu-latest
+    if: github.event.inputs.phase == 'all' || github.event.inputs.phase == 'outline' || github.event.inputs.phase == ''
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+    - name: Checkout workflow branch
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.setup.outputs.workflow-branch }}
+    
+    - name: Run Outline Writer Agent
+      run: |
+        BRIEF_FILE="${{ needs.setup.outputs.brief-file }}"
+        BRIEF_SLUG="${{ needs.setup.outputs.brief-slug }}"
+        DATE=$(date +%Y%m%d)
+        
+        OUTLINE_FILE="content-workflow/outputs/${BRIEF_SLUG}-outline-${DATE}.md"
+        RATIONALE_FILE="content-workflow/outputs/${BRIEF_SLUG}-outline-rationale-${DATE}.md"
+        
+        # TODO: Replace with actual agent invocation
+        # For now, create placeholder demonstrating structure
+        
+        cat > "$OUTLINE_FILE" << 'EOF'
+        # Article Outline
+        
+        ## Introduction
+        - Hook: Engaging opening
+        - Context: Background information
+        - Value proposition: What reader will learn
+        
+        ## Section 1: Main Topic
+        ### Subsection 1.1
+        - Key point 1
+        - Key point 2
+        
+        ## Section 2: Deep Dive
+        - Detailed exploration
+        
+        ## Conclusion
+        - Summary of key takeaways
+        - Call to action
+        EOF
+        
+        cat > "$RATIONALE_FILE" << 'EOF'
+        # Outline Rationale
+        
+        ## Structure Decisions
+        - Chose problem-solution pattern
+        - Balanced depth with readability
+        - Included concrete examples throughout
+        
+        ## Alignment with Brief
+        - Addresses all required topics
+        - Appropriate for target audience
+        - Meets length requirements
+        EOF
+        
+        echo "outline_file=$OUTLINE_FILE" >> $GITHUB_OUTPUT
+        echo "✅ Outline generated"
+    
+    - name: Commit Phase 1 output
+      run: |
+        git config user.name "Content Pipeline Bot"
+        git config user.email "pipeline@github.com"
+        git add content-workflow/outputs/
+        git commit -m "Phase 1: Outline generated for ${{ needs.setup.outputs.brief-slug }}"
+        git push origin ${{ needs.setup.outputs.workflow-branch }}
+    
+    - name: Request review for Phase 1
+      uses: actions/github-script@v7
+      with:
+        script: |
+          await github.rest.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: ${{ needs.setup.outputs.pr-number }},
+            event: 'COMMENT',
+            body: `## ✅ Phase 1: Outline Complete
+            
+            The outline has been generated and committed to this PR.
+            
+            **Files**:
+            - 📄 Outline: \`content-workflow/outputs/${{ needs.setup.outputs.brief-slug }}-outline-*.md\`
+            - 📋 Rationale: \`content-workflow/outputs/${{ needs.setup.outputs.brief-slug }}-outline-rationale-*.md\`
+            
+            ### Next Steps
+            
+            **To proceed to Phase 2 (Research)**:
+            1. Review the outline in the "Files changed" tab
+            2. Make any edits needed:
+               - Edit directly in GitHub UI, OR
+               - Check out branch locally: \`git checkout ${{ needs.setup.outputs.workflow-branch }}\`
+            3. Comment \`/approve-phase-1\` to continue
+            
+            **To re-generate outline**:
+            - Comment \`/regenerate-phase-1\` with feedback
+            
+            *Note: Any edits you make will be automatically tracked for agent learning!*`
+          });
+          
+          // Update PR description
+          const { data: pr } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: ${{ needs.setup.outputs.pr-number }}
+          });
+          
+          const updatedBody = pr.body.replace(
+            '- [ ] Phase 1: Outline Writing',
+            '- [x] Phase 1: Outline Writing ✅'
+          );
+          
+          await github.rest.pulls.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: ${{ needs.setup.outputs.pr-number }},
+            body: updatedBody
+          });
+
+  # Phase 2: Research (triggered by approval)
+  phase-2-research:
+    needs: [setup, phase-1-outline]
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == '/approve-phase-1' || (github.event.inputs.phase == 'research')
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+    - name: Checkout workflow branch
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.setup.outputs.workflow-branch }}
+    
+    - name: Run Researcher Agent
+      run: |
+        BRIEF_SLUG="${{ needs.setup.outputs.brief-slug }}"
+        DATE=$(date +%Y%m%d)
+        
+        RESEARCH_FILE="content-workflow/outputs/${BRIEF_SLUG}-research-${DATE}.md"
+        SOURCES_FILE="content-workflow/outputs/${BRIEF_SLUG}-sources-${DATE}.md"
+        
+        # TODO: Replace with actual agent invocation
+        
+        cat > "$RESEARCH_FILE" << 'EOF'
+        # Research Document
+        
+        ## Section 1: Main Topic
+        **Key Facts**:
+        - Fact 1 (Source: Author, 2024)
+        - Fact 2 (Source: Organization, 2024)
+        
+        **Examples**:
+        - Example 1: Description
+        EOF
+        
+        cat > "$SOURCES_FILE" << 'EOF'
+        # Sources
+        
+        1. Author. (2024). "Article Title." Publication.
+        2. Organization. (2024). "Report Title."
+        EOF
+        
+        echo "✅ Research completed"
+    
+    - name: Commit Phase 2 output
+      run: |
+        git config user.name "Content Pipeline Bot"
+        git config user.email "pipeline@github.com"
+        git add content-workflow/outputs/
+        git commit -m "Phase 2: Research completed for ${{ needs.setup.outputs.brief-slug }}"
+        git push origin ${{ needs.setup.outputs.workflow-branch }}
+    
+    - name: Request review for Phase 2
+      uses: actions/github-script@v7
+      with:
+        script: |
+          await github.rest.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: ${{ needs.setup.outputs.pr-number }},
+            event: 'COMMENT',
+            body: `## ✅ Phase 2: Research Complete
+            
+            Research has been gathered and sources documented.
+            
+            **Files**:
+            - 📚 Research: \`content-workflow/outputs/${{ needs.setup.outputs.brief-slug }}-research-*.md\`
+            - 🔗 Sources: \`content-workflow/outputs/${{ needs.setup.outputs.brief-slug }}-sources-*.md\`
+            
+            Comment \`/approve-phase-2\` to proceed to Phase 3 (Drafting)`
+          });
+
+  # Phase 3-7: Similar pattern for remaining phases
+  # ... (abbreviated for length)
+
+  # Capture edits for learning
+  capture-edits:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Detect and capture edits
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // Get the diff to see what files were edited
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number
+          });
+          
+          // Check if any output files were edited
+          const editedOutputs = files.filter(f => 
+            f.filename.startsWith('content-workflow/outputs/') && 
+            f.status === 'modified'
+          );
+          
+          if (editedOutputs.length > 0) {
+            // Save original and edited versions to edits/ folder
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `🎓 **Edit Detected for Learning**
+              
+              ${editedOutputs.length} file(s) were edited. These changes will be analyzed by the learning agent to improve future outputs.
+              
+              Edited files:
+              ${editedOutputs.map(f => `- \`${f.filename}\``).join('\n')}
+              
+              The learning system will track these changes and recommend agent improvements if patterns emerge across 3-5 edits.`
+            });
+          }
+
+  # Final: Trigger learning analysis
+  analyze-edits:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    if: github.event.review.state == 'approved' && contains(github.event.review.body, 'Phase')
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Run Learning Agent
+      run: |
+        echo "🎓 Learning agent would analyze edits here"
+        # TODO: Implement learning agent analysis
