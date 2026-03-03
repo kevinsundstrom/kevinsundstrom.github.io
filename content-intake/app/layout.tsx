@@ -4,8 +4,8 @@ import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "Content intake",
-  description: "Chat-based intake for the multi-agent content pipeline",
+  title: "Content Foundry",
+  description: "Raw knowledge in, finished content out.",
 };
 
 export default async function RootLayout({

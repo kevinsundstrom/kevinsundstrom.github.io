@@ -73,9 +73,9 @@ export default async function PipelinePage() {
   return (
     <div className="flex-1 overflow-y-auto px-8 py-8 max-w-3xl mx-auto w-full">
       <div className="mb-6">
-        <h1 className="text-lg font-semibold text-gray-100">Pipeline</h1>
+        <h1 className="text-lg font-semibold text-gray-100">In production</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Status of committed briefs. Refreshes every 30 seconds.
+          Refreshes every 30 seconds.
         </p>
       </div>
 

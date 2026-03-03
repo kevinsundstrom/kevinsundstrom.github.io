@@ -9,7 +9,7 @@ export default async function Sidebar() {
     <aside className="w-48 flex-shrink-0 flex flex-col border-r border-gray-800 bg-gray-950">
       {/* Brand */}
       <div className="px-4 py-5 border-b border-gray-800">
-        <span className="text-sm font-semibold text-gray-100">Content intake</span>
+        <span className="text-sm font-semibold text-gray-100">Content Foundry</span>
       </div>
 
       {/* Nav */}
@@ -18,7 +18,7 @@ export default async function Sidebar() {
           href="/pipeline"
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
         >
-          Pipeline
+          In production
         </Link>
       </nav>
 

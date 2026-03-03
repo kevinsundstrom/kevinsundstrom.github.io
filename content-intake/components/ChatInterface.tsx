@@ -75,12 +75,12 @@ export default function ChatInterface({ conversationId, initialMessages }: Props
   }
 
   return (
-    <div className="flex flex-col h-full w-full px-6">
+    <div className="flex flex-col h-full w-full max-w-2xl mx-auto px-6">
       {/* Header */}
       <div className="py-5 border-b border-gray-800">
-        <h1 className="text-lg font-semibold text-gray-100">Content intake</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Content Foundry</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Upload a transcript or start a brief.
+          Start a brief, upload a transcript, or contribute knowledge.
         </p>
       </div>
 
