@@ -62,7 +62,7 @@ export default function ChatInterface({ conversationId, initialMessages }: Props
   }
 
   return (
-    <div className="flex flex-col h-full max-w-3xl mx-auto px-4">
+    <div className="flex flex-col h-full w-full px-6">
       {/* Header */}
       <div className="py-5 border-b border-gray-800">
         <h1 className="text-lg font-semibold text-gray-100">Content intake</h1>
@@ -72,7 +72,7 @@ export default function ChatInterface({ conversationId, initialMessages }: Props
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-6 space-y-5">
+      <div className="flex-1 overflow-y-auto py-6 pr-4 space-y-5">
         {messages.length === 0 && (
           <div className="text-gray-500 text-sm">
             <p>You can:</p>
