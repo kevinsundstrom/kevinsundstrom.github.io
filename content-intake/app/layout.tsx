@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 export const metadata: Metadata = {
   title: "Content Foundry",
   description: "Raw knowledge in, finished content out.",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default async function RootLayout({
