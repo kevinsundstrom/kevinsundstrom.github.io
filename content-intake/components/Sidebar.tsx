@@ -15,12 +15,6 @@ export default async function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 px-3 py-3 space-y-1">
         <Link
-          href="/"
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
-        >
-          + New conversation
-        </Link>
-        <Link
           href="/pipeline"
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
         >

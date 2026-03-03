@@ -18,9 +18,9 @@ export default function Home() {
 
       const convs = await listRes.json();
 
-      if (convs.length > 0) {
-        // Load the most recent conversation
-        router.replace(`/chat/${convs[0].id}`);
+      const active = convs.find((c: { status: string }) => c.status === "active");
+      if (active) {
+        router.replace(`/chat/${active.id}`);
       } else {
         // No conversations yet — create one
         const createRes = await fetch("/api/conversations", { method: "POST" });

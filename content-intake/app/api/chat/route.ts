@@ -146,6 +146,7 @@ export async function POST(req: Request) {
 
       let finalAssistantText = "";
       let briefSlugCommitted: string | null = null;
+      let anyCommitSucceeded = false;
 
       // Loop to handle tool calls — keeps going until no tool call is returned
       while (true) {
@@ -229,12 +230,10 @@ export async function POST(req: Request) {
                 const args = JSON.parse(tc.arguments);
                 result = await commitFile(args.path, args.content, args.message, githubToken);
 
-                // Detect brief commit — path like briefs/{slug}/brief.md
                 if (result.success) {
+                  anyCommitSucceeded = true;
                   const briefMatch = args.path.match(/^briefs\/([^/]+)\/brief\.md$/);
-                  if (briefMatch) {
-                    briefSlugCommitted = briefMatch[1];
-                  }
+                  if (briefMatch) briefSlugCommitted = briefMatch[1];
                 }
               } catch {
                 result = {
@@ -255,6 +254,11 @@ export async function POST(req: Request) {
         }
 
         break;
+      }
+
+      // Signal session end to client before closing
+      if (anyCommitSucceeded) {
+        controller.enqueue(encoder.encode(`2:[{"sessionCommitted":true}]\n`));
       }
 
       controller.close();
@@ -283,11 +287,14 @@ export async function POST(req: Request) {
             });
           }
 
-          // Update conversation if a brief was committed
-          if (briefSlugCommitted) {
+          // Mark session as committed after any successful commit
+          if (anyCommitSucceeded) {
             await db
               .update(conversations)
-              .set({ briefSlug: briefSlugCommitted, status: "committed" })
+              .set({
+                status: "committed",
+                ...(briefSlugCommitted ? { briefSlug: briefSlugCommitted } : {}),
+              })
               .where(eq(conversations.id, conversationId));
           }
         } catch {

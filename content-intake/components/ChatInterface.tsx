@@ -2,6 +2,7 @@
 
 import { useChat } from "ai/react";
 import { useRef, useEffect, useState, ChangeEvent } from "react";
+import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 
 interface StoredMessage {
@@ -17,7 +18,8 @@ interface Props {
 }
 
 export default function ChatInterface({ conversationId, initialMessages }: Props) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages } =
+  const router = useRouter();
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages, data } =
     useChat({
       api: "/api/chat",
       body: { conversationId },
@@ -26,6 +28,17 @@ export default function ChatInterface({ conversationId, initialMessages }: Props
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileStatus, setFileStatus] = useState<string | null>(null);
+
+  // When a commit succeeds, end the session and start a new one
+  useEffect(() => {
+    if (!data?.length) return;
+    const last = data[data.length - 1] as { sessionCommitted?: boolean };
+    if (last?.sessionCommitted) {
+      fetch("/api/conversations", { method: "POST" })
+        .then((r) => r.json())
+        .then((conv) => router.push(`/chat/${conv.id}`));
+    }
+  }, [data, router]);
 
   // Load persisted messages on mount
   useEffect(() => {
