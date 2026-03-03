@@ -1,5 +1,16 @@
-export { auth as proxy } from "@/auth";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+
+export const proxy = auth(function proxy(req) {
+  const pathname = req.nextUrl.pathname;
+  const isPublic =
+    pathname === "/login" || pathname.startsWith("/api/auth");
+
+  if (!req.auth && !isPublic) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+});
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
