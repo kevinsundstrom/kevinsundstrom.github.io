@@ -20,6 +20,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    authorized({ auth }) {
+      return !!auth;
+    },
     async session({ session, user }) {
       session.user.id = user.id;
 
