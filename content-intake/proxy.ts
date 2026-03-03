@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-export const proxy = auth(function proxy(req) {
+export const proxy = auth(function (req) {
   const pathname = req.nextUrl.pathname;
   const isPublic =
     pathname === "/login" || pathname.startsWith("/api/auth");

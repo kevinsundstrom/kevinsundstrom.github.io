@@ -8,8 +8,14 @@ export default function Home() {
 
   useEffect(() => {
     fetch("/api/conversations", { method: "POST" })
-      .then((r) => r.json())
-      .then((data) => setConversationId(data.id));
+      .then((r) => {
+        if (r.status === 401) {
+          window.location.href = "/login";
+          return null;
+        }
+        return r.json();
+      })
+      .then((data) => { if (data?.id) setConversationId(data.id); });
   }, []);
 
   if (!conversationId) {
