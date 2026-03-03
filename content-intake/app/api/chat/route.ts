@@ -3,8 +3,8 @@ import { Octokit } from "@octokit/rest";
 import { INTAKE_SYSTEM_PROMPT } from "@/lib/intake-system-prompt";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { accounts, conversations, messages } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { conversations, messages } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export const runtime = "nodejs";
 
@@ -128,16 +128,8 @@ export async function POST(req: Request) {
   const userId = session.user.id;
   const { messages: clientMessages, conversationId } = await req.json();
 
-  // Fetch user's GitHub OAuth token from accounts table
-  const [account] = await db
-    .select({ access_token: accounts.access_token })
-    .from(accounts)
-    .where(
-      and(eq(accounts.userId, userId), eq(accounts.provider, "github"))
-    )
-    .limit(1);
-
-  const githubToken = account?.access_token ?? process.env.GITHUB_TOKEN!;
+  // Use service token for all GitHub operations
+  const githubToken = process.env.GITHUB_TOKEN!;
 
   // GitHub Models inference still uses GITHUB_TOKEN (service token)
   const client = new OpenAI({

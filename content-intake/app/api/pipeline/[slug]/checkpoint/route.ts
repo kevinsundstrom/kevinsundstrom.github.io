@@ -1,7 +1,4 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
-import { accounts } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import { Octokit } from "@octokit/rest";
 
 export const runtime = "nodejs";
@@ -33,8 +30,6 @@ export async function GET(
   const { slug } = await params;
   const owner = process.env.PIPELINE_REPO_OWNER!;
   const repo = process.env.PIPELINE_REPO_NAME!;
-
-  // Use service token for reads — read-only and repo already accessible
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
   const [outline, coverageMap] = await Promise.all([
@@ -59,24 +54,7 @@ export async function POST(
     return Response.json({ error: "prNumber required" }, { status: 400 });
   }
 
-  // Use the user's OAuth token so the merge shows their name on GitHub
-  const [account] = await db
-    .select({ access_token: accounts.access_token })
-    .from(accounts)
-    .where(
-      and(
-        eq(accounts.userId, session.user.id),
-        eq(accounts.provider, "github")
-      )
-    )
-    .limit(1);
-
-  const githubToken = account?.access_token;
-  if (!githubToken) {
-    return Response.json({ error: "No GitHub token found" }, { status: 400 });
-  }
-
-  const octokit = new Octokit({ auth: githubToken });
+  const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
   const owner = process.env.PIPELINE_REPO_OWNER!;
   const repo = process.env.PIPELINE_REPO_NAME!;
   const { slug } = await params;
