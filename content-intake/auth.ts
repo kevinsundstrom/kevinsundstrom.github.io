@@ -23,22 +23,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async session({ session, user }) {
       session.user.id = user.id;
-
-      const row = await db
-        .select({ githubLogin: users.githubLogin })
-        .from(users)
-        .where(eq(users.id, user.id))
-        .limit(1);
-
-      session.user.githubLogin = row[0]?.githubLogin ?? null;
+      try {
+        const row = await db
+          .select({ githubLogin: users.githubLogin })
+          .from(users)
+          .where(eq(users.id, user.id))
+          .limit(1);
+        session.user.githubLogin = row[0]?.githubLogin ?? null;
+      } catch {
+        session.user.githubLogin = null;
+      }
       return session;
     },
     async signIn({ user, account, profile }) {
-      if (account?.provider === "github" && profile?.login && user.id) {
-        await db
-          .update(users)
-          .set({ githubLogin: profile.login as string })
-          .where(eq(users.id, user.id));
+      try {
+        if (account?.provider === "github" && profile?.login && user.id) {
+          await db
+            .update(users)
+            .set({ githubLogin: profile.login as string })
+            .where(eq(users.id, user.id));
+        }
+      } catch {
+        // non-fatal — sign-in still succeeds
       }
       return true;
     },

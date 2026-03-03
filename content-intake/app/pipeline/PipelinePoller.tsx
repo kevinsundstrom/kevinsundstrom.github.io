@@ -53,9 +53,12 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
 
   if (statuses.length === 0) {
     return (
-      <p className="text-gray-500 text-sm">
-        Nothing in production yet. Submit a brief to get started.
-      </p>
+      <div className="rounded-xl border border-gray-800 bg-gray-900 p-5">
+        <div className="flex items-center gap-3">
+          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 bg-gray-700" />
+          <span className="text-sm text-gray-500">Nothing in production yet. Submit a brief to get started.</span>
+        </div>
+      </div>
     );
   }
 
