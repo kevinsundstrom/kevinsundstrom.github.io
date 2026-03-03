@@ -6,6 +6,7 @@ import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   adapter: DrizzleAdapter(db, {
     usersTable: users,
     accountsTable: accounts,
@@ -20,13 +21,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    authorized({ auth }) {
-      return !!auth;
-    },
     async session({ session, user }) {
       session.user.id = user.id;
 
-      // Attach GitHub login from users table
       const row = await db
         .select({ githubLogin: users.githubLogin })
         .from(users)
@@ -37,7 +34,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     async signIn({ user, account, profile }) {
-      // Store GitHub login on the user row
       if (account?.provider === "github" && profile?.login && user.id) {
         await db
           .update(users)
