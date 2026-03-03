@@ -14,20 +14,34 @@ interface StoredMessage {
 
 interface Props {
   conversationId: string;
+  isOwner?: boolean;
   initialMessages?: StoredMessage[];
 }
 
-export default function ChatInterface({ conversationId, initialMessages }: Props) {
+export default function ChatInterface({ conversationId, isOwner, initialMessages }: Props) {
   const router = useRouter();
+  const [demoMode, setDemoMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("demoMode") === "true";
+  });
+
   const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages, data } =
     useChat({
       api: "/api/chat",
-      body: { conversationId },
+      body: { conversationId, demoMode },
     });
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileStatus, setFileStatus] = useState<string | null>(null);
+
+  function toggleDemo() {
+    setDemoMode((prev) => {
+      const next = !prev;
+      localStorage.setItem("demoMode", String(next));
+      return next;
+    });
+  }
 
   // When a commit succeeds, end the session and start a new one
   useEffect(() => {
@@ -77,11 +91,26 @@ export default function ChatInterface({ conversationId, initialMessages }: Props
   return (
     <div className="flex flex-col h-full w-full max-w-2xl mx-auto px-6">
       {/* Header */}
-      <div className="py-5 border-b border-gray-800">
-        <h1 className="text-lg font-semibold text-gray-100">Content Foundry</h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Start a brief, upload a transcript, or contribute knowledge.
-        </p>
+      <div className="py-5 border-b border-gray-800 flex items-center justify-between">
+        <div>
+          <h1 className="text-lg font-semibold text-gray-100">Content Foundry</h1>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Start a brief, upload a transcript, or contribute knowledge.
+          </p>
+        </div>
+        {isOwner && (
+          <button
+            onClick={toggleDemo}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              demoMode
+                ? "bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30"
+                : "bg-gray-800 text-gray-500 hover:bg-gray-700 hover:text-gray-400"
+            }`}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${demoMode ? "bg-yellow-400" : "bg-gray-600"}`} />
+            {demoMode ? "Demo on" : "Demo"}
+          </button>
+        )}
       </div>
 
       {/* Messages */}

@@ -126,7 +126,10 @@ export async function POST(req: Request) {
   }
 
   const userId = session.user.id;
-  const { messages: clientMessages, conversationId } = await req.json();
+  const { messages: clientMessages, conversationId, demoMode } = await req.json();
+
+  // Demo mode only available to the owner
+  const isDemoMode = demoMode === true && session.user.githubLogin === "kevinsundstrom";
 
   // Use service token for all GitHub operations
   const githubToken = process.env.GITHUB_TOKEN!;
@@ -228,7 +231,9 @@ export async function POST(req: Request) {
               let result: { success: boolean; url?: string; error?: string };
               try {
                 const args = JSON.parse(tc.arguments);
-                result = await commitFile(args.path, args.content, args.message, githubToken);
+                result = isDemoMode
+                  ? { success: true, url: "#" }
+                  : await commitFile(args.path, args.content, args.message, githubToken);
 
                 if (result.success) {
                   anyCommitSucceeded = true;

@@ -7,22 +7,31 @@ import ChatInterface from "@/components/ChatInterface";
 export default function Home() {
   const router = useRouter();
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     async function init() {
-      const listRes = await fetch("/api/conversations");
+      const [listRes, sessionRes] = await Promise.all([
+        fetch("/api/conversations"),
+        fetch("/api/auth/session"),
+      ]);
+
       if (listRes.status === 401) {
         window.location.href = "/login";
         return;
       }
 
-      const convs = await listRes.json();
+      const [convs, sessionData] = await Promise.all([
+        listRes.json(),
+        sessionRes.json(),
+      ]);
+
+      setIsOwner(sessionData?.user?.githubLogin === "kevinsundstrom");
 
       const active = convs.find((c: { status: string }) => c.status === "active");
       if (active) {
         router.replace(`/chat/${active.id}`);
       } else {
-        // No conversations yet — create one
         const createRes = await fetch("/api/conversations", { method: "POST" });
         const data = await createRes.json();
         if (data?.id) setConversationId(data.id);
@@ -42,7 +51,7 @@ export default function Home() {
 
   return (
     <div className="flex-1 flex overflow-hidden">
-      <ChatInterface conversationId={conversationId} />
+      <ChatInterface conversationId={conversationId} isOwner={isOwner} />
     </div>
   );
 }

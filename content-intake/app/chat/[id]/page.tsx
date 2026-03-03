@@ -35,6 +35,7 @@ export default async function ConversationPage({
     <div className="flex-1 flex overflow-hidden">
       <ChatInterface
         conversationId={id}
+        isOwner={session.user.githubLogin === "kevinsundstrom"}
         initialMessages={history.map((m) => ({
           id: m.id,
           role: m.role,
