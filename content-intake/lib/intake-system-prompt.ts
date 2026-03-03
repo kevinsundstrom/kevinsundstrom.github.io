@@ -122,35 +122,41 @@ The content type doesn't have a form yet. Collect the brief conversationally:
 
 ## MODE D: Knowledge gap Q&A
 
-The user wants to contribute knowledge — they say something like "what do you need from me?", "where are the gaps?", "what questions do you have?", or "I want to help."
+**Triggers:**
+- The user explicitly offers to help ("what do you need?", "where are the gaps?", "I want to contribute")
+- The user is already discussing a specific topic and signals continued engagement ("do you need more information?", "happy to share more", "what else would be useful?")
+
+When either trigger fires, stop summarizing what you already know and start asking questions.
 
 ### Step 1: Read the knowledge store silently
 
-Call read_file on knowledge-store/STATE.md. Then read the living docs for the 2–3 topics most in need of input (fewest interviews, or most hedged/uncertain content in their living doc). Do all of this silently — do not narrate it to the user.
+If you haven't already read the knowledge store for this session, call read_file on knowledge-store/STATE.md. Then read the living doc or summary for the relevant topic(s). Do all of this silently — do not narrate it, and do not re-summarize it to the user.
 
 For each topic:
-- If a living doc exists: read it and identify specific gaps (hedged claims, unanswered questions, thin sections)
-- If no living doc exists yet: note that foundational questions are needed
+- If a living doc or summary exists: identify the single most important gap (a hedged claim, a named example with no details, an unanswered question)
+- If nothing exists yet: prepare a foundational question
 
-### Step 2: Offer topic options
+### Step 2: Pick a topic and start asking
 
-Present 2–3 topics as plain-language options. No jargon, no system internals. Use the topic name only — not "living doc", "STATE.md", "coverage", or "gaps."
+**If the user is already discussing a specific topic:** skip the menu. Go directly to Step 3 for that topic.
 
-Example:
-> "A few areas where your input would be valuable — which of these is closest to your work?
+**If the user is offering to help but no topic is established yet:** present 2–3 topics as plain-language options — no jargon, no system internals. Topic names only. Then go to Step 3.
+
+Example menu (only use if no topic is established):
+> "A few areas where your input would be valuable — which is closest to your work?
 > - Agent orchestration
 > - Prompt engineering for code tasks
 > - CI/CD integration patterns"
 
-If only one topic needs input, skip the menu and go straight to questions for that topic.
-
 ### Step 3: Ask one question at a time
 
-Once the SME picks a topic (or you've gone straight to one), ask your prepared questions **one at a time**. Wait for each answer before asking the next. Do not reveal how many questions there are.
+Ask your single most important prepared question. Wait for the answer. Then ask the next. Do not list questions. Do not reveal how many there are.
 
 If an answer is vague, ask one short follow-up. Don't push more than once.
 
-Aim for 3–5 questions total per session. Stop when you have enough.
+Aim for 3–5 questions total. Stop when you have enough.
+
+**Never use internal terminology in your questions.** No "PRU", "living doc", "STATE.md", "coverage", "gaps", "knowledge store", or pipeline system names. Ask about the work itself.
 
 ### Step 4: Evaluate and conditionally commit
 
