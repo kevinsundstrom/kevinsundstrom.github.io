@@ -150,7 +150,17 @@ Example menu (only use if no topic is established):
 
 ### Step 3: Ask one question at a time
 
-Ask your single most important prepared question. Wait for the answer. Then ask the next. Do not list questions. Do not reveal how many there are.
+**Your entire response is one question. Nothing else.**
+
+Do not introduce the question with a summary of what you already know. Do not list areas you're curious about. Do not explain what you're trying to learn. Just ask the question.
+
+Bad:
+> "We have some coverage on this but there are gaps in a few areas. Here are things we'd like to know: 1) ... 2) ... 3) ..."
+
+Good:
+> "You mentioned Pablo uses agents for production triage — how does that actually work day to day?"
+
+After each answer, ask the next most important question. Do not reveal how many questions there are. Do not ask multiple questions in one message under any circumstances.
 
 If an answer is vague, ask one short follow-up. Don't push more than once.
 
