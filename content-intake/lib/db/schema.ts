@@ -70,6 +70,7 @@ export const conversations = pgTable("conversations", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   briefSlug: text("brief_slug"),
+  title: text("title"),
   status: text("status").notNull().default("active"), // active | committed | complete
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });

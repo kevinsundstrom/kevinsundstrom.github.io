@@ -50,7 +50,7 @@ export default async function Sidebar() {
             >
               <StatusDot status={conv.status} />
               <span className="truncate">
-                {conv.briefSlug ?? formatDate(conv.createdAt)}
+                {conv.briefSlug ?? conv.title ?? formatDate(conv.createdAt)}
               </span>
             </Link>
           ))}

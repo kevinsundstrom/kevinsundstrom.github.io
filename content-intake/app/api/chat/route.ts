@@ -271,10 +271,24 @@ export async function POST(req: Request) {
       // Persist messages to DB after streaming ends
       if (conversationId) {
         try {
-          // Persist the last user message
           const lastUserMsg = [...clientMessages].reverse().find(
             (m: { role: string; content: string }) => m.role === "user"
           );
+
+          // On first message, generate a title in parallel with persistence
+          const isFirstMessage = clientMessages.length === 1 && clientMessages[0]?.role === "user";
+          const titlePromise = isFirstMessage && lastUserMsg
+            ? client.chat.completions.create({
+                model: "gpt-4o",
+                messages: [
+                  {
+                    role: "user",
+                    content: `Generate a short 3-6 word title for a conversation that starts with this message. Return only the title, no punctuation, no quotes.\n\nMessage: ${lastUserMsg.content.slice(0, 300)}`,
+                  },
+                ],
+              }).then((r) => r.choices[0]?.message?.content?.trim() ?? null).catch(() => null)
+            : Promise.resolve(null);
+
           if (lastUserMsg) {
             await db.insert(messages).values({
               conversationId,
@@ -283,7 +297,6 @@ export async function POST(req: Request) {
             });
           }
 
-          // Persist the assistant response
           if (finalAssistantText) {
             await db.insert(messages).values({
               conversationId,
@@ -292,14 +305,18 @@ export async function POST(req: Request) {
             });
           }
 
-          // Mark session as committed after any successful commit
+          const conversationUpdate: Record<string, string> = {};
           if (anyCommitSucceeded) {
+            conversationUpdate.status = "committed";
+            if (briefSlugCommitted) conversationUpdate.briefSlug = briefSlugCommitted;
+          }
+          const generatedTitle = await titlePromise;
+          if (generatedTitle) conversationUpdate.title = generatedTitle;
+
+          if (Object.keys(conversationUpdate).length > 0) {
             await db
               .update(conversations)
-              .set({
-                status: "committed",
-                ...(briefSlugCommitted ? { briefSlug: briefSlugCommitted } : {}),
-              })
+              .set(conversationUpdate)
               .where(eq(conversations.id, conversationId));
           }
         } catch {
