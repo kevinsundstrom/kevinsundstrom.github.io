@@ -34,6 +34,7 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileStatus, setFileStatus] = useState<string | null>(null);
+  const titleRefreshed = useRef(false);
 
   function toggleDemo() {
     setDemoMode((prev) => {
@@ -71,6 +72,14 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // After first exchange completes, refresh server components so sidebar shows the generated title
+  useEffect(() => {
+    if (!isLoading && messages.length >= 2 && !titleRefreshed.current) {
+      titleRefreshed.current = true;
+      setTimeout(() => router.refresh(), 1500);
+    }
+  }, [isLoading, messages.length, router]);
 
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
