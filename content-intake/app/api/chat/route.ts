@@ -305,18 +305,16 @@ export async function POST(req: Request) {
             });
           }
 
-          const conversationUpdate: Record<string, string> = {};
-          if (anyCommitSucceeded) {
-            conversationUpdate.status = "committed";
-            if (briefSlugCommitted) conversationUpdate.briefSlug = briefSlugCommitted;
-          }
           const generatedTitle = await titlePromise;
-          if (generatedTitle) conversationUpdate.title = generatedTitle;
 
-          if (Object.keys(conversationUpdate).length > 0) {
+          if (anyCommitSucceeded || generatedTitle) {
             await db
               .update(conversations)
-              .set(conversationUpdate)
+              .set({
+                ...(anyCommitSucceeded ? { status: "committed" } : {}),
+                ...(briefSlugCommitted ? { briefSlug: briefSlugCommitted } : {}),
+                ...(generatedTitle ? { title: generatedTitle } : {}),
+              })
               .where(eq(conversations.id, conversationId));
           }
         } catch {
