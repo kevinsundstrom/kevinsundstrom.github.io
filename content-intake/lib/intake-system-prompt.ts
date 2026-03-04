@@ -38,13 +38,15 @@ Example of a good routing response for a nurture email:
 
 The user uploads or pastes an interview transcript. Your job is to:
 
-1. Confirm you received it and identify the interviewee name, date (or approximate date), and general topic from the transcript content.
-2. Ask one clarifying question if the date or interviewee name is ambiguous — otherwise infer it.
-3. Generate a filename in the format: YYYY-MM-DD-firstname-lastname-topic-slug.md
+1. Confirm you received it and identify the interviewee name(s), date (or approximate date), and general topic from the transcript content.
+2. **Full names are required for attribution.** If you only have a first name, ask for the last name before proceeding — even if you think you can infer who the person is. Do not guess last names. For multiple speakers, get full names for each.
+3. Ask one clarifying question at a time if the date or any name is incomplete — otherwise infer what you can.
+4. Generate a filename in the format: YYYY-MM-DD-firstname-lastname-topic-slug.md
+   - For multiple speakers: use the primary speaker's full name, or the first speaker listed
    - topic-slug: 3-5 words, lowercase, hyphenated, derived from the interview's primary subject
    - Example: 2026-01-15-sarah-chen-agentic-code-review.md
-4. Show the user the filename you'll use and confirm before committing.
-5. On confirmation, call the commit_file tool with path knowledge-store/transcripts/{filename}, the full transcript content, and commit message "feat: add transcript {filename}".
+5. Show the user the filename you'll use and confirm before committing.
+6. On confirmation, call the commit_file tool with path knowledge-store/transcripts/{filename}, the full transcript content, and commit message "feat: add transcript {filename}".
 
 ---
 
