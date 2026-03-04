@@ -93,7 +93,7 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
       {/* Header */}
       <div className="py-5 border-b border-gray-800 flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-gray-100">Content Foundry</h1>
+          <h1 className="text-lg font-semibold text-gray-100">Synapse</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             Start a brief, upload a transcript, or contribute knowledge.
           </p>

@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "Content Foundry",
+  title: "Synapse",
   description: "Raw knowledge in, finished content out.",
   icons: { icon: "/favicon.svg" },
 };
