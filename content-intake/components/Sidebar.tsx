@@ -1,9 +1,32 @@
 import { auth, signOut } from "@/auth";
+import { db } from "@/lib/db";
+import { conversations } from "@/lib/db/schema";
+import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
+
+function StatusDot({ status }: { status: string }) {
+  const base = "w-1.5 h-1.5 rounded-full flex-shrink-0";
+  if (status === "complete") return <span className={`${base} bg-green-500`} />;
+  if (status === "committed") return <span className={`${base} bg-yellow-400`} />;
+  return <span className={`${base} bg-gray-600`} />;
+}
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
+    " · " +
+    date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+}
 
 export default async function Sidebar() {
   const session = await auth();
   if (!session?.user?.id) return null;
+
+  const recent = await db
+    .select()
+    .from(conversations)
+    .where(eq(conversations.userId, session.user.id))
+    .orderBy(desc(conversations.createdAt))
+    .limit(10);
 
   return (
     <aside className="w-48 flex-shrink-0 flex flex-col border-r border-gray-800 bg-gray-950">
@@ -16,13 +39,32 @@ export default async function Sidebar() {
       </Link>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-3 space-y-1">
-        <Link
-          href="/pipeline"
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
-        >
-          In production
-        </Link>
+      <nav className="flex-1 px-3 py-3 flex flex-col gap-4 overflow-y-auto min-h-0">
+        {/* Conversations */}
+        <div className="space-y-0.5">
+          {recent.map((conv) => (
+            <Link
+              key={conv.id}
+              href={`/chat/${conv.id}`}
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition-colors min-w-0"
+            >
+              <StatusDot status={conv.status} />
+              <span className="truncate">
+                {conv.briefSlug ?? formatDate(conv.createdAt)}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Pipeline */}
+        <div className="space-y-0.5">
+          <Link
+            href="/pipeline"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
+          >
+            In production
+          </Link>
+        </div>
       </nav>
 
       {/* Sign out */}
