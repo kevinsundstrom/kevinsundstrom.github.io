@@ -283,14 +283,15 @@ export async function POST(req: Request) {
               try {
                 const args = JSON.parse(tc.arguments);
                 const isOwner = session.user.githubLogin === "kevinsundstrom";
-                // For transcript commits, use the uploaded file content instead of model-generated content
                 const isTranscript = args.path.startsWith("knowledge-store/transcripts/");
+                // Transcripts always go via PR so ingestion-review triggers regardless of who uploads
+                const usePr = isTranscript || !isOwner;
                 const commitContent = (isTranscript && fileContent) ? fileContent : args.content;
                 result = isDemoMode
                   ? { success: true, url: "#" }
-                  : isOwner
-                  ? await commitFile(args.path, commitContent, args.message, githubToken)
-                  : await createPrForFile(args.path, commitContent, args.message, githubToken);
+                  : usePr
+                  ? await createPrForFile(args.path, commitContent, args.message, githubToken)
+                  : await commitFile(args.path, commitContent, args.message, githubToken);
 
                 if (result.success) {
                   anyCommitSucceeded = true;
