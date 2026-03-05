@@ -69,6 +69,56 @@ async function commitFile(
   }
 }
 
+async function createPrForFile(
+  path: string,
+  content: string,
+  message: string,
+  githubToken: string
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  const octokit = new Octokit({ auth: githubToken });
+  const owner = process.env.PIPELINE_REPO_OWNER!;
+  const repo = process.env.PIPELINE_REPO_NAME!;
+
+  try {
+    // Get main HEAD SHA
+    const { data: refData } = await octokit.git.getRef({ owner, repo, ref: "heads/main" });
+    const mainSha = refData.object.sha;
+
+    // Derive a branch name from the file path
+    const slug = path.split("/").pop()?.replace(".md", "") ?? "intake-" + Date.now();
+    const branch = `intake/${slug}`;
+
+    // Create branch
+    await octokit.git.createRef({ owner, repo, ref: `refs/heads/${branch}`, sha: mainSha });
+
+    // Commit file to branch
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path,
+      message,
+      content: Buffer.from(content).toString("base64"),
+      branch,
+    });
+
+    // Open PR
+    const { data: pr } = await octokit.pulls.create({
+      owner,
+      repo,
+      title: message,
+      head: branch,
+      base: "main",
+    });
+
+    return { success: true, url: pr.html_url };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown GitHub API error",
+    };
+  }
+}
+
 const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   {
     type: "function",
@@ -231,9 +281,12 @@ export async function POST(req: Request) {
               let result: { success: boolean; url?: string; error?: string };
               try {
                 const args = JSON.parse(tc.arguments);
+                const isOwner = session.user.githubLogin === "kevinsundstrom";
                 result = isDemoMode
                   ? { success: true, url: "#" }
-                  : await commitFile(args.path, args.content, args.message, githubToken);
+                  : isOwner
+                  ? await commitFile(args.path, args.content, args.message, githubToken)
+                  : await createPrForFile(args.path, args.content, args.message, githubToken);
 
                 if (result.success) {
                   anyCommitSucceeded = true;
