@@ -176,7 +176,7 @@ export async function POST(req: Request) {
   }
 
   const userId = session.user.id;
-  const { messages: clientMessages, conversationId, demoMode } = await req.json();
+  const { messages: clientMessages, conversationId, demoMode, fileContent } = await req.json();
 
   // Demo mode only available to the owner
   const isDemoMode = demoMode === true && session.user.githubLogin === "kevinsundstrom";
@@ -283,11 +283,14 @@ export async function POST(req: Request) {
               try {
                 const args = JSON.parse(tc.arguments);
                 const isOwner = session.user.githubLogin === "kevinsundstrom";
+                // For transcript commits, use the uploaded file content instead of model-generated content
+                const isTranscript = args.path.startsWith("knowledge-store/transcripts/");
+                const commitContent = (isTranscript && fileContent) ? fileContent : args.content;
                 result = isDemoMode
                   ? { success: true, url: "#" }
                   : isOwner
-                  ? await commitFile(args.path, args.content, args.message, githubToken)
-                  : await createPrForFile(args.path, args.content, args.message, githubToken);
+                  ? await commitFile(args.path, commitContent, args.message, githubToken)
+                  : await createPrForFile(args.path, commitContent, args.message, githubToken);
 
                 if (result.success) {
                   anyCommitSucceeded = true;

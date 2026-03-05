@@ -40,6 +40,7 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileStatus, setFileStatus] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<{ name: string; content: string } | null>(null);
   const titleRefreshed = useRef(false);
   const initialScrollDone = useRef(false);
 
@@ -84,12 +85,24 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
     const text = await file.text();
     setFileStatus(null);
 
+    setPendingFile({ name: file.name, content: text });
+
     await append({
       role: "user",
-      content: `I'm uploading a transcript file named "${file.name}":\n\n${text}`,
+      content: `I have a transcript ready to upload: "${file.name}"`,
     });
 
     if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function sendTranscript() {
+    if (!pendingFile) return;
+    const { content } = pendingFile;
+    setPendingFile(null);
+    await append(
+      { role: "user", content: "Please save this transcript." },
+      { body: { fileContent: content } }
+    );
   }
 
   return (
@@ -188,6 +201,18 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
 
       {/* Input area */}
       <div className="py-4 border-t border-gray-800">
+        {pendingFile && (
+          <div className="flex items-center justify-between mb-3 px-3 py-2 bg-gray-800 rounded-xl text-xs">
+            <span className="text-gray-400 truncate">{pendingFile.name} ready to send</span>
+            <button
+              onClick={sendTranscript}
+              disabled={isLoading}
+              className="ml-3 flex-shrink-0 px-3 py-1 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-lg transition-colors"
+            >
+              Send transcript
+            </button>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="flex gap-2 items-end">
           <div className="flex-1 flex flex-col gap-2">
             {fileStatus && (
