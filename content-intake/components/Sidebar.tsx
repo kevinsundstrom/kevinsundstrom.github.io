@@ -1,6 +1,6 @@
 import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
-import { conversations } from "@/lib/db/schema";
+import { conversations, messages } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
 
@@ -22,9 +22,17 @@ export default async function Sidebar() {
   if (!session?.user?.id) return null;
 
   const recent = await db
-    .select()
+    .select({
+      id: conversations.id,
+      briefSlug: conversations.briefSlug,
+      title: conversations.title,
+      status: conversations.status,
+      createdAt: conversations.createdAt,
+    })
     .from(conversations)
+    .innerJoin(messages, eq(messages.conversationId, conversations.id))
     .where(eq(conversations.userId, session.user.id))
+    .groupBy(conversations.id, conversations.briefSlug, conversations.title, conversations.status, conversations.createdAt)
     .orderBy(desc(conversations.createdAt))
     .limit(10);
 

@@ -25,16 +25,23 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
     return localStorage.getItem("demoMode") === "true";
   });
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages, data } =
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append, data } =
     useChat({
       api: "/api/chat",
       body: { conversationId, demoMode },
+      initialMessages: initialMessages?.map((m) => ({
+        id: m.id,
+        role: m.role as "user" | "assistant",
+        content: m.content,
+        createdAt: new Date(m.createdAt),
+      })),
     });
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileStatus, setFileStatus] = useState<string | null>(null);
   const titleRefreshed = useRef(false);
+  const initialScrollDone = useRef(false);
 
   function toggleDemo() {
     setDemoMode((prev) => {
@@ -55,22 +62,10 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
     }
   }, [data, router]);
 
-  // Load persisted messages on mount
   useEffect(() => {
-    if (initialMessages && initialMessages.length > 0) {
-      setMessages(
-        initialMessages.map((m) => ({
-          id: m.id,
-          role: m.role as "user" | "assistant",
-          content: m.content,
-          createdAt: new Date(m.createdAt),
-        }))
-      );
-    }
-  }, [initialMessages, setMessages]);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const behavior = initialScrollDone.current ? "smooth" : "instant";
+    bottomRef.current?.scrollIntoView({ behavior });
+    initialScrollDone.current = true;
   }, [messages]);
 
   // After first exchange completes, refresh server components so sidebar shows the generated title
