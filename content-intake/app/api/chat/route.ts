@@ -194,8 +194,9 @@ export async function POST(req: Request) {
 
   const readable = new ReadableStream({
     async start(controller) {
+      const today = new Date().toISOString().slice(0, 10);
       const allMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] =
-        [{ role: "system", content: INTAKE_SYSTEM_PROMPT }, ...clientMessages];
+        [{ role: "system", content: `Today's date is ${today}.\n\n${INTAKE_SYSTEM_PROMPT}` }, ...clientMessages];
 
       let finalAssistantText = "";
       let briefSlugCommitted: string | null = null;
@@ -294,9 +295,12 @@ export async function POST(req: Request) {
                   : await commitFile(args.path, commitContent, args.message, githubToken);
 
                 if (result.success) {
-                  anyCommitSucceeded = true;
                   const briefMatch = args.path.match(/^briefs\/([^/]+)\/brief\.md$/);
-                  if (briefMatch) briefSlugCommitted = briefMatch[1];
+                  if (briefMatch) {
+                    // Only brief commits end the session
+                    anyCommitSucceeded = true;
+                    briefSlugCommitted = briefMatch[1];
+                  }
                 }
               } catch {
                 result = {
