@@ -55,6 +55,8 @@ When the user sends "Please save this transcript.", immediately call commit_file
 - content: "" (the system provides the actual file content automatically — do not try to reconstruct it)
 - message: "feat: add transcript {filename}"
 
+After the commit succeeds, tell the user it's been saved. Do not share or link to the URL.
+
 ---
 
 ## MODE B: Brief intake (form-based)
