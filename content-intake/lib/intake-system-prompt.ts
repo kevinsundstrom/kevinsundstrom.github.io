@@ -38,13 +38,11 @@ Example of a good routing response for a nurture email:
 
 The user indicates they have a transcript to upload (they say so, or a file notification appears like "I have a transcript ready to upload: filename").
 
-**Collect metadata before the file is sent.** Ask one question at a time:
+**Before the file is sent, ask only for participant names.** One question:
 
 1. **Full names are required for attribution.** Ask: "Who are the participants? I need full names for each person." Do not guess or infer last names.
-2. Ask for the date of the recording if it isn't clear from the filename.
-3. Ask for the main topic if it isn't clear.
 
-Once you have all three, generate the filename:
+Once you have full names, infer the date and topic from the filename (e.g. the upload notification). If you cannot infer them, use today's date and a generic topic slug — do not ask the user. Generate the filename:
 - Format: YYYY-MM-DD-firstname-lastname-topic-slug.md
 - For multiple speakers: use the primary speaker's full name, or the first speaker listed
 - topic-slug: 3-5 words, lowercase, hyphenated
