@@ -1,7 +1,7 @@
 import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { conversations, messages } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import Link from "next/link";
 
 function StatusDot({ status }: { status: string }) {
@@ -28,6 +28,7 @@ export default async function Sidebar() {
       title: conversations.title,
       status: conversations.status,
       createdAt: conversations.createdAt,
+      firstUserMessage: sql<string>`min(case when ${messages.role} = 'user' then ${messages.content} end)`,
     })
     .from(conversations)
     .innerJoin(messages, eq(messages.conversationId, conversations.id))
@@ -48,20 +49,32 @@ export default async function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-3 flex flex-col gap-4 overflow-y-auto min-h-0">
+        {/* New chat */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
+        >
+          + New chat
+        </Link>
+
         {/* Conversations */}
         <div className="space-y-0.5">
-          {recent.map((conv) => (
-            <Link
-              key={conv.id}
-              href={`/chat/${conv.id}`}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition-colors min-w-0"
-            >
-              <StatusDot status={conv.status} />
-              <span className="truncate">
-                {conv.briefSlug ?? conv.title ?? formatDate(conv.createdAt)}
-              </span>
-            </Link>
-          ))}
+          {recent.map((conv) => {
+            const label = conv.briefSlug
+              ?? conv.title
+              ?? (conv.firstUserMessage ? conv.firstUserMessage.slice(0, 40) : null)
+              ?? formatDate(conv.createdAt);
+            return (
+              <Link
+                key={conv.id}
+                href={`/chat/${conv.id}`}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition-colors min-w-0"
+              >
+                <StatusDot status={conv.status} />
+                <span className="truncate">{label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Pipeline */}
