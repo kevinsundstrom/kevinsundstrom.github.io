@@ -201,6 +201,7 @@ export async function POST(req: Request) {
       let briefSlugCommitted: string | null = null;
       let anyCommitSucceeded = false;
 
+      try {
       // Loop to handle tool calls — keeps going until no tool call is returned
       while (true) {
         const stream = await client.chat.completions.create({
@@ -312,6 +313,10 @@ export async function POST(req: Request) {
         }
 
         break;
+      }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+        controller.enqueue(encoder.encode(`0:${JSON.stringify("Sorry, I ran into an error: " + msg)}\n`));
       }
 
       // Signal session end to client before closing
