@@ -15,7 +15,8 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
   const [loading, setLoading] = useState(true);
   const [showNotes, setShowNotes] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState<"approved" | "changes-requested" | null>(null);
+  const [rerunning, setRerunning] = useState(false);
+  const [done, setDone] = useState<"approved" | "changes-requested" | "rerunning" | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +58,31 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
 
   if (loading) {
     return <p className="text-xs text-gray-500 animate-pulse">Loading draft…</p>;
+  }
+
+  async function handleRerun() {
+    setRerunning(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/pipeline/${encodeURIComponent(slug)}/rerun-draft`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to re-run");
+      setDone("rerunning");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setRerunning(false);
+    }
+  }
+
+  if (done === "rerunning") {
+    return (
+      <div className="rounded-lg bg-gray-800 px-4 py-3 text-sm text-yellow-400">
+        Draft agent is running — check back in a few minutes.
+      </div>
+    );
   }
 
   if (done === "approved") {
@@ -139,20 +165,27 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
           </div>
         </div>
       ) : (
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => handleAction("approve")}
-            disabled={submitting || !hasContent}
+            disabled={submitting || rerunning || !hasContent}
             className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
           >
             {submitting ? "Approving…" : "Approve draft"}
           </button>
           <button
             onClick={() => setShowFeedback(true)}
-            disabled={submitting || !hasContent}
+            disabled={submitting || rerunning || !hasContent}
             className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed text-gray-300 text-sm font-medium transition-colors"
           >
             Request changes
+          </button>
+          <button
+            onClick={handleRerun}
+            disabled={submitting || rerunning}
+            className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed text-gray-300 text-sm font-medium transition-colors"
+          >
+            {rerunning ? "Starting…" : "Re-run draft"}
           </button>
         </div>
       )}
