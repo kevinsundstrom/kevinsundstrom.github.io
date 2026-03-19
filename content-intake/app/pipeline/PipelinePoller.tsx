@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CheckpointPanel from "@/components/CheckpointPanel";
+import Checkpoint2Panel from "@/components/Checkpoint2Panel";
 
 interface PrRef {
   number: number;
@@ -88,17 +89,6 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
             </a>
           )}
 
-          {s.checkpoint2Pr && (
-            <a
-              href={s.checkpoint2Pr.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-blue-400 hover:underline block"
-            >
-              Checkpoint 2 PR #{s.checkpoint2Pr.number}
-            </a>
-          )}
-
           {s.stage === "checkpoint-1-open" && s.checkpoint1Pr && (
             <CheckpointPanel
               slug={s.slug}
@@ -107,6 +97,20 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
                 setStatuses((prev) =>
                   prev.map((x) =>
                     x.slug === s.slug ? { ...x, stage: "running" } : x
+                  )
+                )
+              }
+            />
+          )}
+
+          {s.stage === "checkpoint-2-open" && s.checkpoint2Pr && (
+            <Checkpoint2Panel
+              slug={s.slug}
+              prNumber={s.checkpoint2Pr.number}
+              onApproved={() =>
+                setStatuses((prev) =>
+                  prev.map((x) =>
+                    x.slug === s.slug ? { ...x, stage: "complete" } : x
                   )
                 )
               }
