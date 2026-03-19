@@ -4,9 +4,30 @@ import { INTAKE_SYSTEM_PROMPT } from "@/lib/intake-system-prompt";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { conversations, messages } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, gt, sql } from "drizzle-orm";
 
 export const runtime = "nodejs";
+
+// ── Path validation ──────────────────────────────────────────────────────────
+
+const READ_ALLOWED = [
+  /^knowledge-store\/STATE\.md$/,
+  /^knowledge-store\/living-docs\/[^/]+\.md$/,
+  /^knowledge-store\/summaries\/[^/]+\.md$/,
+  /^knowledge-store\/transcripts\/[^/]+\.md$/,
+  /^briefs\/[^/]+\/brief\.md$/,
+];
+
+const COMMIT_ALLOWED = [
+  /^briefs\/[^/]+\/brief\.md$/,
+  /^knowledge-store\/transcripts\/[^/]+\.md$/,
+];
+
+function isValidPath(path: string, patterns: RegExp[]): boolean {
+  if (typeof path !== "string") return false;
+  if (path.includes("..") || path.includes("//")) return false;
+  return patterns.some((p) => p.test(path));
+}
 
 async function readFile(
   path: string,
@@ -176,6 +197,24 @@ export async function POST(req: Request) {
   }
 
   const userId = session.user.id;
+
+  // Rate limit: max 50 user messages per hour
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(messages)
+    .innerJoin(conversations, eq(messages.conversationId, conversations.id))
+    .where(
+      and(
+        eq(conversations.userId, userId),
+        eq(messages.role, "user"),
+        gt(messages.createdAt, oneHourAgo)
+      )
+    );
+  if (Number(count) >= 50) {
+    return Response.json({ error: "Rate limit exceeded. Try again in an hour." }, { status: 429 });
+  }
+
   const { messages: clientMessages, conversationId, demoMode, fileContent } = await req.json();
 
   // Demo mode only available to the owner
@@ -269,7 +308,11 @@ export async function POST(req: Request) {
               let result: { success: boolean; content?: string; error?: string };
               try {
                 const args = JSON.parse(tc.arguments);
-                result = await readFile(args.path, githubToken);
+                if (!isValidPath(args.path, READ_ALLOWED)) {
+                  result = { success: false, error: "Path not permitted" };
+                } else {
+                  result = await readFile(args.path, githubToken);
+                }
               } catch {
                 result = { success: false, error: "Failed to parse tool arguments" };
               }
@@ -283,23 +326,27 @@ export async function POST(req: Request) {
               let result: { success: boolean; url?: string; error?: string };
               try {
                 const args = JSON.parse(tc.arguments);
-                const isOwner = session.user.githubLogin === "kevinsundstrom";
-                const isTranscript = args.path.startsWith("knowledge-store/transcripts/");
-                // Transcripts always go via PR so ingestion-review triggers regardless of who uploads
-                const usePr = isTranscript || !isOwner;
-                const commitContent = (isTranscript && fileContent) ? fileContent : args.content;
-                result = isDemoMode
-                  ? { success: true, url: "#" }
-                  : usePr
-                  ? await createPrForFile(args.path, commitContent, args.message, githubToken)
-                  : await commitFile(args.path, commitContent, args.message, githubToken);
+                if (!isValidPath(args.path, COMMIT_ALLOWED)) {
+                  result = { success: false, error: "Path not permitted" };
+                } else {
+                  const isOwner = session.user.githubLogin === "kevinsundstrom";
+                  const isTranscript = args.path.startsWith("knowledge-store/transcripts/");
+                  // Transcripts always go via PR so ingestion-review triggers regardless of who uploads
+                  const usePr = isTranscript || !isOwner;
+                  const commitContent = (isTranscript && fileContent) ? fileContent : args.content;
+                  result = isDemoMode
+                    ? { success: true, url: "#" }
+                    : usePr
+                    ? await createPrForFile(args.path, commitContent, args.message, githubToken)
+                    : await commitFile(args.path, commitContent, args.message, githubToken);
 
-                if (result.success) {
-                  const briefMatch = args.path.match(/^briefs\/([^/]+)\/brief\.md$/);
-                  if (briefMatch) {
-                    // Only brief commits end the session
-                    anyCommitSucceeded = true;
-                    briefSlugCommitted = briefMatch[1];
+                  if (result.success) {
+                    const briefMatch = args.path.match(/^briefs\/([^/]+)\/brief\.md$/);
+                    if (briefMatch) {
+                      // Only brief commits end the session
+                      anyCommitSucceeded = true;
+                      briefSlugCommitted = briefMatch[1];
+                    }
                   }
                 }
               } catch {
