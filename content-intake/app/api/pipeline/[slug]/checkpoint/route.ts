@@ -7,10 +7,11 @@ async function getFileContent(
   octokit: Octokit,
   owner: string,
   repo: string,
-  path: string
+  path: string,
+  ref?: string
 ): Promise<string | null> {
   try {
-    const { data } = await octokit.repos.getContent({ owner, repo, path });
+    const { data } = await octokit.repos.getContent({ owner, repo, path, ...(ref ? { ref } : {}) });
     if (Array.isArray(data) || data.type !== "file") return null;
     return Buffer.from(data.content, "base64").toString("utf-8");
   } catch {
@@ -32,9 +33,29 @@ export async function GET(
   const repo = process.env.PIPELINE_REPO_NAME!;
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
+  // Find the open checkpoint-1 PR for this slug to get its head branch.
+  // The planning agent commits outputs to the PR branch, not main.
+  let ref: string | undefined;
+  try {
+    const { data: prs } = await octokit.pulls.list({
+      owner,
+      repo,
+      state: "open",
+      per_page: 100,
+    });
+    const pr = prs.find(
+      (p) =>
+        p.labels.some((l) => l.name === "checkpoint-1") &&
+        (p.head.ref.includes(slug) || p.title.toLowerCase().includes(slug))
+    );
+    if (pr) ref = pr.head.ref;
+  } catch {
+    // fall through to main
+  }
+
   const [outline, coverageMap] = await Promise.all([
-    getFileContent(octokit, owner, repo, `outputs/${slug}/outline.md`),
-    getFileContent(octokit, owner, repo, `outputs/${slug}/coverage-map.md`),
+    getFileContent(octokit, owner, repo, `outputs/${slug}/outline.md`, ref),
+    getFileContent(octokit, owner, repo, `outputs/${slug}/coverage-map.md`, ref),
   ]);
 
   return Response.json({ outline, coverageMap });

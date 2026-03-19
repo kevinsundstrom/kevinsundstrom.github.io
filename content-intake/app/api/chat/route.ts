@@ -374,6 +374,19 @@ export async function POST(req: Request) {
         controller.enqueue(encoder.encode(`0:${JSON.stringify("Sorry, I ran into an error: " + msg)}\n`));
       }
 
+      // Persist briefSlug to DB before signaling the client, so the pipeline
+      // page sees the item immediately when the client redirects there.
+      if (anyCommitSucceeded && conversationId && briefSlugCommitted) {
+        try {
+          await db
+            .update(conversations)
+            .set({ status: "committed", briefSlug: briefSlugCommitted })
+            .where(eq(conversations.id, conversationId));
+        } catch {
+          // Non-fatal — client will still see the committed state
+        }
+      }
+
       // Signal session end to client before closing
       if (anyCommitSucceeded) {
         controller.enqueue(encoder.encode(`2:[{"sessionCommitted":true}]\n`));
@@ -381,7 +394,7 @@ export async function POST(req: Request) {
 
       controller.close();
 
-      // Persist messages to DB after streaming ends
+      // Persist messages and generate title after streaming ends
       if (conversationId) {
         try {
           const lastUserMsg = [...clientMessages].reverse().find(
@@ -420,14 +433,10 @@ export async function POST(req: Request) {
 
           const generatedTitle = await titlePromise;
 
-          if (anyCommitSucceeded || generatedTitle) {
+          if (generatedTitle) {
             await db
               .update(conversations)
-              .set({
-                ...(anyCommitSucceeded ? { status: "committed" } : {}),
-                ...(briefSlugCommitted ? { briefSlug: briefSlugCommitted } : {}),
-                ...(generatedTitle ? { title: generatedTitle } : {}),
-              })
+              .set({ title: generatedTitle })
               .where(eq(conversations.id, conversationId));
           }
         } catch {

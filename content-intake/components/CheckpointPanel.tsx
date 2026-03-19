@@ -62,7 +62,7 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
   if (approved) {
     return (
       <div className="rounded-lg bg-gray-800 px-4 py-3 text-sm text-green-400">
-        Approved — draft agent is running.
+        Approved — draft is running.
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
         disabled={approving || (!outline && !coverageMap)}
         className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
       >
-        {approving ? "Approving…" : "Approve and run draft agent"}
+        {approving ? "Approving…" : "Approve outline"}
       </button>
     </div>
   );
