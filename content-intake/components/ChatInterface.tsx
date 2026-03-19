@@ -41,7 +41,6 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileStatus, setFileStatus] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<{ name: string; content: string } | null>(null);
-  const [committed, setCommitted] = useState(false);
   const titleRefreshed = useRef(false);
   const initialScrollDone = useRef(false);
 
@@ -53,14 +52,14 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
     });
   }
 
-  // When a commit succeeds, show the done state
+  // When a commit succeeds, go straight to the pipeline view
   useEffect(() => {
     if (!data?.length) return;
     const last = data[data.length - 1] as { sessionCommitted?: boolean };
     if (last?.sessionCommitted) {
-      setCommitted(true);
+      router.push("/pipeline");
     }
-  }, [data]);
+  }, [data, router]);
 
   useEffect(() => {
     const behavior = initialScrollDone.current ? "smooth" : "instant";
@@ -200,88 +199,64 @@ export default function ChatInterface({ conversationId, isOwner, initialMessages
 
       {/* Input area */}
       <div className="py-4 border-t border-gray-800">
-        {committed ? (
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-400">Brief saved.</span>
+        {pendingFile && (
+          <div className="flex items-center justify-between mb-3 px-3 py-2 bg-gray-800 rounded-xl text-xs">
+            <span className="text-gray-400 truncate">{pendingFile.name} ready to send</span>
             <button
-              onClick={() => router.push("/pipeline")}
-              className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-gray-100 rounded-lg text-sm transition-colors"
+              onClick={sendTranscript}
+              disabled={isLoading}
+              className="ml-3 flex-shrink-0 px-3 py-1 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-lg transition-colors"
             >
-              View pipeline
-            </button>
-            <button
-              onClick={() =>
-                fetch("/api/conversations", { method: "POST" })
-                  .then((r) => r.json())
-                  .then((conv) => router.push(`/chat/${conv.id}`))
-              }
-              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm transition-colors"
-            >
-              New brief
+              Send transcript
             </button>
           </div>
-        ) : (
-          <>
-            {pendingFile && (
-              <div className="flex items-center justify-between mb-3 px-3 py-2 bg-gray-800 rounded-xl text-xs">
-                <span className="text-gray-400 truncate">{pendingFile.name} ready to send</span>
-                <button
-                  onClick={sendTranscript}
-                  disabled={isLoading}
-                  className="ml-3 flex-shrink-0 px-3 py-1 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white rounded-lg transition-colors"
-                >
-                  Send transcript
-                </button>
-              </div>
-            )}
-            <form onSubmit={handleSubmit} className="flex gap-2 items-end">
-              <div className="flex-1 flex flex-col gap-2">
-                {fileStatus && (
-                  <p className="text-xs text-gray-500 px-1">{fileStatus}</p>
-                )}
-                <textarea
-                  className="w-full bg-gray-800 text-gray-100 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 placeholder-gray-500"
-                  rows={3}
-                  placeholder="Type a message…"
-                  value={input}
-                  onChange={handleInputChange}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
-                    }
-                  }}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-200 rounded-xl text-sm transition-colors"
-                  title="Upload transcript"
-                >
-                  Upload
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoading || !input.trim()}
-                  className="px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm transition-colors"
-                >
-                  Send
-                </button>
-              </div>
-            </form>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".md,.txt"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </>
         )}
+        <form onSubmit={handleSubmit} className="flex gap-2 items-end">
+          <div className="flex-1 flex flex-col gap-2">
+            {fileStatus && (
+              <p className="text-xs text-gray-500 px-1">{fileStatus}</p>
+            )}
+            <textarea
+              className="w-full bg-gray-800 text-gray-100 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 placeholder-gray-500"
+              rows={3}
+              placeholder="Type a message…"
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+                }
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-200 rounded-xl text-sm transition-colors"
+              title="Upload transcript"
+            >
+              Upload
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm transition-colors"
+            >
+              Send
+            </button>
+          </div>
+        </form>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".md,.txt"
+          className="hidden"
+          onChange={handleFileChange}
+        />
       </div>
     </div>
   );

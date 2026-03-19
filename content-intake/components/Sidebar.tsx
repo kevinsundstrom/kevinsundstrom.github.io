@@ -3,13 +3,7 @@ import { db } from "@/lib/db";
 import { conversations, messages } from "@/lib/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import Link from "next/link";
-
-function StatusDot({ status }: { status: string }) {
-  const base = "w-1.5 h-1.5 rounded-full flex-shrink-0";
-  if (status === "complete") return <span className={`${base} bg-green-500`} />;
-  if (status === "committed") return <span className={`${base} bg-yellow-400`} />;
-  return <span className={`${base} bg-gray-600`} />;
-}
+import PipelineSidebarSection from "./PipelineSidebarSection";
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
@@ -35,7 +29,7 @@ export default async function Sidebar() {
     .where(eq(conversations.userId, session.user.id))
     .groupBy(conversations.id, conversations.briefSlug, conversations.title, conversations.status, conversations.createdAt)
     .orderBy(desc(conversations.createdAt))
-    .limit(10);
+    .limit(4);
 
   return (
     <aside className="w-48 flex-shrink-0 flex flex-col border-r border-gray-800 bg-gray-950">
@@ -60,8 +54,7 @@ export default async function Sidebar() {
         {/* Conversations */}
         <div className="space-y-0.5">
           {recent.map((conv) => {
-            const label = conv.briefSlug
-              ?? conv.title
+            const label = conv.title
               ?? (conv.firstUserMessage ? conv.firstUserMessage.slice(0, 40) : null)
               ?? formatDate(conv.createdAt);
             return (
@@ -70,7 +63,6 @@ export default async function Sidebar() {
                 href={`/chat/${conv.id}`}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition-colors min-w-0"
               >
-                <StatusDot status={conv.status} />
                 <span className="truncate">{label}</span>
               </Link>
             );
@@ -78,14 +70,7 @@ export default async function Sidebar() {
         </div>
 
         {/* Pipeline */}
-        <div className="space-y-0.5">
-          <Link
-            href="/pipeline"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
-          >
-            In production
-          </Link>
-        </div>
+        <PipelineSidebarSection />
       </nav>
 
       {/* Sign out */}
