@@ -107,6 +107,14 @@ export async function POST(
 
   // Default: approve (merge)
   try {
+    // Draft PRs can't be merged — convert to ready first
+    await octokit.pulls.update({
+      owner,
+      repo,
+      pull_number: prNumber,
+      draft: false,
+    });
+
     await octokit.pulls.merge({
       owner,
       repo,
