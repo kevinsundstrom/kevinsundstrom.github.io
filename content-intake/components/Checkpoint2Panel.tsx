@@ -104,32 +104,7 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
   const hasContent = !!(draft || reviewNotes);
 
   return (
-    <div className="space-y-4 pt-2">
-      {draft && (
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Draft</p>
-          <div className="rounded-lg bg-gray-800 px-4 py-3 text-xs text-gray-200 overflow-y-auto max-h-96 prose prose-invert prose-xs">
-            <ReactMarkdown>{draft}</ReactMarkdown>
-          </div>
-        </div>
-      )}
-
-      {reviewNotes && (
-        <div>
-          <button
-            onClick={() => setShowNotes((v) => !v)}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
-          >
-            {showNotes ? "Hide review notes" : "Show review notes"}
-          </button>
-          {showNotes && (
-            <div className="mt-2 rounded-lg bg-gray-800 px-4 py-3 text-xs text-gray-200 overflow-y-auto max-h-64 prose prose-invert prose-xs">
-              <ReactMarkdown>{reviewNotes}</ReactMarkdown>
-            </div>
-          )}
-        </div>
-      )}
-
+    <div className="space-y-6 pt-2">
       {!hasContent && (
         <p className="text-xs text-gray-500">
           Draft not yet available — the draft agent may still be running.
@@ -137,6 +112,70 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
       )}
 
       {error && <p className="text-xs text-red-400">{error}</p>}
+
+      {draft && (
+        <div className="border-t border-gray-800 pt-6">
+          <ReactMarkdown
+            components={{
+              h1: ({ children }) => (
+                <h1 className="text-2xl font-bold text-gray-100 mb-4 leading-tight">{children}</h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-lg font-semibold text-gray-100 mt-8 mb-3 leading-snug">{children}</h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-base font-semibold text-gray-200 mt-6 mb-2">{children}</h3>
+              ),
+              p: ({ children }) => (
+                <p className="text-sm text-gray-300 leading-relaxed mb-4">{children}</p>
+              ),
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-2 border-gray-600 pl-4 my-4 text-gray-400 italic text-sm">
+                  {children}
+                </blockquote>
+              ),
+              strong: ({ children }) => (
+                <strong className="font-semibold text-gray-200">{children}</strong>
+              ),
+              em: ({ children }) => <em className="italic text-gray-300">{children}</em>,
+              ul: ({ children }) => (
+                <ul className="list-disc list-outside ml-5 mb-4 space-y-1 text-sm text-gray-300">{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="list-decimal list-outside ml-5 mb-4 space-y-1 text-sm text-gray-300">{children}</ol>
+              ),
+              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+              a: ({ href, children }) => (
+                <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
+                  {children}
+                </a>
+              ),
+              code: ({ children }) => (
+                <code className="bg-gray-800 rounded px-1 py-0.5 text-xs font-mono text-gray-300">{children}</code>
+              ),
+              hr: () => <hr className="border-gray-700 my-6" />,
+            }}
+          >
+            {draft}
+          </ReactMarkdown>
+        </div>
+      )}
+
+      {reviewNotes && (
+        <div className="border-t border-gray-800 pt-4">
+          <button
+            onClick={() => setShowNotes((v) => !v)}
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            {showNotes ? "Hide review notes" : "Show review notes"}
+          </button>
+          {showNotes && (
+            <div className="mt-4 rounded-lg bg-gray-800 px-4 py-3 text-xs text-gray-200 overflow-y-auto max-h-64 prose prose-invert prose-xs">
+              <ReactMarkdown>{reviewNotes}</ReactMarkdown>
+            </div>
+          )}
+        </div>
+      )}
 
       {showFeedback ? (
         <div className="space-y-2">
