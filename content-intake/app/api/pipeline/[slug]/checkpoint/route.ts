@@ -70,7 +70,7 @@ export async function POST(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { prNumber } = await req.json();
+  const { prNumber, action, feedback } = await req.json();
   if (!prNumber) {
     return Response.json({ error: "prNumber required" }, { status: 400 });
   }
@@ -80,6 +80,32 @@ export async function POST(
   const repo = process.env.PIPELINE_REPO_NAME!;
   const { slug } = await params;
 
+  if (action === "request-changes") {
+    try {
+      if (feedback?.trim()) {
+        await octokit.issues.createComment({
+          owner,
+          repo,
+          issue_number: prNumber,
+          body: `**Changes requested by ${session.user.name ?? session.user.email ?? "reviewer"}:**\n\n${feedback.trim()}\n\n*Closing this PR. Submit a revised brief to restart the pipeline.*`,
+        });
+      }
+      await octokit.pulls.update({
+        owner,
+        repo,
+        pull_number: prNumber,
+        state: "closed",
+      });
+      return Response.json({ success: true });
+    } catch (err) {
+      return Response.json(
+        { error: err instanceof Error ? err.message : "Failed to close PR" },
+        { status: 500 }
+      );
+    }
+  }
+
+  // Default: approve (merge)
   try {
     await octokit.pulls.merge({
       owner,

@@ -13,8 +13,10 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
   const [outline, setOutline] = useState<string | null>(null);
   const [coverageMap, setCoverageMap] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [approving, setApproving] = useState(false);
-  const [approved, setApproved] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState<"approved" | "changes-requested" | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedback, setFeedback] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,8 +30,8 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
       .catch(() => setLoading(false));
   }, [slug]);
 
-  async function handleApprove() {
-    setApproving(true);
+  async function handleAction(action: "approve" | "request-changes") {
+    setSubmitting(true);
     setError(null);
     try {
       const res = await fetch(
@@ -37,17 +39,21 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prNumber }),
+          body: JSON.stringify({ prNumber, action, feedback: feedback.trim() || undefined }),
         }
       );
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Approval failed");
-      setApproved(true);
-      onApproved();
+      if (!res.ok) throw new Error(data.error ?? "Request failed");
+      if (action === "approve") {
+        setDone("approved");
+        onApproved();
+      } else {
+        setDone("changes-requested");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
-      setApproving(false);
+      setSubmitting(false);
     }
   }
 
@@ -59,13 +65,23 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
     );
   }
 
-  if (approved) {
+  if (done === "approved") {
     return (
       <div className="rounded-lg bg-gray-800 px-4 py-3 text-sm text-green-400">
         Approved — draft is running.
       </div>
     );
   }
+
+  if (done === "changes-requested") {
+    return (
+      <div className="rounded-lg bg-gray-800 px-4 py-3 text-sm text-yellow-400">
+        Changes requested — PR closed. Submit a revised brief to restart.
+      </div>
+    );
+  }
+
+  const hasOutputs = !!(outline || coverageMap);
 
   return (
     <div className="space-y-4 pt-2">
@@ -91,21 +107,58 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
         </div>
       )}
 
-      {!outline && !coverageMap && (
+      {!hasOutputs && (
         <p className="text-xs text-gray-500">
-          Outputs not yet available — the orchestrator may still be running.
+          Outputs not yet available — planning may still be running.
         </p>
       )}
 
       {error && <p className="text-xs text-red-400">{error}</p>}
 
-      <button
-        onClick={handleApprove}
-        disabled={approving || (!outline && !coverageMap)}
-        className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
-      >
-        {approving ? "Approving…" : "Approve outline"}
-      </button>
+      {showFeedback ? (
+        <div className="space-y-2">
+          <textarea
+            className="w-full bg-gray-800 text-gray-100 rounded-lg px-3 py-2 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 placeholder-gray-500"
+            rows={4}
+            placeholder="Describe what needs to change…"
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleAction("request-changes")}
+              disabled={submitting}
+              className="px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+            >
+              {submitting ? "Sending…" : "Send feedback"}
+            </button>
+            <button
+              onClick={() => { setShowFeedback(false); setFeedback(""); }}
+              disabled={submitting}
+              className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-gray-300 text-sm font-medium transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleAction("approve")}
+            disabled={submitting || !hasOutputs}
+            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+          >
+            {submitting ? "Approving…" : "Approve outline"}
+          </button>
+          <button
+            onClick={() => setShowFeedback(true)}
+            disabled={submitting || !hasOutputs}
+            className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed text-gray-300 text-sm font-medium transition-colors"
+          >
+            Request changes
+          </button>
+        </div>
+      )}
     </div>
   );
 }
