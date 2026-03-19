@@ -107,13 +107,14 @@ export async function POST(
 
   // Default: approve (merge)
   try {
-    // Draft PRs can't be merged — convert to ready first
-    await octokit.pulls.update({
-      owner,
-      repo,
-      pull_number: prNumber,
-      draft: false,
-    });
+    // Draft PRs can't be merged — use GraphQL to mark ready for review first
+    const { data: pr } = await octokit.pulls.get({ owner, repo, pull_number: prNumber });
+    if (pr.draft) {
+      await octokit.graphql(
+        `mutation($prId: ID!) { markPullRequestReadyForReview(input: { pullRequestId: $prId }) { pullRequest { isDraft } } }`,
+        { prId: pr.node_id }
+      );
+    }
 
     await octokit.pulls.merge({
       owner,
