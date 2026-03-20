@@ -40,13 +40,7 @@ export async function POST(
     // Non-fatal — proceed to dispatch anyway
   }
 
-  // Reset conversation status so the pipeline shows as running
-  await db
-    .update(conversations)
-    .set({ status: "committed" })
-    .where(eq(conversations.briefSlug, slug));
-
-  // Dispatch the planning workflow
+  // Dispatch the planning workflow before updating DB — if dispatch fails, DB stays unchanged
   try {
     await octokit.actions.createWorkflowDispatch({
       owner,
@@ -61,6 +55,12 @@ export async function POST(
       { status: 500 }
     );
   }
+
+  // Reset conversation status only after successful dispatch
+  await db
+    .update(conversations)
+    .set({ status: "committed" })
+    .where(eq(conversations.briefSlug, slug));
 
   return Response.json({ success: true });
 }
