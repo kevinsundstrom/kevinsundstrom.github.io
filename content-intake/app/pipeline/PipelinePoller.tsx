@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import CheckpointPanel from "@/components/CheckpointPanel";
 import Checkpoint2Panel from "@/components/Checkpoint2Panel";
+import CompletedDraftPanel from "@/components/CompletedDraftPanel";
 
 interface PrRef {
   number: number;
@@ -116,6 +117,8 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
               }
             />
           )}
+
+          {s.stage === "complete" && <CompletedDraftPanel slug={s.slug} />}
         </div>
       ))}
     </div>

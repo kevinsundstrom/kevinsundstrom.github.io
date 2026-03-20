@@ -1,4 +1,7 @@
 import { auth } from "@/auth";
+import { db } from "@/lib/db";
+import { conversations } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { Octokit } from "@octokit/rest";
 
 export const runtime = "nodejs";
@@ -120,6 +123,11 @@ export async function POST(
       merge_method: "squash",
       commit_title: `approve checkpoint 2: ${slug}`,
     });
+
+    await db
+      .update(conversations)
+      .set({ status: "complete" })
+      .where(eq(conversations.briefSlug, slug));
 
     return Response.json({ success: true });
   } catch (err) {
