@@ -63,16 +63,18 @@ export async function GET() {
   const results: SlugStatus[] = committed.map((conv) => {
     const slug = conv.briefSlug!;
 
+    const slugSpaces = slug.replace(/-/g, " ");
+    const prMatches = (pr: { head: { ref: string }; title: string }) =>
+      pr.head.ref.includes(slug) ||
+      pr.title.toLowerCase().includes(slug) ||
+      pr.title.toLowerCase().includes(slugSpaces);
+
     const c1 = openPrs.find(
-      (pr) =>
-        pr.labels.some((l) => l.name === "checkpoint-1") &&
-        (pr.head.ref.includes(slug) || pr.title.toLowerCase().includes(slug))
+      (pr) => pr.labels.some((l) => l.name === "checkpoint-1") && prMatches(pr)
     );
 
     const c2 = openPrs.find(
-      (pr) =>
-        pr.labels.some((l) => l.name === "checkpoint-2") &&
-        (pr.head.ref.includes(slug) || pr.title.toLowerCase().includes(slug))
+      (pr) => pr.labels.some((l) => l.name === "checkpoint-2") && prMatches(pr)
     );
 
     let stage: PipelineStage = "running";
