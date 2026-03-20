@@ -329,6 +329,17 @@ export async function POST(req: Request) {
                 if (!isValidPath(args.path, COMMIT_ALLOWED)) {
                   result = { success: false, error: "Path not permitted" };
                 } else {
+                  // For brief paths, reject if the slug already exists to prevent
+                  // silent overwrites or branch conflicts on duplicate submissions.
+                  const briefMatch = args.path.match(/^briefs\/([^/]+)\/brief\.md$/);
+                  if (briefMatch) {
+                    const existing = await readFile(args.path, githubToken);
+                    if (existing.success) {
+                      result = { success: false, error: `A brief with slug '${briefMatch[1]}' already exists. Choose a different slug.` };
+                      allMessages.push({ role: "tool", tool_call_id: tc.id, content: JSON.stringify(result) });
+                      continue;
+                    }
+                  }
                   const isOwner = session.user.githubLogin === "kevinsundstrom";
                   const isTranscript = args.path.startsWith("knowledge-store/transcripts/");
                   // Transcripts always go via PR so ingestion-review triggers regardless of who uploads
