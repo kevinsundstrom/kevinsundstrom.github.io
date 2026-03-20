@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { isValidSlug } from "@/lib/pipeline-utils";
 import { Octokit } from "@octokit/rest";
 
 export const runtime = "nodejs";
@@ -13,6 +14,10 @@ export async function POST(
   }
 
   const { slug } = await params;
+  if (!isValidSlug(slug)) {
+    return Response.json({ error: "Invalid slug" }, { status: 400 });
+  }
+
   const owner = process.env.PIPELINE_REPO_OWNER!;
   const repo = process.env.PIPELINE_REPO_NAME!;
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });

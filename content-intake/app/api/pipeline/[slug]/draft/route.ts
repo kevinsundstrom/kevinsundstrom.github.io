@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { conversations } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { isValidSlug, isValidPrNumber } from "@/lib/pipeline-utils";
 import { Octokit } from "@octokit/rest";
 
 export const runtime = "nodejs";
@@ -32,6 +33,10 @@ export async function GET(
   }
 
   const { slug } = await params;
+  if (!isValidSlug(slug)) {
+    return Response.json({ error: "Invalid slug" }, { status: 400 });
+  }
+
   const owner = process.env.PIPELINE_REPO_OWNER!;
   const repo = process.env.PIPELINE_REPO_NAME!;
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
@@ -77,7 +82,7 @@ export async function POST(
   }
 
   const { prNumber, action, feedback } = await req.json();
-  if (!prNumber) {
+  if (!isValidPrNumber(prNumber)) {
     return Response.json({ error: "prNumber required" }, { status: 400 });
   }
 
