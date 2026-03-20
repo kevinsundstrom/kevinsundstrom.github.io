@@ -37,6 +37,43 @@ function StatusDot({ stage }: { stage: string }) {
   return <span className={`${base} bg-gray-600`} />;
 }
 
+function RerunPlanningButton({ slug, onRerun }: { slug: string; onRerun: () => void }) {
+  const [state, setState] = useState<"idle" | "confirming" | "running">("idle");
+
+  async function handleConfirm() {
+    setState("running");
+    try {
+      await fetch(`/api/pipeline/${encodeURIComponent(slug)}/rerun-planning`, { method: "POST" });
+      onRerun();
+    } catch {
+      setState("idle");
+    }
+  }
+
+  if (state === "running") {
+    return <span className="text-xs text-gray-500">Re-running from planning…</span>;
+  }
+
+  if (state === "confirming") {
+    return (
+      <span className="flex items-center gap-2">
+        <span className="text-xs text-gray-400">Re-run from planning?</span>
+        <button onClick={handleConfirm} className="text-xs text-yellow-400 hover:text-yellow-300">Yes</button>
+        <button onClick={() => setState("idle")} className="text-xs text-gray-500 hover:text-gray-400">Cancel</button>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setState("confirming")}
+      className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+    >
+      Re-run from planning
+    </button>
+  );
+}
+
 export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
   const [statuses, setStatuses] = useState<SlugStatus[]>(initial);
 
@@ -119,6 +156,21 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
           )}
 
           {s.stage === "complete" && <CompletedDraftPanel slug={s.slug} />}
+
+          {(s.stage === "complete" || s.stage === "running") && (
+            <div className="pt-1">
+              <RerunPlanningButton
+                slug={s.slug}
+                onRerun={() =>
+                  setStatuses((prev) =>
+                    prev.map((x) =>
+                      x.slug === s.slug ? { ...x, stage: "running" } : x
+                    )
+                  )
+                }
+              />
+            </div>
+          )}
         </div>
       ))}
     </div>
