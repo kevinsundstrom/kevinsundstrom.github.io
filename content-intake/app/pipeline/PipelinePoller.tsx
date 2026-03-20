@@ -157,7 +157,7 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
 
           {s.stage === "complete" && <CompletedDraftPanel slug={s.slug} />}
 
-          {(s.stage === "complete" || s.stage === "running") && (
+          {(s.stage === "complete" || s.stage === "running" || s.stage === "checkpoint-2-open" || s.stage === "checkpoint-1-open") && (
             <div className="pt-1">
               <RerunPlanningButton
                 slug={s.slug}
