@@ -43,7 +43,7 @@ export async function POST(
     await octokit.actions.createWorkflowDispatch({
       owner,
       repo,
-      workflow_id: "draft.md",
+      workflow_id: "draft.lock.yml",
       ref: "main",
       inputs: { slug },
     });
