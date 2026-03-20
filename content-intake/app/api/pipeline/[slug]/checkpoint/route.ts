@@ -58,12 +58,9 @@ export async function GET(
     // fall through to main
   }
 
-  const [outline, coverageMap] = await Promise.all([
-    getFileContent(octokit, owner, repo, `outputs/${slug}/outline.md`, ref),
-    getFileContent(octokit, owner, repo, `outputs/${slug}/coverage-map.md`, ref),
-  ]);
+  const outline = await getFileContent(octokit, owner, repo, `outputs/${slug}/outline.md`, ref);
 
-  return Response.json({ outline, coverageMap });
+  return Response.json({ outline });
 }
 
 export async function POST(
@@ -75,7 +72,9 @@ export async function POST(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { prNumber, action, feedback } = await req.json();
+  const body = await req.json();
+  const { prNumber, action, feedback, gaps } = body;
+
   if (!isValidPrNumber(prNumber)) {
     return Response.json({ error: "prNumber required" }, { status: 400 });
   }
@@ -122,6 +121,64 @@ export async function POST(
         `mutation($prId: ID!) { markPullRequestReadyForReview(input: { pullRequestId: $prId }) { pullRequest { isDraft } } }`,
         { prId: pr.node_id }
       );
+    }
+
+    // Write gap resolutions to the planning branch before merge so they
+    // land on main with the squash commit and Assembly can read them.
+    const resolvedGaps: Array<{ section: string; description: string; resolution: string }> = gaps ?? [];
+    if (resolvedGaps.length > 0) {
+      const resolutionContent = [
+        "# Gap Resolutions",
+        "",
+        `**Slug:** ${slug}`,
+        `**Resolved:** ${new Date().toISOString()}`,
+        "",
+        "---",
+        "",
+        ...resolvedGaps.map((gap) =>
+          [
+            `## ${gap.section}`,
+            "",
+            `**Gap:** ${gap.description}`,
+            `**Resolution:** ${gap.resolution === "research" ? "Research from first-party sources" : "Approved thin — proceed without filling"}`,
+            "",
+          ].join("\n")
+        ),
+      ].join("\n");
+
+      // Fetch existing SHA if the file already exists (re-run scenario)
+      let existingSha: string | undefined;
+      try {
+        const existing = await octokit.repos.getContent({
+          owner,
+          repo,
+          path: `outputs/${slug}/gap-resolutions.md`,
+          ref: pr.head.ref,
+        });
+        if (!Array.isArray(existing.data) && existing.data.sha) {
+          existingSha = existing.data.sha;
+        }
+      } catch {
+        // File doesn't exist yet — proceed without SHA
+      }
+
+      try {
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: `outputs/${slug}/gap-resolutions.md`,
+          message: `feat: gap resolutions for ${slug} [checkpoint-1]`,
+          content: Buffer.from(resolutionContent).toString("base64"),
+          branch: pr.head.ref,
+          ...(existingSha ? { sha: existingSha } : {}),
+        });
+      } catch (err) {
+        console.error("Failed to write gap resolutions:", err);
+        return Response.json(
+          { error: "Failed to write gap resolutions — approval not completed" },
+          { status: 500 }
+        );
+      }
     }
 
     await octokit.pulls.merge({
