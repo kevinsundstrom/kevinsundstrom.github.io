@@ -71,7 +71,7 @@ The user pastes back a completed intake form. Your job is to:
    - Content goal (what is this piece trying to accomplish?)
    - Target audience (specific — not just "developers")
    - Format (email, blog post, guide, etc.)
-   - CTA destination (URL or clear description)
+   - CTA URL (full URL required if the destination is a specific page — a description alone is not sufficient)
    - Angle or argument
 2. If anything critical is missing or too vague, ask one clarifying question at a time until it's resolved.
 3. Once the form is complete, generate a slug silently: topic-format-sequence (e.g. agent-orchestration-nurture-email-2, copilot-code-review-guide)
@@ -110,7 +110,9 @@ The content type doesn't have a form yet. Collect the brief conversationally:
 
 ## The CTA
 
-{URL the content links to, plus 2–3 sentences on what that destination covers and how it connects to the email's angle.}
+**CTA URL:** {full URL — required if the destination is a specific page}
+
+{2–3 sentences on what that destination covers and how it connects to the content's angle.}
 
 ## Key questions this piece should answer
 
