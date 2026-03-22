@@ -90,6 +90,8 @@ export async function GET() {
       stage = "checkpoint-2-open";
     } else if (c1) {
       stage = "checkpoint-1-open";
+    } else if (conv.status === "complete") {
+      stage = "complete";
     }
 
     return {

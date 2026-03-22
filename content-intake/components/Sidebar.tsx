@@ -1,7 +1,7 @@
 import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { conversations, messages } from "@/lib/db/schema";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, isNull, and } from "drizzle-orm";
 import Link from "next/link";
 import PipelineSidebarSection from "./PipelineSidebarSection";
 
@@ -26,7 +26,7 @@ export default async function Sidebar() {
     })
     .from(conversations)
     .innerJoin(messages, eq(messages.conversationId, conversations.id))
-    .where(eq(conversations.userId, session.user.id))
+    .where(and(eq(conversations.userId, session.user.id), isNull(conversations.briefSlug)))
     .groupBy(conversations.id, conversations.briefSlug, conversations.title, conversations.status, conversations.createdAt)
     .orderBy(desc(conversations.createdAt))
     .limit(4);
