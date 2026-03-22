@@ -16,6 +16,40 @@ interface Props {
   onApproved: () => void;
 }
 
+function preprocessOutline(raw: string): string {
+  let content = raw;
+
+  // Strip metadata lines (Brief, Slug, Format, Generated)
+  content = content.replace(/^\*\*(Brief|Slug|Format|Generated):\*\*.+\n?/gm, "");
+
+  // Strip [NEEDS SOURCE] markers — shown separately in the gaps UI
+  content = content.replace(/^`?\[NEEDS SOURCE:[^\]]*\]`?\n?/gm, "");
+
+  // Strip [FETCH] markers — internal pipeline detail
+  content = content.replace(/^`?\[FETCH:[^`\]]*\]`?\n?/gm, "");
+
+  // Convert Evidence lines: file paths → readable topic names
+  content = content.replace(/\*\*Evidence:\*\* (.+)/g, (_match, paths: string) => {
+    const clean = paths.trim();
+    if (!clean || clean.toLowerCase().startsWith("none")) return "";
+    const topics = clean.split(",").map((p: string) => {
+      const bare = p.trim().replace(/`/g, "");
+      const filename = bare.match(/([^/]+)\.md$/)?.[1];
+      if (!filename) return bare; // not a file path — return as-is
+      return filename.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    }).join(", ");
+    return topics ? `*${topics}*` : "";
+  });
+
+  // Remove "## Notes for the draft agent" section entirely
+  content = content.replace(/\n## Notes for the draft agent[\s\S]*$/, "");
+
+  // Clean up multiple blank lines
+  content = content.replace(/\n{3,}/g, "\n\n").trim();
+
+  return content;
+}
+
 export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
   const [outline, setOutline] = useState<string | null>(null);
   const [gaps, setGaps] = useState<Gap[]>([]);
@@ -158,7 +192,7 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
             Outline
           </p>
           <div className="rounded-lg bg-gray-800 px-4 py-3 text-xs text-gray-200 overflow-y-auto max-h-64 prose prose-invert prose-xs">
-            <ReactMarkdown>{outline}</ReactMarkdown>
+            <ReactMarkdown>{preprocessOutline(outline)}</ReactMarkdown>
           </div>
         </div>
       )}
