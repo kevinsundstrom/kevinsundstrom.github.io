@@ -16,6 +16,22 @@ interface Props {
   onApproved: () => void;
 }
 
+function parseOutlineSections(preprocessed: string): {
+  preamble: string;
+  sections: Array<{ heading: string; body: string; interactive: boolean }>;
+} {
+  const nonInteractive = new Set(["Sections omitted"]);
+  const parts = preprocessed.split(/\n(?=## )/);
+  const preamble = parts[0] ?? "";
+  const sections = parts.slice(1).map((part) => {
+    const headingMatch = part.match(/^## (.+)/);
+    const heading = headingMatch?.[1].trim() ?? "";
+    const body = part.slice(headingMatch?.[0].length ?? 0).trim();
+    return { heading, body, interactive: !nonInteractive.has(heading) };
+  });
+  return { preamble, sections };
+}
+
 function preprocessOutline(raw: string): string {
   let content = raw;
 
@@ -59,6 +75,9 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [activeFeedbackSection, setActiveFeedbackSection] = useState<string | null>(null);
+  const [sectionFeedback, setSectionFeedback] = useState("");
+  const [regeneratingSection, setRegeneratingSection] = useState<string | null>(null);
 
   const parseGaps = (content: string) => {
     const parsed: Gap[] = [];
@@ -156,6 +175,30 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
     }
   }
 
+  async function handleRegenerateSection(heading: string) {
+    setRegeneratingSection(heading);
+    setError(null);
+    try {
+      const res = await fetch(`/api/pipeline/${encodeURIComponent(slug)}/section`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sectionHeading: heading, feedback: sectionFeedback, prNumber }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Regeneration failed");
+      setOutline(data.outline);
+      parseGaps(data.outline);
+      setActiveFeedbackSection(null);
+      setSectionFeedback("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setRegeneratingSection(null);
+    }
+  }
+
+  const parsedOutline = outline ? parseOutlineSections(preprocessOutline(outline)) : null;
+
   if (loading) {
     return (
       <p className="text-xs text-gray-500 animate-pulse">
@@ -186,13 +229,72 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
 
   return (
     <div className="space-y-4 pt-2">
-      {outline && (
+      {parsedOutline && (
         <div>
           <p className="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">
             Outline
           </p>
-          <div className="rounded-lg bg-gray-800 px-4 py-3 text-xs text-gray-200 overflow-y-auto max-h-64 prose prose-invert prose-xs">
-            <ReactMarkdown>{preprocessOutline(outline)}</ReactMarkdown>
+          <div className="rounded-lg bg-gray-800 text-xs text-gray-200 overflow-y-auto max-h-96">
+            {parsedOutline.preamble && (
+              <div className="px-4 py-3 prose prose-invert prose-xs border-b border-gray-700">
+                <ReactMarkdown>{parsedOutline.preamble}</ReactMarkdown>
+              </div>
+            )}
+            {parsedOutline.sections.map((section) => (
+              <div key={section.heading} className="border-b border-gray-700 last:border-b-0 px-4 py-3 space-y-2">
+                <button
+                  onClick={() => {
+                    if (!section.interactive) return;
+                    if (activeFeedbackSection === section.heading) {
+                      setActiveFeedbackSection(null);
+                      setSectionFeedback("");
+                    } else {
+                      setActiveFeedbackSection(section.heading);
+                      setSectionFeedback("");
+                    }
+                  }}
+                  className="text-left w-full"
+                  disabled={!section.interactive}
+                >
+                  <span className={`font-semibold ${section.interactive ? "text-gray-100 hover:text-blue-400" : "text-gray-100"} transition-colors`}>
+                    {section.heading}
+                  </span>
+                </button>
+                {section.body && (
+                  <div className="text-gray-400 prose prose-invert prose-xs">
+                    <ReactMarkdown>{section.body}</ReactMarkdown>
+                  </div>
+                )}
+                {section.interactive && activeFeedbackSection === section.heading && (
+                  <div className="space-y-2 pt-1">
+                    <textarea
+                      value={sectionFeedback}
+                      onChange={(e) => setSectionFeedback(e.target.value)}
+                      placeholder="What should change in this section?"
+                      className="w-full bg-gray-700 text-gray-100 rounded px-2 py-1.5 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder-gray-500"
+                      rows={3}
+                      autoFocus
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleRegenerateSection(section.heading)}
+                        disabled={!sectionFeedback.trim() || !!regeneratingSection}
+                        className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-medium transition-colors"
+                      >
+                        {regeneratingSection === section.heading ? "Regenerating…" : "Regenerate"}
+                      </button>
+                      <button
+                        onClick={() => { setActiveFeedbackSection(null); setSectionFeedback(""); }}
+                        disabled={!!regeneratingSection}
+                        className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-gray-300 text-xs transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       )}
