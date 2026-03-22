@@ -60,7 +60,15 @@ export async function GET() {
     // If GitHub call fails, return committed status for all
   }
 
-  const results: SlugStatus[] = committed.map((conv) => {
+  // Deduplicate by slug — keep one conversation per slug
+  const seenSlugs = new Set<string>();
+  const dedupedCommitted = committed.filter((conv) => {
+    if (seenSlugs.has(conv.briefSlug!)) return false;
+    seenSlugs.add(conv.briefSlug!);
+    return true;
+  });
+
+  const results: SlugStatus[] = dedupedCommitted.map((conv) => {
     const slug = conv.briefSlug!;
 
     const slugSpaces = slug.replace(/-/g, " ");
@@ -82,8 +90,6 @@ export async function GET() {
       stage = "checkpoint-2-open";
     } else if (c1) {
       stage = "checkpoint-1-open";
-    } else if (conv.status === "complete") {
-      stage = "complete";
     }
 
     return {

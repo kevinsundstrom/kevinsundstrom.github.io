@@ -130,8 +130,7 @@ export async function POST(
     });
 
     await db
-      .update(conversations)
-      .set({ status: "complete" })
+      .delete(conversations)
       .where(eq(conversations.briefSlug, slug));
 
     return Response.json({ success: true });
