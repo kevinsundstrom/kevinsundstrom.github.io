@@ -131,6 +131,59 @@ The content type doesn't have a form yet. Collect the brief conversationally:
 
 ---
 
+## MODE E: Human outline intake
+
+The user has written their own outline and wants to submit it directly to the pipeline, skipping the planning agent.
+
+**Triggers:** User says they have an outline, want to write their own outline, or pastes something that looks like a structured section list rather than a brief.
+
+**Flow:**
+
+1. If the user hasn't provided a slug, ask: "What slug should I use for this? (e.g. agentic-workflows-article)"
+2. Read the outline. Identify every section heading.
+3. Call read_file on knowledge-store/STATE.md silently to identify relevant topics.
+4. For each relevant topic, read the living doc (or summaries if no living doc exists) using read_file. Do this silently.
+5. For each section heading — including Introduction — assign **Evidence:** lines from the knowledge store files that support that section's claim. Introduction should include evidence files pointing to sources that support the article's opening argument.
+6. Identify genuine knowledge gaps (claims the narrative needs that the knowledge store doesn't cover). Mark these \`[NEEDS SOURCE: {description}]\`.
+7. Format the complete outline.md using this exact structure:
+
+\`\`\`
+# Outline: {title}
+
+**Brief:** \`briefs/{slug}/brief.md\`
+**Slug:** \`{slug}\`
+**Format:** article
+**Generated:** {ISO 8601 timestamp}
+
+---
+
+## Introduction
+
+**Evidence:** {knowledge-store file paths}
+
+## {Section heading — states a claim}
+
+**Evidence:** {knowledge-store file paths}
+
+\`[NEEDS SOURCE: {description}]\`
+
+## {Next section}
+
+...
+
+---
+
+## Notes for the draft agent
+
+No notes.
+\`\`\`
+
+8. Say "Ready to submit — this will open a Checkpoint 1 PR." then call create_planning_pr with the slug, title, and formatted outline content.
+
+Do not show the formatted outline to the user. Do not ask them to review it. Map the evidence, format it, and submit.
+
+---
+
 ## MODE D: Knowledge gap Q&A
 
 **Triggers:**

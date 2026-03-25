@@ -140,6 +140,57 @@ async function createPrForFile(
   }
 }
 
+async function createPlanningPr(
+  slug: string,
+  title: string,
+  content: string,
+  githubToken: string
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  const octokit = new Octokit({ auth: githubToken });
+  const owner = process.env.PIPELINE_REPO_OWNER!;
+  const repo = process.env.PIPELINE_REPO_NAME!;
+
+  try {
+    const { data: refData } = await octokit.git.getRef({ owner, repo, ref: "heads/main" });
+    const mainSha = refData.object.sha;
+
+    const branch = `planning/${slug}`;
+    await octokit.git.createRef({ owner, repo, ref: `refs/heads/${branch}`, sha: mainSha });
+
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: `outputs/${slug}/outline.md`,
+      message: `feat: outline for ${slug} [planning]`,
+      content: Buffer.from(content).toString("base64"),
+      branch,
+    });
+
+    const { data: pr } = await octokit.pulls.create({
+      owner,
+      repo,
+      title: `[Checkpoint 1] ${title}`,
+      head: branch,
+      base: "main",
+      body: `## Checkpoint 1 — Narrative approval\n\nOutline authored by human via Synapse.\n\n### What to review\n\n- [ ] Narrative is the right argument for this piece\n- [ ] Section headings are claims, not source categories\n- [ ] Evidence files are correctly mapped\n- [ ] Gaps are acceptable or will be resolved before drafting\n\n### To proceed\n\nMerge this PR to authorize Assembly and Draft to run.`,
+    });
+
+    await octokit.issues.addLabels({
+      owner,
+      repo,
+      issue_number: pr.number,
+      labels: ["checkpoint-1"],
+    });
+
+    return { success: true, url: pr.html_url };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown GitHub API error",
+    };
+  }
+}
+
 const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   {
     type: "function",
@@ -184,6 +235,32 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
           },
         },
         required: ["path", "content", "message"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "create_planning_pr",
+      description:
+        "Submit a human-authored outline to the pipeline. Creates a planning branch, commits the formatted outline.md to outputs/{slug}/, and opens a Checkpoint 1 PR. Call this after evidence mapping is complete and the outline is fully formatted.",
+      parameters: {
+        type: "object",
+        properties: {
+          slug: {
+            type: "string",
+            description: "Brief slug (e.g. agentic-workflows-article)",
+          },
+          title: {
+            type: "string",
+            description: "Article title for the PR",
+          },
+          content: {
+            type: "string",
+            description: "Full formatted outline.md content",
+          },
+        },
+        required: ["slug", "title", "content"],
       },
     },
   },
@@ -367,6 +444,28 @@ export async function POST(req: Request) {
                 };
               }
 
+              allMessages.push({
+                role: "tool",
+                tool_call_id: tc.id,
+                content: JSON.stringify(result),
+              });
+            } else if (tc.name === "create_planning_pr") {
+              let result: { success: boolean; url?: string; error?: string };
+              try {
+                const args = JSON.parse(tc.arguments);
+                const { isValidSlug } = await import("@/lib/pipeline-utils");
+                if (!args.slug || !isValidSlug(args.slug) || !args.title || !args.content) {
+                  result = { success: false, error: "slug, title, and content are required" };
+                } else {
+                  result = await createPlanningPr(args.slug, args.title, args.content, githubToken);
+                  if (result.success) {
+                    anyCommitSucceeded = true;
+                    briefSlugCommitted = args.slug;
+                  }
+                }
+              } catch {
+                result = { success: false, error: "Failed to parse tool arguments" };
+              }
               allMessages.push({
                 role: "tool",
                 tool_call_id: tc.id,
