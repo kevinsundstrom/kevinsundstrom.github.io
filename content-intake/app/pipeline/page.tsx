@@ -34,19 +34,28 @@ async function fetchInitialStatuses(userId: string) {
     // proceed with empty PR list
   }
 
-  return committed.map((conv) => {
+  // Deduplicate by slug — keep one conversation per slug (last committed wins)
+  const seenSlugs = new Set<string>();
+  const dedupedCommitted = committed.filter((conv) => {
+    if (seenSlugs.has(conv.briefSlug!)) return false;
+    seenSlugs.add(conv.briefSlug!);
+    return true;
+  });
+
+  return dedupedCommitted.map((conv) => {
     const slug = conv.briefSlug!;
+    const slugSpaces = slug.replace(/-/g, " ");
+    const prMatches = (pr: { head: { ref: string }; title: string }) =>
+      pr.head.ref.includes(slug) ||
+      pr.title.toLowerCase().includes(slug) ||
+      pr.title.toLowerCase().includes(slugSpaces);
 
     const c1 = openPrs.find(
-      (pr) =>
-        pr.labels.some((l) => l.name === "checkpoint-1") &&
-        (pr.head.ref.includes(slug) || pr.title.toLowerCase().includes(slug))
+      (pr) => pr.labels.some((l) => l.name === "checkpoint-1") && prMatches(pr)
     );
 
     const c2 = openPrs.find(
-      (pr) =>
-        pr.labels.some((l) => l.name === "checkpoint-2") &&
-        (pr.head.ref.includes(slug) || pr.title.toLowerCase().includes(slug))
+      (pr) => pr.labels.some((l) => l.name === "checkpoint-2") && prMatches(pr)
     );
 
     let stage = "running";
@@ -72,13 +81,6 @@ export default async function PipelinePage() {
 
   return (
     <div className="flex-1 overflow-y-auto px-8 py-8 max-w-3xl mx-auto w-full">
-      <div className="mb-6">
-        <h1 className="text-lg font-semibold text-gray-100">In production</h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Refreshes every 30 seconds.
-        </p>
-      </div>
-
       <PipelinePoller initial={initial} />
     </div>
   );

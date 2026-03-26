@@ -9,6 +9,51 @@ interface Props {
   onApproved: () => void;
 }
 
+interface DraftSection {
+  heading: string;
+  content: string;
+}
+
+function parseDraftSections(draft: string): { headline: string; intro: string; sections: DraftSection[] } {
+  const lines = draft.split("\n");
+  const sections: DraftSection[] = [];
+  let currentHeading: string | null = null;
+  let currentLines: string[] = [];
+  let headline = "";
+  let introLines: string[] = [];
+  let inIntro = false;
+
+  for (const line of lines) {
+    if (!headline && line.startsWith("# ")) {
+      headline = line.slice(2).trim();
+      inIntro = true;
+    } else if (line.startsWith("## ")) {
+      if (inIntro) {
+        introLines = [...currentLines];
+        inIntro = false;
+      } else if (currentHeading !== null) {
+        sections.push({ heading: currentHeading, content: currentLines.join("\n").trim() });
+      }
+      currentHeading = line.slice(3).trim();
+      currentLines = [];
+    } else {
+      currentLines.push(line);
+    }
+  }
+
+  if (currentHeading !== null) {
+    sections.push({ heading: currentHeading, content: currentLines.join("\n").trim() });
+  } else if (inIntro) {
+    introLines = [...currentLines];
+  }
+
+  return {
+    headline,
+    intro: introLines.join("\n").trim(),
+    sections,
+  };
+}
+
 export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) {
   const [draft, setDraft] = useState<string | null>(null);
   const [reviewNotes, setReviewNotes] = useState<string | null>(null);
@@ -20,6 +65,9 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [activeSections, setActiveSections] = useState<Record<string, boolean>>({});
+  const [sectionFeedback, setSectionFeedback] = useState<Record<string, string>>({});
+  const [regeneratingSection, setRegeneratingSection] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/pipeline/${encodeURIComponent(slug)}/draft`)
@@ -53,6 +101,29 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleRegenerateDraftSection(heading: string) {
+    const fb = sectionFeedback[heading]?.trim();
+    if (!fb) return;
+    setRegeneratingSection(heading);
+    setError(null);
+    try {
+      const res = await fetch(`/api/pipeline/${encodeURIComponent(slug)}/draft-section`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sectionHeading: heading, feedback: fb, prNumber }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Regeneration failed");
+      setDraft(data.draft);
+      setActiveSections((prev) => { const n = { ...prev }; delete n[heading]; return n; });
+      setSectionFeedback((prev) => { const n = { ...prev }; delete n[heading]; return n; });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setRegeneratingSection(null);
     }
   }
 
@@ -113,53 +184,127 @@ export default function Checkpoint2Panel({ slug, prNumber, onApproved }: Props) 
 
       {error && <p className="text-xs text-red-400">{error}</p>}
 
-      {draft && (
-        <div className="border-t border-gray-800 pt-6">
-          <ReactMarkdown
-            components={{
-              h1: ({ children }) => (
-                <h1 className="text-2xl font-bold text-gray-100 mb-4 leading-tight">{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="text-lg font-semibold text-gray-100 mt-8 mb-3 leading-snug">{children}</h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="text-base font-semibold text-gray-200 mt-6 mb-2">{children}</h3>
-              ),
-              p: ({ children }) => (
-                <p className="text-sm text-gray-300 leading-relaxed mb-4">{children}</p>
-              ),
-              blockquote: ({ children }) => (
-                <blockquote className="border-l-2 border-gray-600 pl-4 my-4 text-gray-400 italic text-sm">
-                  {children}
-                </blockquote>
-              ),
-              strong: ({ children }) => (
-                <strong className="font-semibold text-gray-200">{children}</strong>
-              ),
-              em: ({ children }) => <em className="italic text-gray-300">{children}</em>,
-              ul: ({ children }) => (
-                <ul className="list-disc list-outside ml-5 mb-4 space-y-1 text-sm text-gray-300">{children}</ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="list-decimal list-outside ml-5 mb-4 space-y-1 text-sm text-gray-300">{children}</ol>
-              ),
-              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-              a: ({ href, children }) => (
-                <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                  {children}
-                </a>
-              ),
-              code: ({ children }) => (
-                <code className="bg-gray-800 rounded px-1 py-0.5 text-xs font-mono text-gray-300">{children}</code>
-              ),
-              hr: () => <hr className="border-gray-700 my-6" />,
-            }}
-          >
-            {draft}
-          </ReactMarkdown>
-        </div>
-      )}
+      {draft && (() => {
+        const { headline, intro, sections } = parseDraftSections(draft);
+        const mdComponents = {
+          h1: ({ children }: { children?: React.ReactNode }) => (
+            <h1 className="text-2xl font-bold text-gray-100 mb-4 leading-tight">{children}</h1>
+          ),
+          h3: ({ children }: { children?: React.ReactNode }) => (
+            <h3 className="text-base font-semibold text-gray-200 mt-6 mb-2">{children}</h3>
+          ),
+          p: ({ children }: { children?: React.ReactNode }) => (
+            <p className="text-sm text-gray-300 leading-relaxed mb-4">{children}</p>
+          ),
+          blockquote: ({ children }: { children?: React.ReactNode }) => (
+            <blockquote className="border-l-2 border-gray-600 pl-4 my-4 text-gray-400 italic text-sm">
+              {children}
+            </blockquote>
+          ),
+          strong: ({ children }: { children?: React.ReactNode }) => (
+            <strong className="font-semibold text-gray-200">{children}</strong>
+          ),
+          em: ({ children }: { children?: React.ReactNode }) => <em className="italic text-gray-300">{children}</em>,
+          ul: ({ children }: { children?: React.ReactNode }) => (
+            <ul className="list-disc list-outside ml-5 mb-4 space-y-1 text-sm text-gray-300">{children}</ul>
+          ),
+          ol: ({ children }: { children?: React.ReactNode }) => (
+            <ol className="list-decimal list-outside ml-5 mb-4 space-y-1 text-sm text-gray-300">{children}</ol>
+          ),
+          li: ({ children }: { children?: React.ReactNode }) => <li className="leading-relaxed">{children}</li>,
+          a: ({ href, children }: { href?: string; children?: React.ReactNode }) => (
+            <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
+              {children}
+            </a>
+          ),
+          code: ({ children }: { children?: React.ReactNode }) => (
+            <code className="bg-gray-800 rounded px-1 py-0.5 text-xs font-mono text-gray-300">{children}</code>
+          ),
+          hr: () => <hr className="border-gray-700 my-6" />,
+        };
+        const specialSections = [
+          headline ? { key: "Headline", label: "Headline", renderContent: () => <h1 className="text-2xl font-bold text-gray-100 mb-4 leading-tight">{headline}</h1> } : null,
+          intro ? { key: "Introduction", label: "Introduction", renderContent: () => <ReactMarkdown components={mdComponents}>{intro}</ReactMarkdown> } : null,
+        ].filter(Boolean) as { key: string; label: string; renderContent: () => React.ReactNode }[];
+
+        return (
+          <div className="border-t border-gray-800 pt-6">
+            {specialSections.map(({ key, label, renderContent }) => {
+              const isActive = !!activeSections[key];
+              const isRegenerating = regeneratingSection === key;
+              return (
+                <div key={key} className={key === "Introduction" ? "mt-6" : ""}>
+                  <div className="flex items-start gap-2 group">
+                    <div className="flex-1">{renderContent()}</div>
+                    <button
+                      onClick={() => setActiveSections((prev) => ({ ...prev, [key]: !prev[key] }))}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-500 hover:text-gray-300 mt-1 shrink-0"
+                    >
+                      {isActive ? "Cancel" : "Revise"}
+                    </button>
+                  </div>
+                  {isActive && (
+                    <div className="mt-3 space-y-2">
+                      <textarea
+                        className="w-full bg-gray-800 text-gray-100 rounded-lg px-3 py-2 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 placeholder-gray-500"
+                        rows={3}
+                        placeholder={`What should change in the ${label.toLowerCase()}?`}
+                        value={sectionFeedback[key] ?? ""}
+                        onChange={(e) => setSectionFeedback((prev) => ({ ...prev, [key]: e.target.value }))}
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleRegenerateDraftSection(key)}
+                        disabled={isRegenerating || !sectionFeedback[key]?.trim()}
+                        className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-medium transition-colors"
+                      >
+                        {isRegenerating ? "Rewriting…" : `Rewrite ${label.toLowerCase()}`}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {sections.map((section) => {
+              const isActive = !!activeSections[section.heading];
+              const isRegenerating = regeneratingSection === section.heading;
+              return (
+                <div key={section.heading} className="mt-8">
+                  <div className="flex items-start gap-2 group">
+                    <h2 className="text-lg font-semibold text-gray-100 leading-snug flex-1">{section.heading}</h2>
+                    <button
+                      onClick={() => setActiveSections((prev) => ({ ...prev, [section.heading]: !prev[section.heading] }))}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-500 hover:text-gray-300 mt-1 shrink-0"
+                    >
+                      {isActive ? "Cancel" : "Revise"}
+                    </button>
+                  </div>
+                  <ReactMarkdown components={mdComponents}>{section.content}</ReactMarkdown>
+                  {isActive && (
+                    <div className="mt-3 space-y-2">
+                      <textarea
+                        className="w-full bg-gray-800 text-gray-100 rounded-lg px-3 py-2 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-gray-600 placeholder-gray-500"
+                        rows={3}
+                        placeholder={`What should change in "${section.heading}"?`}
+                        value={sectionFeedback[section.heading] ?? ""}
+                        onChange={(e) => setSectionFeedback((prev) => ({ ...prev, [section.heading]: e.target.value }))}
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleRegenerateDraftSection(section.heading)}
+                        disabled={isRegenerating || !sectionFeedback[section.heading]?.trim()}
+                        className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-medium transition-colors"
+                      >
+                        {isRegenerating ? "Rewriting…" : "Rewrite section"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {reviewNotes && (
         <div className="border-t border-gray-800 pt-4">

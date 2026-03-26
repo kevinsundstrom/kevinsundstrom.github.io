@@ -48,10 +48,13 @@ export async function GET(
       state: "open",
       per_page: 100,
     });
+    const slugSpaces = slug.replace(/-/g, " ");
     const pr = prs.find(
       (p) =>
         p.labels.some((l) => l.name === "checkpoint-1") &&
-        (p.head.ref.includes(slug) || p.title.toLowerCase().includes(slug))
+        (p.head.ref.includes(slug) ||
+          p.title.toLowerCase().includes(slug) ||
+          p.title.toLowerCase().includes(slugSpaces))
     );
     if (pr) ref = pr.head.ref;
   } catch {
@@ -123,8 +126,8 @@ export async function POST(
       );
     }
 
-    // Write gap resolutions to the planning branch before merge so they
-    // land on main with the squash commit and Assembly can read them.
+    // Write gap resolutions FIRST — before updating the branch or merging.
+    // This ensures the single mergeability poll at the end accounts for all branch changes.
     const resolvedGaps: Array<{ section: string; description: string; resolution: string }> = gaps ?? [];
     if (resolvedGaps.length > 0) {
       const resolutionContent = [
@@ -146,7 +149,6 @@ export async function POST(
         ),
       ].join("\n");
 
-      // Fetch existing SHA if the file already exists (re-run scenario)
       let existingSha: string | undefined;
       try {
         const existing = await octokit.repos.getContent({
@@ -179,6 +181,25 @@ export async function POST(
           { status: 500 }
         );
       }
+    }
+
+    // Bring the branch current with main after all writes are done.
+    try {
+      await octokit.pulls.updateBranch({ owner, repo, pull_number: prNumber });
+    } catch {
+      // Non-fatal: throws 422 if already up to date — continue
+    }
+
+    // Poll until GitHub confirms the branch is current AND mergeable.
+    // mergeable === true means no conflicts; mergeable_state === "clean" means up to date.
+    for (let i = 0; i < 10; i++) {
+      await new Promise((r) => setTimeout(r, 2000));
+      const { data: updated } = await octokit.pulls.get({ owner, repo, pull_number: prNumber });
+      if (updated.mergeable === false) {
+        return Response.json({ error: "PR has merge conflicts — resolve them before approving." }, { status: 422 });
+      }
+      if (updated.mergeable === true && updated.mergeable_state === "clean") break;
+      // null / "behind" / "unknown" — keep waiting
     }
 
     await octokit.pulls.merge({

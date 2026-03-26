@@ -75,8 +75,8 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [activeFeedbackSection, setActiveFeedbackSection] = useState<string | null>(null);
-  const [sectionFeedback, setSectionFeedback] = useState("");
+  const [activeSections, setActiveSections] = useState<Record<string, boolean>>({});
+  const [sectionFeedback, setSectionFeedback] = useState<Record<string, string>>({});
   const [regeneratingSection, setRegeneratingSection] = useState<string | null>(null);
 
   const parseGaps = (content: string) => {
@@ -176,20 +176,22 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
   }
 
   async function handleRegenerateSection(heading: string) {
+    const fb = sectionFeedback[heading]?.trim();
+    if (!fb) return;
     setRegeneratingSection(heading);
     setError(null);
     try {
       const res = await fetch(`/api/pipeline/${encodeURIComponent(slug)}/section`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sectionHeading: heading, feedback: sectionFeedback, prNumber }),
+        body: JSON.stringify({ sectionHeading: heading, feedback: fb, prNumber }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Regeneration failed");
       setOutline(data.outline);
       parseGaps(data.outline);
-      setActiveFeedbackSection(null);
-      setSectionFeedback("");
+      setActiveSections((prev) => { const n = { ...prev }; delete n[heading]; return n; });
+      setSectionFeedback((prev) => { const n = { ...prev }; delete n[heading]; return n; });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -245,13 +247,7 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
                 <button
                   onClick={() => {
                     if (!section.interactive) return;
-                    if (activeFeedbackSection === section.heading) {
-                      setActiveFeedbackSection(null);
-                      setSectionFeedback("");
-                    } else {
-                      setActiveFeedbackSection(section.heading);
-                      setSectionFeedback("");
-                    }
+                    setActiveSections((prev) => ({ ...prev, [section.heading]: !prev[section.heading] }));
                   }}
                   className="text-left w-full"
                   disabled={!section.interactive}
@@ -265,11 +261,11 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
                     <ReactMarkdown>{section.body}</ReactMarkdown>
                   </div>
                 )}
-                {section.interactive && activeFeedbackSection === section.heading && (
+                {section.interactive && activeSections[section.heading] && (
                   <div className="space-y-2 pt-1">
                     <textarea
-                      value={sectionFeedback}
-                      onChange={(e) => setSectionFeedback(e.target.value)}
+                      value={sectionFeedback[section.heading] ?? ""}
+                      onChange={(e) => setSectionFeedback((prev) => ({ ...prev, [section.heading]: e.target.value }))}
                       placeholder="What should change in this section?"
                       className="w-full bg-gray-700 text-gray-100 rounded px-2 py-1.5 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder-gray-500"
                       rows={3}
@@ -278,13 +274,13 @@ export default function CheckpointPanel({ slug, prNumber, onApproved }: Props) {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleRegenerateSection(section.heading)}
-                        disabled={!sectionFeedback.trim() || !!regeneratingSection}
+                        disabled={!sectionFeedback[section.heading]?.trim() || !!regeneratingSection}
                         className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-medium transition-colors"
                       >
                         {regeneratingSection === section.heading ? "Regenerating…" : "Regenerate"}
                       </button>
                       <button
-                        onClick={() => { setActiveFeedbackSection(null); setSectionFeedback(""); }}
+                        onClick={() => setActiveSections((prev) => ({ ...prev, [section.heading]: false }))}
                         disabled={!!regeneratingSection}
                         className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-gray-300 text-xs transition-colors"
                       >

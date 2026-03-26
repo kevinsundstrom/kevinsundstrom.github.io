@@ -37,6 +37,43 @@ function StatusDot({ stage }: { stage: string }) {
   return <span className={`${base} bg-gray-600`} />;
 }
 
+function AbandonButton({ slug, onAbandoned }: { slug: string; onAbandoned: () => void }) {
+  const [state, setState] = useState<"idle" | "confirming" | "running">("idle");
+
+  async function handleConfirm() {
+    setState("running");
+    try {
+      await fetch(`/api/pipeline/${encodeURIComponent(slug)}/abandon`, { method: "POST" });
+      onAbandoned();
+    } catch {
+      setState("idle");
+    }
+  }
+
+  if (state === "running") {
+    return <span className="text-xs text-gray-500">Abandoning…</span>;
+  }
+
+  if (state === "confirming") {
+    return (
+      <span className="flex items-center gap-2">
+        <span className="text-xs text-gray-400">Abandon this brief? This cannot be undone.</span>
+        <button onClick={handleConfirm} className="text-xs text-red-400 hover:text-red-300">Yes, abandon</button>
+        <button onClick={() => setState("idle")} className="text-xs text-gray-500 hover:text-gray-400">Cancel</button>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setState("confirming")}
+      className="text-xs text-gray-600 hover:text-red-400 transition-colors"
+    >
+      Abandon brief
+    </button>
+  );
+}
+
 function RerunPlanningButton({ slug, onRerun }: { slug: string; onRerun: () => void }) {
   const [state, setState] = useState<"idle" | "confirming" | "running">("idle");
 
@@ -76,32 +113,50 @@ function RerunPlanningButton({ slug, onRerun }: { slug: string; onRerun: () => v
 
 export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
   const [statuses, setStatuses] = useState<SlugStatus[]>(initial);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function refresh() {
+    setRefreshing(true);
+    try {
+      const res = await fetch("/api/pipeline");
+      if (res.ok) setStatuses(await res.json());
+    } catch {
+      // ignore
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch("/api/pipeline");
-        if (res.ok) setStatuses(await res.json());
-      } catch {
-        // silently ignore polling errors
-      }
-    }, 30_000);
-
+    const interval = setInterval(refresh, 15_000);
     return () => clearInterval(interval);
   }, []);
 
-  if (statuses.length === 0) {
-    return (
-      <div className="rounded-xl border border-gray-800 bg-gray-900 p-5">
-        <div className="flex items-center gap-3">
-          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 bg-gray-700" />
-          <span className="text-sm text-gray-500">Nothing in production yet. Submit a brief to get started.</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-lg font-semibold text-gray-100">In production</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Auto-refreshes every 15 seconds.</p>
+        </div>
+        <button
+          onClick={refresh}
+          disabled={refreshing}
+          className="text-xs text-gray-500 hover:text-gray-300 disabled:opacity-40 transition-colors"
+        >
+          {refreshing ? "Refreshing…" : "Refresh"}
+        </button>
+      </div>
+
+      {statuses.length === 0 && (
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-5">
+          <div className="flex items-center gap-3">
+            <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 bg-gray-700" />
+            <span className="text-sm text-gray-500">Nothing in production yet. Submit a brief to get started.</span>
+          </div>
+        </div>
+      )}
+
     <div className="space-y-3">
       {statuses.map((s) => (
         <div
@@ -158,7 +213,7 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
           {s.stage === "complete" && <CompletedDraftPanel slug={s.slug} />}
 
           {(s.stage === "complete" || s.stage === "running" || s.stage === "checkpoint-2-open" || s.stage === "checkpoint-1-open") && (
-            <div className="pt-1">
+            <div className="pt-1 flex items-center gap-4">
               <RerunPlanningButton
                 slug={s.slug}
                 onRerun={() =>
@@ -169,10 +224,17 @@ export default function PipelinePoller({ initial }: { initial: SlugStatus[] }) {
                   )
                 }
               />
+              <AbandonButton
+                slug={s.slug}
+                onAbandoned={() =>
+                  setStatuses((prev) => prev.filter((x) => x.slug !== s.slug))
+                }
+              />
             </div>
           )}
         </div>
       ))}
+    </div>
     </div>
   );
 }

@@ -90,6 +90,49 @@ async function commitFile(
   }
 }
 
+const REPO_MAP: Record<string, { owner: string; repo: string }> = {
+  synapse: { owner: "kevinsundstrom", repo: "synapse" },
+  pipeline: { owner: "kevinsundstrom", repo: "multi-agent-content-workflows-V2" },
+};
+
+async function createGithubIssue(
+  repoKey: string,
+  title: string,
+  body: string,
+  labels: string[],
+  githubToken: string
+): Promise<{ success: boolean; url?: string; number?: number; error?: string }> {
+  const target = REPO_MAP[repoKey];
+  if (!target) return { success: false, error: `Unknown repo key: ${repoKey}` };
+
+  const octokit = new Octokit({ auth: githubToken });
+  try {
+    const { data: issue } = await octokit.issues.create({
+      owner: target.owner,
+      repo: target.repo,
+      title,
+      body,
+      labels,
+    });
+
+    // Attempt Copilot assignment separately — don't fail the whole call if it's not enabled
+    try {
+      await octokit.issues.addAssignees({
+        owner: target.owner,
+        repo: target.repo,
+        issue_number: issue.number,
+        assignees: ["copilot"],
+      });
+    } catch {
+      // Copilot coding agent not enabled on this repo — issue still created
+    }
+
+    return { success: true, url: issue.html_url, number: issue.number };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Unknown GitHub API error" };
+  }
+}
+
 async function createPrForFile(
   path: string,
   content: string,
@@ -235,6 +278,38 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
           },
         },
         required: ["path", "content", "message"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "create_github_issue",
+      description:
+        "Open a GitHub issue for a bug report or feature request and assign it to the Copilot coding agent. For requests that touch both Synapse (the chat UI) and the pipeline (agents/workflows), call this twice with repo='synapse' and repo='pipeline' respectively, cross-referencing each issue in the other's body.",
+      parameters: {
+        type: "object",
+        properties: {
+          repo: {
+            type: "string",
+            enum: ["synapse", "pipeline"],
+            description: "'synapse' for the Synapse chat UI and API (content-intake app), 'pipeline' for the content pipeline agents and workflows (planning, assembly, draft)",
+          },
+          title: {
+            type: "string",
+            description: "Short, specific issue title",
+          },
+          body: {
+            type: "string",
+            description: "Full issue body in markdown. For bugs: include what happened, what was expected, and steps to reproduce. For features: include what the user wants and why. Be specific.",
+          },
+          labels: {
+            type: "array",
+            items: { type: "string" },
+            description: "Labels to apply. Use ['bug'] for bugs, ['enhancement'] for feature requests.",
+          },
+        },
+        required: ["repo", "title", "body", "labels"],
       },
     },
   },
@@ -449,6 +524,23 @@ export async function POST(req: Request) {
                 tool_call_id: tc.id,
                 content: JSON.stringify(result),
               });
+            } else if (tc.name === "create_github_issue") {
+              let result: { success: boolean; url?: string; number?: number; error?: string };
+              try {
+                const args = JSON.parse(tc.arguments);
+                if (!args.repo || !args.title || !args.body || !Array.isArray(args.labels)) {
+                  result = { success: false, error: "repo, title, body, and labels are required" };
+                } else {
+                  result = await createGithubIssue(args.repo, args.title, args.body, args.labels, githubToken);
+                }
+              } catch {
+                result = { success: false, error: "Failed to parse tool arguments" };
+              }
+              allMessages.push({
+                role: "tool",
+                tool_call_id: tc.id,
+                content: JSON.stringify(result),
+              });
             } else if (tc.name === "create_planning_pr") {
               let result: { success: boolean; url?: string; error?: string };
               try {
@@ -457,10 +549,16 @@ export async function POST(req: Request) {
                 if (!args.slug || !isValidSlug(args.slug) || !args.title || !args.content) {
                   result = { success: false, error: "slug, title, and content are required" };
                 } else {
-                  result = await createPlanningPr(args.slug, args.title, args.content, githubToken);
-                  if (result.success) {
-                    anyCommitSucceeded = true;
-                    briefSlugCommitted = args.slug;
+                  // Reject if outputs/{slug}/outline.md already exists on main
+                  const existingOutline = await readFile(`outputs/${args.slug}/outline.md`, githubToken);
+                  if (existingOutline.success) {
+                    result = { success: false, error: `A pipeline run with slug '${args.slug}' already exists. Choose a different slug.` };
+                  } else {
+                    result = await createPlanningPr(args.slug, args.title, args.content, githubToken);
+                    if (result.success) {
+                      anyCommitSucceeded = true;
+                      briefSlugCommitted = args.slug;
+                    }
                   }
                 }
               } catch {
