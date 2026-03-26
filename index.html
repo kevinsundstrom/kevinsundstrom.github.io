@@ -233,6 +233,64 @@
     border-radius: 50%;
     background: var(--ink-ghost);
   }
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink-muted);
+  }
+  .nav-dropdown {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    padding: 16px 0 4px;
+  }
+  .nav-dropdown a {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 10px 0;
+    transition: color 0.15s;
+  }
+  .nav-dropdown a:hover { color: var(--ink); }
+  .nav-dropdown a.active { color: var(--accent); }
+  .nav-dropdown.open { display: flex; }
+  @media (max-width: 768px) {
+    .shell { padding: 0 24px; }
+    header { flex-wrap: wrap; align-items: center; padding: 28px 0 24px; }
+    nav { display: none; }
+    .hamburger { display: flex; }
+    .nav-dropdown { width: 100%; order: 3; }
+    main {
+      grid-template-columns: 1fr;
+      padding: 40px 0 48px;
+    }
+    .col-identity {
+      padding-right: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 40px;
+      margin-bottom: 40px;
+    }
+    .col-project { padding-left: 0; }
+    .lede { font-size: clamp(28px, 8vw, 42px); }
+    .project-name { font-size: clamp(32px, 10vw, 52px); }
+  }
   @media (prefers-reduced-motion: no-preference) {
     .col-identity > * { animation: rise 0.5s ease both; }
     .col-identity > *:nth-child(1) { animation-delay: 0.05s; }
@@ -261,6 +319,14 @@
       <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
       <a href="mailto:kevin@kevinsundstrom.com">Contact</a>
     </nav>
+    <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-dropdown" id="nav-dropdown">
+      <a href="/" class="active">Home</a>
+      <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
+      <a href="mailto:kevin@kevinsundstrom.com">Contact</a>
+    </div>
   </header>
 
   <main>
@@ -328,5 +394,19 @@
     </div>
   </footer>
 </div>
+<script>
+  const hamburger = document.querySelector('.hamburger');
+  const dropdown = document.getElementById('nav-dropdown');
+  hamburger.addEventListener('click', () => {
+    const open = dropdown.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open);
+  });
+  dropdown.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      dropdown.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
 </body>
 </html>
