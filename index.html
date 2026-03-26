@@ -1,555 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Adaptive theme colors for browser UI -->
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="dns-prefetch" href="https://formsubmit.co" />
-  <title>Kevin Sundstrom | Marketing & Content Strategist</title>
-  <meta name="description" content="Kevin Sundstrom is a marketing and content strategist helping organizations translate executive vision into actionable content strategies and drive meaningful results." />
-  <meta name="keywords" content="marketing strategist, content strategist, marketing consultant, content development, marketing strategy, digital marketing, SEO, content marketing" />
-  <meta name="author" content="Kevin Sundstrom" />
-  <link rel="canonical" href="https://kevinsundstrom.com/" />
-  <!-- Preload critical resources -->
-  <link rel="preload" href="styles.css?v=dev-20250808-02" as="style" />
-  <link rel="preload" href="theme.js?v=dev-20250808-02" as="script" />
-  <meta property="og:title" content="Kevin Sundstrom | Marketing & Content Strategist" />
-  <meta property="og:description" content="Marketing and content strategist helping organizations translate executive vision into actionable content strategies." />
-  <meta property="og:url" content="https://kevinsundstrom.com/" />
-  <meta property="og:type" content="website" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css?v=dev-20250808-02" />
-  <style>
-    /* Page-specific styles for homepage */
-    :root {
-      /* Configurable positioning variables for easy manual adjustment */
-      --homepage-vertical-offset: 0rem; /* Adjust this to move content up (-2rem) or down (+2rem) */
-      --homepage-horizontal-padding: 1.5rem; /* Adjust horizontal padding */
-  --control-size: 44px; /* unified height for input/button */
-  --control-border-width: 1px; /* use whole pixels to avoid subpixel rounding */
-  /* Hero spacing presets */
-  --hero-top: clamp(5rem, 18vh, 10rem);
-  --hero-gap-after: 1.5rem;
-  --hero-gap-title-sub: 0.35rem;
-    }
-    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kevin Sundstrom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0f0f0d;
+    --ink-muted: #5a5955;
+    --ink-ghost: #b8b5af;
+    --paper: #f5f3ef;
+    --rule: #d8d5cf;
+    --accent: #c8411a;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+  }
+  html { height: 100%; }
   body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      /* padding: var(--homepage-horizontal-padding); */
-      padding: 0; /* Ensure body does not add padding around footer */
-      min-height: 100vh;
-      height: auto;
-  /* Removed vertical centering translation; we now use top padding on main-content */
+    min-height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 56px;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 40px 0 36px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .wordmark {
+    font-family: var(--serif);
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  nav { display: flex; gap: 32px; align-items: baseline; }
+  nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: var(--ink); }
+  nav a.active { color: var(--accent); }
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 72px 0 80px;
+  }
+  .col-identity {
+    padding-right: 72px;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .lede {
+    font-family: var(--serif);
+    font-size: clamp(38px, 4.5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .lede em { font-style: italic; color: var(--accent); }
+  .bio {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--ink-muted);
+    max-width: 400px;
+    margin-bottom: 48px;
+  }
+  .bio strong { font-weight: 500; color: var(--ink); }
+  .meta-strip { display: flex; flex-direction: column; gap: 8px; }
+  .meta-row { display: flex; align-items: baseline; gap: 16px; }
+  .meta-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    min-width: 64px;
+  }
+  .meta-val { font-size: 12px; font-weight: 400; color: var(--ink-muted); }
+  .col-project {
+    padding-left: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .project-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-ghost);
+    margin-bottom: 20px;
+  }
+  .project-name {
+    font-family: var(--serif);
+    font-size: clamp(44px, 5.5vw, 72px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .project-name-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--ink-ghost);
+    margin-bottom: 28px;
+  }
+  .project-desc {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--ink-muted);
+    max-width: 380px;
+    margin-bottom: 40px;
+  }
+  .project-desc strong { font-weight: 500; color: var(--ink); }
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .feature-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ink-muted);
+  }
+  .feature-list li::before { content: '·'; color: var(--accent); flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .cta-block { display: flex; flex-direction: column; gap: 10px; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    align-self: flex-start;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary .arrow { font-size: 14px; transition: transform 0.15s; }
+  .btn-primary:hover .arrow { transform: translateX(4px); }
+  .cta-note {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-ghost);
+    letter-spacing: 0.02em;
+  }
+  .cta-note a {
+    color: var(--ink-ghost);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s;
+  }
+  .cta-note a:hover { color: var(--ink-muted); }
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 20px 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-left { font-size: 11px; font-weight: 300; color: var(--ink-ghost); letter-spacing: 0.02em; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-ghost);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--ink-muted); }
+  .accent-rule { width: 32px; height: 2px; background: var(--accent); margin-bottom: 24px; }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border: 1px solid var(--rule);
+    padding: 3px 10px;
+    margin-bottom: 20px;
+  }
+  .status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink-ghost);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .col-identity > * { animation: rise 0.5s ease both; }
+    .col-identity > *:nth-child(1) { animation-delay: 0.05s; }
+    .col-identity > *:nth-child(2) { animation-delay: 0.12s; }
+    .col-identity > *:nth-child(3) { animation-delay: 0.18s; }
+    .col-project > * { animation: rise 0.5s ease both; }
+    .col-project > *:nth-child(1) { animation-delay: 0.08s; }
+    .col-project > *:nth-child(2) { animation-delay: 0.15s; }
+    .col-project > *:nth-child(3) { animation-delay: 0.22s; }
+    .col-project > *:nth-child(4) { animation-delay: 0.28s; }
+    .col-project > *:nth-child(5) { animation-delay: 0.34s; }
+    .col-project > *:nth-child(6) { animation-delay: 0.40s; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    
-    .main-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  /* Top-weight the hero instead of perfect vertical center */
-  justify-content: flex-start;
-      flex: 1;
-      width: 100%;
-  padding: calc(var(--homepage-horizontal-padding) + 0.5rem);
-  /* Add generous top padding that scales with viewport height but is capped */
-  padding-top: var(--hero-top);
-    }
-    
-    .search-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-width: 680px; /* Slightly narrower for hierarchy */
-      background: var(--bg-secondary);
-      border: 1.5px solid var(--border-light);
-      border-radius: 12px;
-      padding: 0.75rem;
-      /* Tone down elevation so the name stays primary */
-      box-shadow: 0 4px 12px var(--shadow-light);
-      gap: 0.75rem;
-    }
-    
-  /* Rebuilt search input with rotating prompt overlay */
-  .search-wrap { position: relative; width: 100%; height: var(--control-size); }
-    .search-bar {
-      padding: 0 1.1rem;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      height: var(--control-size);
-      box-sizing: border-box;
-  border: var(--control-border-width) solid var(--border-light);
-      border-radius: 8px;
-      width: 100%;
-      outline: none;
-      transition: border-color var(--transition-med), box-shadow var(--transition-med), transform var(--transition-fast);
-      font-family: inherit;
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236a6a6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.5' cy='10.5' r='7.5'/%3E%3Cline x1='21' y1='21' x2='15.8' y2='15.8'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: 0.75rem 50%;
-      background-size: 18px 18px;
-      padding-left: 2.4rem;
-    }
-    
-    .search-bar:focus {
-      border: 1.5px solid var(--brand);
-      transform: translateY(-1px);
-      box-shadow: 0 0 0 4px var(--ring), 0 4px 12px var(--shadow-medium);
-    }
-    
-    /* Search button */
-    .search-btn {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0 0.95rem;
-      height: var(--control-size);
-      box-sizing: border-box;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border-radius: 8px;
-  border: var(--control-border-width) solid var(--border-light);
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: transform var(--transition-fast), box-shadow var(--transition-med), border-color var(--transition-med), background var(--transition-med);
-    }
-    .search-btn:hover { transform: translateY(-1px); border-color: var(--brand); background: color-mix(in oklab, var(--bg-secondary) 92%, var(--brand) 8%); }
-    .search-btn:active { transform: translateY(0); }
-    .search-btn:focus-visible { box-shadow: 0 0 0 3px var(--ring); outline: none; }
-    
-    .page-title {
-      font-size: 2.6rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      transition: color 0.3s ease;
-    }
-
-  /* Hero lockup */
-  .hero-lockup { text-align: center; margin-bottom: var(--hero-gap-after); }
-  .hero-title { font-size: 2.7rem; margin: 0 0 var(--hero-gap-title-sub) 0; font-weight: 800; letter-spacing: -0.02em; }
-  .hero-subtitle { font-size: 1rem; color: var(--text-secondary); margin: 0; }
-    @media (max-width: 700px) { .hero-title { font-size: 2.2rem; } }
-
-    /* Rotating prompt overlay styles */
-    .search-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center; /* true vertical centering */
-      pointer-events: none;
-      padding-left: 2.4rem; /* align with icon */
-      padding-right: 1.25rem;
-      color: var(--text-primary);
-      opacity: 0.88;
-      transition: opacity var(--transition-med);
-      overflow: hidden;
-    }
-  .prompt-viewport { height: 1.4em; overflow: hidden; width: 100%; display: block; }
-  .prompt-roller { will-change: transform; transition: transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1); }
-  .prompt-line { height: 1.4em; line-height: 1.4em; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 0.95rem; }
-  .search-wrap.typing .search-overlay,
-  .search-wrap.focused .search-overlay { opacity: 0; }
-    
-    /* @media (max-width: 700px) {
-      body {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-      }
-    } */
-
-    /* Added media query for .main-content padding on mobile */
-    @media (max-width: 700px) {
-      .main-content {
-  /* On small screens keep hero high but allow tighter top spacing */
-  padding-top: 0.75rem;
-        padding-bottom: 0.5rem;
-        /* padding-left and padding-right will remain var(--homepage-horizontal-padding) */
-      }
-    }
-    
-    /* Extra small screens */
-    @media (max-width: 480px) {
-      .main-content {
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-      }
-      
-      .page-title {
-  font-size: 2rem;
-      }
-      /* Mobile tweaks: smaller overlay text, tighter icon padding for more room */
-      .prompt-line { font-size: 0.9rem; }
-      .search-bar {
-        background-position: 0.6rem 50%;
-        background-size: 16px 16px;
-        padding-left: 2.1rem;
-      }
-      /* Allow two-line overlay on mobile */
-      :root { --control-size: 56px; }
-      .prompt-line {
-        white-space: normal;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-  line-clamp: 2;
-        -webkit-line-clamp: 2;
-        text-overflow: ellipsis;
-      }
-    }
-
-    /* Mobile-only splash page (<= 768px) */
-    @media (max-width: 768px) {
-      /* Hide normal site chrome when splash active */
-      body.has-mobile-splash .slim-navbar,
-      body.has-mobile-splash .navbar-spacer,
-      body.has-mobile-splash .main-content,
-      body.has-mobile-splash .site-footer { display: none !important; }
-
-      .mobile-splash {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 1.75rem;
-        padding: 3rem 1.75rem 2.5rem 1.75rem;
-        background: #1a1a1a; /* Dark theme primary */
-        color: #ffffff;
-        z-index: 5000;
-        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-        text-align: center;
-      }
-      .mobile-splash h1 {
-        margin: 0;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        line-height: 1.15;
-        font-size: clamp(2.1rem, 7.2vw, 2.9rem);
-        background: var(--brand-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-      .mobile-splash p { margin: 0; font-size: clamp(0.95rem, 2.9vw, 1.05rem); line-height: 1.5; color: var(--text-secondary, #d1d1d1); }
-      .mobile-splash p + p { margin-top: 0.9rem; }
-      .mobile-splash-footer {
-        position: absolute;
-        bottom: 1rem;
-        left: 0; right: 0;
-        display: flex;
-        justify-content: center;
-        padding: 0 1rem;
-      }
-      .mobile-splash-footer a {
-        text-decoration: none;
-        color: var(--text-tertiary, #a1a1a1);
-        font-size: 0.85rem;
-        letter-spacing: 0.25px;
-        padding: 0.4rem 0.9rem;
-        border-radius: 999px;
-        border: 1px solid var(--border-light, #404040);
-        transition: background var(--transition-med, 200ms ease), color var(--transition-med, 200ms ease), border-color var(--transition-med, 200ms ease);
-        background: rgba(255,255,255,0.02);
-      }
-      .mobile-splash-footer a:hover,
-      .mobile-splash-footer a:focus-visible {
-        background: rgba(255,255,255,0.08);
-        color: #fff;
-        outline: none;
-        border-color: color-mix(in oklab, var(--brand, #4f46e5) 55%, transparent);
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-  <!-- Mobile splash (only rendered on small screens via CSS) -->
-  <div class="mobile-splash" style="display:none" aria-hidden="true">
-    <h1>Look up — the world is waiting.</h1>
-    <div style="max-width:640px; display:flex; flex-direction:column; gap:0.5rem;">
-  <p>kevinsundstrom.com will be here when you’re back on your desktop.</p>
-      <p>I look forward to helping you.</p>
-    </div>
-    <div class="mobile-splash-footer">
-      <a href="https://www.linkedin.com/in/kevinsundstrom/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    </div>
-  </div>
-  <div class="bg-accent" aria-hidden="true"></div>
-  <div id="scrollProgress" aria-hidden="true"></div>
-  <nav class="slim-navbar">
-    <div style="display: flex; gap: 0.5rem;">
-      <a href="/contact" class="nav-link" aria-label="Contact Me">Contact Me</a>
-      <a href="/articles/" class="nav-link" aria-label="Articles">Articles</a>
-    </div>
-    <div style="display: flex; align-items: center;">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-        <span id="themeIcon">🌙</span>
-      </button>
-      <span class="nav-name">Kevin Sundstrom</span>
-    </div>
-  </nav>
-  <div class="navbar-spacer"></div>
-  
-  <div class="main-content">
-    <main id="main-content">
-      <div class="hero-lockup">
-        <h1 class="hero-title gradient-text">Kevin Sundstrom</h1>
-        <p class="hero-subtitle">Marketing & Content Strategy</p>
+<div class="shell">
+  <header>
+    <a href="/" class="wordmark">Kevin Sundstrom</a>
+    <nav>
+      <a href="/" class="active">Home</a>
+      <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
+      <a href="mailto:kevin@kevinsundstrom.com">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="col-identity">
+      <div>
+        <div class="accent-rule"></div>
+        <h1 class="lede">Content strategy,<br><em>engineered.</em></h1>
+        <p class="bio">
+          I build <strong>content systems</strong> — the infrastructure that turns subject-matter expertise into structured, scalable output. Currently at <strong>GitHub</strong>, where I lead content strategy and run agentic production pipelines on top of Copilot infrastructure.
+        </p>
       </div>
-    </main>
-    <div class="search-container">
-      <div class="search-wrap" id="searchWrap">
-        <input class="search-bar" id="searchInput" type="text" aria-label="Ask a question or search" placeholder="" />
-        <div class="search-overlay" id="searchOverlay" aria-hidden="true" aria-live="polite">
-          <div class="prompt-viewport" id="promptViewport">
-            <div class="prompt-roller" id="promptRoller"></div>
-          </div>
+      <div class="meta-strip">
+        <div class="meta-row">
+          <span class="meta-label">Role</span>
+          <span class="meta-val">Content Strategist and Team Lead, GitHub</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Focus</span>
+          <span class="meta-val">Content strategy · Agentic workflows · Systems design</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Location</span>
+          <span class="meta-val">Vancouver, WA</span>
         </div>
       </div>
-      <button class="search-btn" id="searchBtn" aria-label="Search or submit question">Search</button>
     </div>
-  </div>
-  
-  <footer class="site-footer">
-    <div class="copyright">© Kevin Sundstrom <span id="current-year"></span></div>
-    <a href="https://www.linkedin.com/in/kevinsundstrom/" class="linkedin-link" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
+
+    <div class="col-project">
+      <p class="project-eyebrow">Current project</p>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        Private beta
+      </div>
+
+      <h2 class="project-name">Synapse</h2>
+      <p class="project-name-sub">synapse.kevinsundstrom.com</p>
+
+      <p class="project-desc">
+        A <strong>multi-agent content production system</strong> built on GitHub Agentic Workflows. Planning, knowledge, assembly, and draft agents work in sequence, turning structured briefs and SME interviews into publication-ready content without the typical editorial bottlenecks.
+      </p>
+
+      <ul class="feature-list">
+        <li>Agentic pipeline with human review gates</li>
+        <li>First-party knowledge store built from real interviews</li>
+        <li>Standardized outline and prose quality controls</li>
+        <li>Runs on Copilot infrastructure with Claude models</li>
+      </ul>
+
+      <div class="cta-block">
+        <a href="https://synapse.kevinsundstrom.com" class="btn-primary">
+          Open Synapse <span class="arrow">→</span>
+        </a>
+        <span class="cta-note">Desktop · Private beta · <a href="https://github.com/kevinsundstrom/synapse">Open source soon ↗</a></span>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span class="footer-left">© 2026 Kevin Sundstrom</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/kevinsundstrom">LinkedIn</a>
+      <a href="https://github.com/kevinsundstrom">GitHub</a>
+      <a href="mailto:kevin@kevinsundstrom.com">Email</a>
+    </div>
   </footer>
-  
-  <script src="theme.js?v=dev-20250808-02"></script>
-  <script>
-    // Activate mobile splash logic: add class when viewport <= 768
-    (function(){
-      const SPLASH_BREAKPOINT = 768;
-      const body = document.body;
-      const splash = document.querySelector('.mobile-splash');
-      if(!splash) return;
-      function apply() {
-        const isMobile = window.innerWidth <= SPLASH_BREAKPOINT;
-        if (isMobile) {
-          splash.style.display = 'flex';
-          splash.setAttribute('aria-hidden','false');
-          body.classList.add('has-mobile-splash');
-        } else {
-          splash.style.display = 'none';
-          splash.setAttribute('aria-hidden','true');
-          body.classList.remove('has-mobile-splash');
-        }
-      }
-      window.addEventListener('resize', apply, { passive: true });
-      apply();
-    })();
-    // Update copyright year
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-    
-    function searchAndGo(term) {
-  document.getElementById('searchInput').value = term;
-  try { sessionStorage.setItem('heroSearchReturnReset', '1'); } catch(e) {}
-      window.location.href = '/resume';
-    }
-    document.getElementById('searchInput').addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') {
-        const value = this.value.trim();
-        if (value !== '') {
-          searchAndGo(value);
-        } else {
-          const term = (window.__getActivePrompt && window.__getActivePrompt()) || '';
-          if (term) searchAndGo(term);
-        }
-      }
-    });
-
-    // Rotating example prompts in the search input
-    (function setupRotatingPrompts() {
-      const wrap = document.getElementById('searchWrap');
-      const input = document.getElementById('searchInput');
-      const overlay = document.getElementById('searchOverlay');
-      const viewport = document.getElementById('promptViewport');
-      const roller = document.getElementById('promptRoller');
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Prompts to cycle through
-      const prompts = [
-        'How do I translate exec vision into something usable?',
-        'Why does everyone think a blog post is a strategy?',
-        'Can I fix the funnel without breaking the brand?',
-        'How do I get actual value out of AI, not draft-shaped garbage?'
-      ];
-
-      // Build lines
-      roller.innerHTML = '';
-      prompts.forEach(t => {
-        const line = document.createElement('div');
-        line.className = 'prompt-line';
-        line.textContent = t;
-        roller.appendChild(line);
-      });
-      // Clone first for seamless loop
-      const firstClone = document.createElement('div');
-      firstClone.className = 'prompt-line';
-      firstClone.textContent = prompts[0];
-      roller.appendChild(firstClone);
-
-  let idx = 0;
-  let timer = null;
-  let lineHeight = 0; // single line height in pixels
-  let viewportHeight = 0; // visible height (1 line desktop, 2 lines mobile)
-
-      function recalc() {
-        // Set viewport to the line height of a prompt-line for crisp masking
-        const cs = getComputedStyle(input);
-        const lh = parseFloat(cs.lineHeight);
-        lineHeight = Number.isFinite(lh) && lh > 0 ? lh : Math.ceil(parseFloat(cs.fontSize) * 1.4);
-        const twoLine = isMobile();
-        viewportHeight = twoLine ? Math.round(lineHeight * 2) : Math.round(lineHeight);
-        // Apply exact line height to viewport and each line so baseline matches input text
-        viewport.style.height = viewportHeight + 'px';
-        Array.from(roller.children).forEach(el => {
-          el.style.height = viewportHeight + 'px';
-          el.style.lineHeight = lineHeight + 'px';
-        });
-        roller.style.transform = `translateY(${-idx * viewportHeight}px)`;
-        // Pixel-perfect vertical centering inside the wrapper (avoids border rounding mismatches)
-        const r = wrap.getBoundingClientRect();
-        const top = Math.max(0, Math.round((r.height - viewportHeight) / 2));
-        overlay.style.top = top + 'px';
-        overlay.style.bottom = 'auto';
-        overlay.style.height = viewportHeight + 'px';
-      }
-
-      function next() {
-        if (!lineHeight) recalc();
-        idx += 1;
-        roller.style.transform = `translateY(${-idx * viewportHeight}px)`;
-      }
-
-      function start() {
-        if (reduceMotion) return; // Respect reduced motion
-        stop();
-        timer = setInterval(next, 2500);
-      }
-      function stop() { if (timer) { clearInterval(timer); timer = null; } }
-
-      // Seamless loop: when we hit the clone, jump back without animation
-      roller.addEventListener('transitionend', (e) => {
-        if (e.propertyName !== 'transform') return;
-        if (idx === prompts.length) {
-          roller.style.transition = 'none';
-          idx = 0;
-          roller.style.transform = 'translateY(0)';
-          // force reflow
-          void roller.offsetHeight;
-          roller.style.transition = '';
-        }
-  // After each step completes, nothing extra for wrap mode
-      });
-
-      // Expose current prompt getter for Enter key when empty
-      window.__getActivePrompt = () => prompts[idx % prompts.length];
-
-      // Search button uses typed value or current prompt
-      const btn = document.getElementById('searchBtn');
-      if (btn) {
-        btn.addEventListener('click', () => {
-          const value = input.value.trim();
-          const term = value !== '' ? value : window.__getActivePrompt();
-          if (term) searchAndGo(term);
-        });
-      }
-
-  // Helper to detect mobile for layout decisions (wrap mode)
-  const isMobile = () => window.matchMedia('(max-width: 480px)').matches;
-  // No marquee in wrap mode
-  function stopMarquee() {}
-  function maybeStartMarquee() { return; }
-
-      // Input interactions
-      input.addEventListener('focus', () => { wrap.classList.add('focused'); stop(); stopMarquee(); });
-      input.addEventListener('blur', () => {
-        wrap.classList.remove('focused');
-        if (input.value.trim() === '') { start(); }
-      });
-      input.addEventListener('input', () => {
-        if (input.value.trim() === '') {
-          wrap.classList.remove('typing');
-          if (!document.activeElement || document.activeElement !== input) { start(); }
-        } else {
-          wrap.classList.add('typing');
-          stop();
-          stopMarquee();
-        }
-      });
-
-      // Initial layout and start
-  window.addEventListener('resize', () => { recalc(); });
-      // Ensure fonts/layout are ready before measuring
-      (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => {
-  recalc();
-        // If input already has a value (e.g., browser autofill or back/forward cache), hide overlay to prevent double text
-        if (input.value.trim() !== '') {
-          wrap.classList.add('typing');
-          stop();
-          stopMarquee();
-        } else {
-          start();
-        }
-      });
-
-      // Handle returning via back/forward cache (pageshow with persisted) so overlay doesn't overlap existing value
-      window.addEventListener('pageshow', (evt) => {
-        // If coming from bfcache or a back/forward navigation, re-evaluate state
-        const navEntries = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
-        const isBackFwd = evt.persisted || (navEntries[0] && navEntries[0].type === 'back_forward');
-        if (!isBackFwd) return;
-        let resetFlag = false;
-        try { resetFlag = sessionStorage.getItem('heroSearchReturnReset') === '1'; } catch(e) {}
-        if (resetFlag) {
-          // Clear previous query so rotating prompts return
-          input.value = '';
-          wrap.classList.remove('typing');
-          try { sessionStorage.removeItem('heroSearchReturnReset'); } catch(e) {}
-          // Restart rotation if motion allowed
-          if (!reduceMotion) { start(); }
-          return;
-        }
-        if (input.value.trim() !== '') {
-          // Keep hidden if user truly left text intentionally
-          wrap.classList.add('typing');
-          stop();
-          stopMarquee();
-        } else {
-          wrap.classList.remove('typing');
-          if (!document.activeElement || document.activeElement !== input) { start(); }
-        }
-      });
-
-      // Pause rotation when tab not visible; resume when returning if appropriate
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          stop();
-          return;
-        }
-        // On becoming visible again, only restart if: no value, not focused, not typing, motion allowed
-        if (!reduceMotion && input.value.trim() === '' && !wrap.classList.contains('typing') && document.activeElement !== input) {
-          start();
-        }
-      });
-    })();
-  </script>
+</div>
 </body>
 </html>
