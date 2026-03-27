@@ -6,7 +6,12 @@ import Sidebar from "@/components/Sidebar";
 export const metadata: Metadata = {
   title: "Synapse",
   description: "Raw knowledge in, finished content out.",
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [
+      { url: "/favicon-light.svg", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },
+      { url: "/favicon-dark.svg", type: "image/svg+xml", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
 };
 
 export default async function RootLayout({

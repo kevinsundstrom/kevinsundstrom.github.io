@@ -8,6 +8,67 @@ import { eq, and, gt, sql } from "drizzle-orm";
 
 export const runtime = "nodejs";
 
+// ── Brief content validation ─────────────────────────────────────────────────
+
+function extractBriefSections(content: string): Record<string, string> {
+  const sections: Record<string, string> = {};
+  const lines = content.split("\n");
+  let currentSection: string | null = null;
+  const currentLines: string[] = [];
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^## (.+)$/);
+    if (headingMatch) {
+      if (currentSection !== null) {
+        sections[currentSection] = currentLines.join("\n").trim();
+      }
+      currentSection = headingMatch[1].trim();
+      currentLines.length = 0;
+    } else if (currentSection !== null) {
+      currentLines.push(line);
+    }
+  }
+  if (currentSection !== null) {
+    sections[currentSection] = currentLines.join("\n").trim();
+  }
+  return sections;
+}
+
+function validateBriefContent(content: string): { valid: boolean; error?: string } {
+  const sections = extractBriefSections(content);
+
+  const MIN_WORDS: Record<string, number> = {
+    "Content goal": 20,
+    "Target audience": 25,
+    "Angle": 25,
+  };
+
+  for (const [sectionName, minWords] of Object.entries(MIN_WORDS)) {
+    const body = sections[sectionName];
+    if (!body) {
+      return { valid: false, error: `Brief is missing a '${sectionName}' section.` };
+    }
+    const wordCount = body.split(/\s+/).filter(Boolean).length;
+    if (wordCount < minWords) {
+      return {
+        valid: false,
+        error: `The '${sectionName}' section needs more specificity (${wordCount} words; minimum ${minWords}).`,
+      };
+    }
+  }
+
+  const questionsBody = sections["Key questions this piece should answer"];
+  if (!questionsBody) {
+    return { valid: false, error: `Brief is missing a 'Key questions this piece should answer' section.` };
+  }
+  const questionCount = questionsBody.split("\n").filter((l) => l.trim().startsWith("-")).length;
+  if (questionCount < 2) {
+    return { valid: false, error: `The 'Key questions' section needs at least 2 questions.` };
+  }
+
+  return { valid: true };
+}
+
 // ── Path validation ──────────────────────────────────────────────────────────
 
 const READ_ALLOWED = [
@@ -488,6 +549,12 @@ export async function POST(req: Request) {
                     const existing = await readFile(args.path, githubToken);
                     if (existing.success) {
                       result = { success: false, error: `A brief with slug '${briefMatch[1]}' already exists. Choose a different slug.` };
+                      allMessages.push({ role: "tool", tool_call_id: tc.id, content: JSON.stringify(result) });
+                      continue;
+                    }
+                    const contentValidation = validateBriefContent(args.content);
+                    if (!contentValidation.valid) {
+                      result = { success: false, error: contentValidation.error };
                       allMessages.push({ role: "tool", tool_call_id: tc.id, content: JSON.stringify(result) });
                       continue;
                     }

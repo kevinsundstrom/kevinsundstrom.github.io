@@ -1,4 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#333"/>
-  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="system-ui,sans-serif" font-size="32" fill="#fff" font-weight="bold">KS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <style>
+    .ink { fill: #0f0f0d; }
+    .acc { fill: #c8411a; }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #f5f3ef; }
+    }
+  </style>
+  <polygon class="ink" points="52,4 28,42 40,42 36,76 60,34 44,34"/>
+  <polygon class="acc" points="36,76 60,34 44,34 46,42"/>
 </svg>
