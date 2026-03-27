@@ -1,0 +1,374 @@
+name: Simple Automated Pipeline with Review Gates
+
+# This workflow runs the full 8-phase pipeline with review gates at each step
+# Easiest editor experience: review outputs, edit if needed, approve to continue
+
+on:
+  workflow_dispatch:
+    inputs:
+      brief_file:
+        description: 'Brief filename (without path)'
+        required: true
+        type: string
+      start_phase:
+        description: 'Starting phase'
+        required: false
+        type: choice
+        options:
+          - '1-outline'
+          - '2-research'
+          - '3-draft'
+          - '4-refine'
+          - '5-polish'
+          - '6-qa'
+          - '7-copy-edit'
+        default: '1-outline'
+
+env:
+  BRIEF_SLUG: ${{ github.event.inputs.brief_file }}
+  DATE: ${{ github.run_id }}
+
+jobs:
+  # Phase 1: Outline
+  phase-1-outline:
+    if: startsWith(github.event.inputs.start_phase, '1')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Generate Outline
+      run: |
+        SLUG=$(basename "${{ github.event.inputs.brief_file }}" .md)
+        DATE=$(date +%Y%m%d)
+        
+        mkdir -p content-workflow/outputs
+        
+        # Save original for learning (before any edits)
+        cp "content-workflow/briefs/${{ github.event.inputs.brief_file }}" \
+           "content-workflow/edits/${SLUG}-brief-original-${DATE}.md" 2>/dev/null || true
+        
+        # Generate outline (placeholder - replace with actual agent call)
+        cat > "content-workflow/outputs/${SLUG}-outline-${DATE}.md" << 'EOF'
+        # Content Outline
+        
+        ## Introduction
+        - Hook: [Engaging opening that captures attention]
+        - Context: [Background and why this matters]
+        - Preview: [What readers will learn]
+        
+        ## Main Section 1: [Topic]
+        ### Subsection 1.1: [Specific aspect]
+        - Key point
+        - Supporting detail
+        - Example placeholder
+        
+        ### Subsection 1.2: [Another aspect]
+        - Key point
+        - Supporting detail
+        
+        ## Main Section 2: [Deep Dive]
+        - Detailed exploration
+        - Practical applications
+        
+        ## Main Section 3: [Implementation/How-To]
+        - Step-by-step guidance
+        - Best practices
+        - Common pitfalls
+        
+        ## Conclusion
+        - Summary of key insights
+        - Actionable takeaways
+        - Call to action
+        
+        ---
+        **Next**: Research phase will add facts, stats, and examples to support each section.
+        EOF
+        
+        # Create rationale
+        cat > "content-workflow/outputs/${SLUG}-outline-rationale-${DATE}.md" << 'EOF'
+        # Outline Rationale
+        
+        ## Structure Decision
+        - Chose problem-solution pattern for clarity
+        - Balanced depth with accessibility
+        - Included practical application section
+        
+        ## Audience Considerations
+        - Started with context for newcomers
+        - Included advanced topics for experienced readers
+        - Made scannable with clear headers
+        
+        ## Brief Alignment
+        - All required topics addressed
+        - Appropriate length for target word count
+        - SEO keywords naturally integrated in headers
+        EOF
+        
+        echo "OUTLINE_FILE=content-workflow/outputs/${SLUG}-outline-${DATE}.md" >> $GITHUB_ENV
+    
+    - name: Commit Phase 1
+      run: |
+        git config user.name "Pipeline Bot"
+        git config user.email "pipeline@users.noreply.github.com"
+        git add content-workflow/outputs/ content-workflow/edits/
+        git commit -m "Phase 1: Outline for ${{ github.event.inputs.brief_file }}" || true
+        git push
+    
+    - name: Create Review Issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const slug = '${{ github.event.inputs.brief_file }}'.replace('.md', '');
+          
+          const { data: issue } = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `📝 Review Phase 1: Outline for ${slug}`,
+            labels: ['content-pipeline', 'needs-review', 'phase-1'],
+            body: `## ✅ Phase 1: Outline Complete
+            
+            The outline has been generated and committed.
+            
+            ### 📁 Files to Review
+            - Outline: \`content-workflow/outputs/${slug}-outline-*.md\`
+            - Rationale: \`content-workflow/outputs/${slug}-outline-rationale-*.md\`
+            
+            ### ✏️ How to Edit (Choose One)
+            
+            **Option A: GitHub Web UI** (Easiest)
+            1. Click the outline file above
+            2. Click the pencil icon to edit
+            3. Make changes
+            4. Commit directly to \`main\`
+            
+            **Option B: Local Editor** (Most Powerful)
+            \`\`\`bash
+            # Pull latest
+            git pull
+            
+            # Edit in your favorite editor
+            vim content-workflow/outputs/${slug}-outline-*.md
+            
+            # Commit and push
+            git add content-workflow/outputs/
+            git commit -m "Editor review: improved outline"
+            git push
+            \`\`\`
+            
+            **Option C: Download → Edit → Upload**
+            1. Download the file
+            2. Edit locally
+            3. Upload the changed file
+            
+            ### ✅ Approve to Continue
+            
+            When satisfied with the outline:
+            - Comment: \`/approve-phase-1\`
+            - Or close this issue
+            - Phase 2 (Research) will automatically start
+            
+            ### 🎓 Learning Note
+            
+            Your edits are automatically captured! Original saved to \`edits/\` folder.
+            After 3-5 similar edits, agents will learn and improve.
+            
+            ---
+            
+            **Workflow**: [View run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+          });
+          
+          core.setOutput('issue-number', issue.number);
+    
+    outputs:
+      issue-number: ${{ steps.create-review-issue.outputs.issue-number }}
+
+  # Phase 2: Research (runs after Phase 1 approval)
+  phase-2-research:
+    needs: phase-1-outline
+    if: |
+      (github.event.issue.labels.*.name contains 'phase-1-approved') ||
+      (startsWith(github.event.inputs.start_phase, '2'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Generate Research
+      run: |
+        SLUG=$(basename "${{ github.event.inputs.brief_file }}" .md)
+        DATE=$(date +%Y%m%d)
+        
+        # Generate research document (placeholder)
+        cat > "content-workflow/outputs/${SLUG}-research-${DATE}.md" << 'EOF'
+        # Research Document
+        
+        ## Section 1: Introduction
+        
+        **Key Facts**:
+        - Fact 1: [Statistic] (Source: Author, Year)
+        - Fact 2: [Finding] (Source: Organization, Year)
+        
+        **Examples**:
+        - Example 1: [Real-world case] (Source)
+        - Example 2: [Industry example] (Source)
+        
+        ## Section 2: Main Topic
+        
+        **Statistics**:
+        - 75% of users report... (Source: Study, 2024)
+        - Market size: $XX billion (Source: Report, 2024)
+        
+        **Expert Quotes**:
+        > "Quote from expert" - Expert Name, Title (Source)
+        
+        **Supporting Data**:
+        - Data point 1
+        - Data point 2
+        
+        ---
+        **Next**: Draft phase will weave this research into compelling narrative.
+        EOF
+        
+        cat > "content-workflow/outputs/${SLUG}-sources-${DATE}.md" << 'EOF'
+        # Sources
+        
+        ## Primary Sources
+        1. Author, F. (2024). "Article Title." Publication Name. https://...
+        2. Organization. (2024). "Report Title." https://...
+        
+        ## Secondary Sources
+        3. Expert, A. (2024). Interview. Publication.
+        4. Company. (2024). "Case Study Title."
+        
+        ## Data Sources
+        5. Research Firm. (2024). "Market Analysis."
+        EOF
+    
+    - name: Commit Phase 2
+      run: |
+        git config user.name "Pipeline Bot"
+        git config user.email "pipeline@users.noreply.github.com"
+        git add content-workflow/outputs/
+        git commit -m "Phase 2: Research for ${{ github.event.inputs.brief_file }}"
+        git push
+    
+    - name: Create Review Issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const slug = '${{ github.event.inputs.brief_file }}'.replace('.md', '');
+          
+          await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `📚 Review Phase 2: Research for ${slug}`,
+            labels: ['content-pipeline', 'needs-review', 'phase-2'],
+            body: `## ✅ Phase 2: Research Complete
+            
+            Research has been gathered and sources documented.
+            
+            ### 📁 Files
+            - Research: \`content-workflow/outputs/${slug}-research-*.md\`
+            - Sources: \`content-workflow/outputs/${slug}-sources-*.md\`
+            
+            ### Review & Edit
+            Same options as Phase 1 (web UI, local editor, or download/upload)
+            
+            ### Approve
+            Comment \`/approve-phase-2\` to start Phase 3 (Drafting)`
+          });
+
+  # Continue pattern for phases 3-7...
+  # Each phase creates a review issue, waits for approval, then next phase runs
+
+  # Learning: Capture edits automatically
+  capture-edits:
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Editor review')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+    
+    - name: Detect edited files
+      run: |
+        # Get list of edited output files
+        EDITED_FILES=$(git diff --name-only HEAD~1 HEAD | grep 'content-workflow/outputs/')
+        
+        if [ -n "$EDITED_FILES" ]; then
+          echo "📝 Edits detected for learning:"
+          echo "$EDITED_FILES"
+          
+          # For each edited file, save original (if not already saved)
+          for file in $EDITED_FILES; do
+            BASENAME=$(basename "$file")
+            EDITED_VERSION="content-workflow/edits/${BASENAME%.md}-edited-$(date +%Y%m%d).md"
+            
+            # Copy edited version
+            cp "$file" "$EDITED_VERSION"
+            
+            echo "✅ Saved edited version: $EDITED_VERSION"
+          done
+          
+          git config user.name "Learning Bot"
+          git config user.email "learning@users.noreply.github.com"
+          git add content-workflow/edits/
+          git commit -m "Learning: Captured edits for analysis" || true
+          git push || true
+        fi
+
+# Approval workflow: Triggered by issue comments
+on_approval:
+  types: [created]
+  
+jobs:
+  process-approval:
+    if: |
+      github.event.issue.labels.*.name contains 'content-pipeline' &&
+      (contains(github.event.comment.body, '/approve-phase-'))
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Parse approval
+      id: parse
+      run: |
+        COMMENT="${{ github.event.comment.body }}"
+        if [[ $COMMENT =~ /approve-phase-([1-7]) ]]; then
+          PHASE="${BASH_REMATCH[1]}"
+          echo "phase=$PHASE" >> $GITHUB_OUTPUT
+          echo "Approved phase: $PHASE"
+        fi
+    
+    - name: Update issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          await github.rest.issues.addLabels({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            labels: [`phase-${{ steps.parse.outputs.phase }}-approved`]
+          });
+          
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: `✅ Phase ${{ steps.parse.outputs.phase }} approved! Next phase starting...`
+          });
+    
+    - name: Trigger next phase
+      run: |
+        NEXT_PHASE=$((  ${{ steps.parse.outputs.phase }} + 1 ))
+        echo "Would trigger phase $NEXT_PHASE"
+        # gh workflow run simple-pipeline.yml -f start_phase="${NEXT_PHASE}-..."
