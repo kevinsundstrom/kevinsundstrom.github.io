@@ -1,20 +1,21 @@
 {
-  "name": "kevinsundstrom.github.io",
+  "name": "kevinsundstrom-com",
   "version": "1.0.0",
-  "description": "My Copilot coding agent tinkering exposed publicly.",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "dev": "http-server -p 8080 -c-1 ."
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "js-yaml": "^4.1.0",
-    "slugify": "^1.6.6"
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
   }
 }

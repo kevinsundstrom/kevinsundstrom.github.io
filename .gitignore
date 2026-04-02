@@ -2,14 +2,18 @@
 node_modules/
 package-lock.json
 
-# Temporary files
-/tmp/
-*.tmp
-*.temp
+# Next.js
+.next/
+out/
 
 # Build artifacts
 dist/
 build/
+
+# Temporary files
+/tmp/
+*.tmp
+*.temp
 
 # IDE files
 .vscode/
@@ -20,4 +24,11 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Vercel
 .vercel
+
+# Local project directories not part of this repo
+Multi-agent content workflows V2/
+Plateau/
+agentic-content-workflows-test/
