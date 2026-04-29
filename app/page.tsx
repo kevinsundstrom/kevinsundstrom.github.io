@@ -70,6 +70,7 @@ export default async function Home() {
             <li>First-party knowledge store built from real interviews</li>
             <li>Standardized outline and prose quality controls</li>
             <li>Runs on Copilot infrastructure with Claude models</li>
+            <li>Delivered as a Next.js app on Vercel</li>
           </ul>
 
           <div className="cta-block">
