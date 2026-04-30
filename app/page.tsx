@@ -78,7 +78,7 @@ export default async function Home() {
               Open Synapse <span className="arrow">→</span>
             </a>
             <span className="cta-note">
-              Desktop · Private beta · <a href="https://github.com/kevinsundstrom/synapse">Open source soon ↗</a>
+              Desktop · Private beta · Open source soon
             </span>
           </div>
         </div>
