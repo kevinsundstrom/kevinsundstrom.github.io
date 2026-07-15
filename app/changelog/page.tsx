@@ -40,12 +40,12 @@ export default function Changelog() {
         <div className="changelog-entries">
           {entries.map((entry) => (
             <article className="changelog-entry" key={entry.slug} id={entry.slug}>
-              <div className="entry-meta">
+              <aside className="entry-meta">
                 <span className="entry-project">{entry.project}</span>
-                <span className="entry-version">{entry.version}</span>
+                <h2 className="entry-version">{entry.version}</h2>
+                <time className="entry-date" dateTime={entry.date}>{entry.date}</time>
                 {entry.tag && <span className="entry-tag">{entry.tag}</span>}
-                <span className="entry-date">{entry.date}</span>
-              </div>
+              </aside>
               <div
                 className="entry-body"
                 dangerouslySetInnerHTML={{ __html: entry.html }}
