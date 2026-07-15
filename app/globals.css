@@ -424,3 +424,6 @@ main.changelog { display: block; padding: 72px 0 96px; }
   .entry-tag { margin-top: 0; padding-top: 0; border-top: none; }
   .entry-body { padding: 24px 0 44px; }
 }
+
+/* emoji glyph in a serif project title — sized to sit like a logo, not a headline */
+.project-name .name-emoji { font-size: 0.55em; line-height: 1; margin-left: 0.12em; }

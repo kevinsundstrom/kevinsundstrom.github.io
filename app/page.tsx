@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
-import MobileNav from './components/MobileNav';
+import SiteHeader from './components/SiteHeader';
+import SiteFooter from './components/SiteFooter';
 
 // Server Component — reads the greeting cookie set by middleware at request time.
 export default async function Home() {
@@ -8,16 +9,7 @@ export default async function Home() {
 
   return (
     <div className="shell">
-      <header>
-        <a href="/" className="wordmark">Kevin Sundstrom</a>
-        <nav>
-          <a href="/" className="active">Home</a>
-          <a href="/changelog">Changelog</a>
-          <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
-          <a href="mailto:kevsundstrom@gmail.com">Contact</a>
-        </nav>
-        <MobileNav />
-      </header>
+      <SiteHeader active="/" />
 
       <main>
         <div className="col-identity">
@@ -85,14 +77,7 @@ export default async function Home() {
         </div>
       </main>
 
-      <footer>
-        <span className="footer-left">© 2026 Kevin Sundstrom</span>
-        <div className="footer-links">
-          <a href="https://linkedin.com/in/kevinsundstrom">LinkedIn</a>
-          <a href="https://github.com/kevinsundstrom">GitHub</a>
-          <a href="mailto:kevsundstrom@gmail.com">Email</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

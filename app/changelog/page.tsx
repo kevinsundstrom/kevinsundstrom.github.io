@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import MobileNav from '../components/MobileNav';
+import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import { getChangelogEntries } from '../../lib/changelog';
 
 export const metadata: Metadata = {
@@ -12,16 +13,7 @@ export default function Changelog() {
 
   return (
     <div className="shell">
-      <header>
-        <a href="/" className="wordmark">Kevin Sundstrom</a>
-        <nav>
-          <a href="/">Home</a>
-          <a href="/changelog" className="active">Changelog</a>
-          <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
-          <a href="mailto:kevsundstrom@gmail.com">Contact</a>
-        </nav>
-        <MobileNav active="/changelog" />
-      </header>
+      <SiteHeader active="/changelog" />
 
       <main className="changelog">
         <div className="changelog-intro">
@@ -32,8 +24,8 @@ export default function Changelog() {
             content tooling. Currently tracking{' '}
             <a href="https://github.com/kevinsundstrom/mdinterface">
               <strong>mdinterface</strong>
-            </a>
-            .
+            </a>{' '}
+            and <a href="/grocery"><strong>grocery</strong></a>.
           </p>
         </div>
 
@@ -55,14 +47,7 @@ export default function Changelog() {
         </div>
       </main>
 
-      <footer>
-        <span className="footer-left">© 2026 Kevin Sundstrom</span>
-        <div className="footer-links">
-          <a href="https://linkedin.com/in/kevinsundstrom">LinkedIn</a>
-          <a href="https://github.com/kevinsundstrom">GitHub</a>
-          <a href="mailto:kevsundstrom@gmail.com">Email</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
