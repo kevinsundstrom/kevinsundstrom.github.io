@@ -311,3 +311,84 @@ footer {
     to   { opacity: 1; transform: translateY(0); }
   }
 }
+
+/* ---------- changelog ---------- */
+main.changelog {
+  display: block;
+  max-width: 720px;
+  padding: 72px 0 80px;
+}
+.changelog-intro { margin-bottom: 24px; }
+.changelog-intro .bio { margin-bottom: 0; max-width: 480px; }
+.changelog-intro .bio a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.changelog-entry { border-top: 1px solid var(--rule); padding: 36px 0 44px; }
+.changelog-entry:first-child { border-top: none; }
+.entry-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.entry-project {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--rule);
+  padding: 3px 10px;
+}
+.entry-version {
+  font-family: var(--serif);
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.entry-tag {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-ghost);
+}
+.entry-date {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--ink-ghost);
+  letter-spacing: 0.04em;
+}
+.entry-body p,
+.entry-body li {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--ink-muted);
+}
+.entry-body p { margin-bottom: 16px; }
+.entry-body p:last-child { margin-bottom: 0; }
+.entry-body strong { font-weight: 500; color: var(--ink); }
+.entry-body a { color: var(--accent); text-decoration: none; transition: opacity 0.15s; }
+.entry-body a:hover { opacity: 0.75; }
+.entry-body code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  background: rgba(15, 15, 13, 0.05);
+  padding: 1px 5px;
+}
+.entry-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.entry-body ul:last-child { margin-bottom: 0; }
+.entry-body li { display: flex; align-items: baseline; gap: 12px; }
+.entry-body li::before { content: '·'; color: var(--accent); flex-shrink: 0; font-size: 16px; line-height: 1; }
+@media (max-width: 768px) {
+  main.changelog { padding: 40px 0 48px; }
+  .entry-date { margin-left: 0; width: 100%; }
+}

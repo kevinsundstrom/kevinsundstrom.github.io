@@ -12,6 +12,7 @@ export default async function Home() {
         <a href="/" className="wordmark">Kevin Sundstrom</a>
         <nav>
           <a href="/" className="active">Home</a>
+          <a href="/changelog">Changelog</a>
           <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
           <a href="mailto:kevsundstrom@gmail.com">Contact</a>
         </nav>
