@@ -477,3 +477,32 @@ main.project-page { display: block; padding: 72px 0 96px; }
   padding: 1px 5px;
   border-radius: 2px;
 }
+
+/* ---------- homepage project cycler ---------- */
+.cycler-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.cycler-head .project-eyebrow { margin-bottom: 0; }
+.cycler-nav { display: flex; align-items: baseline; gap: 12px; }
+.cycler-nav button {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink-ghost);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.cycler-nav button:hover { color: var(--accent); }
+.cycler-count {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--ink-ghost);
+}
+.cta-note a { color: var(--ink-ghost); text-decoration: underline; text-underline-offset: 3px; transition: color 0.15s; }
+.cta-note a:hover { color: var(--ink-muted); }
