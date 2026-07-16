@@ -469,3 +469,11 @@ main.project-page { display: block; padding: 72px 0 96px; }
   .section-rail { border-right: none; padding: 28px 0 0; }
   .project-section .entry-body { padding: 16px 0 36px; }
 }
+.project-intro code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  background: rgba(15, 15, 13, 0.055);
+  padding: 1px 5px;
+  border-radius: 2px;
+}

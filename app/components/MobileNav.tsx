@@ -20,6 +20,7 @@ export default function MobileNav({ active = '/' }: { active?: string }) {
       <div className={`nav-dropdown${open ? ' open' : ''}`}>
         <a href="/" className={cls('/')} onClick={() => setOpen(false)}>Home</a>
         <a href="/changelog" className={cls('/changelog')} onClick={() => setOpen(false)}>Changelog</a>
+        <a href="/mdinterface" className={cls('/mdinterface')} onClick={() => setOpen(false)}>mdinterface</a>
         <a href="/grocery" className={cls('/grocery')} onClick={() => setOpen(false)}>Grocery</a>
         <a href="https://synapse.kevinsundstrom.com" onClick={() => setOpen(false)}>Synapse ↗</a>
         <a href="mailto:kevsundstrom@gmail.com" onClick={() => setOpen(false)}>Contact</a>
