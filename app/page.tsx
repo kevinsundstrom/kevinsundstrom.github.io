@@ -52,8 +52,6 @@ export default async function Home() {
               <polygon fill="#c8411a" points="36,76 60,34 44,34 46,42" />
             </svg>
           </h2>
-          <p className="project-name-sub">synapse.kevinsundstrom.com</p>
-
           <p className="project-desc">
             A <strong>multi-agent content production system</strong> built on GitHub Agentic Workflows. Planning, knowledge, assembly, and draft agents work in sequence, turning structured briefs and SME interviews into publication-ready content without the typical editorial bottlenecks.
           </p>
@@ -65,15 +63,6 @@ export default async function Home() {
             <li>Runs on GitHub Agentic Workflows with Claude models</li>
             <li>Delivered as a Next.js app on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a></li>
           </ul>
-
-          <div className="cta-block">
-            <a href="https://synapse.kevinsundstrom.com" className="btn-primary">
-              Open Synapse <span className="arrow">→</span>
-            </a>
-            <span className="cta-note">
-              Desktop
-            </span>
-          </div>
         </div>
       </main>
 
