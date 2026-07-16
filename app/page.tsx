@@ -18,13 +18,13 @@ export default async function Home() {
             <h1 className="lede">Content strategy,<br /><em>engineered.</em></h1>
             {/* Greeting prepended to bio — value comes from middleware via cookie */}
             <p className="bio">
-              {greeting}! I build <strong>content systems</strong> — the infrastructure that turns subject-matter expertise into structured, scalable output. Currently at <strong>GitHub</strong>, where I lead content strategy and run agentic production pipelines on top of Copilot infrastructure.
+              {greeting}! I build <strong>content systems</strong> — the infrastructure that turns subject-matter expertise into structured, scalable output. Currently a Senior Content Engineer at <strong>Vercel</strong>.
             </p>
           </div>
           <div className="meta-strip">
             <div className="meta-row">
               <span className="meta-label">Role</span>
-              <span className="meta-val">Content Strategist and Team Lead, GitHub</span>
+              <span className="meta-val">Senior Content Engineer, Vercel</span>
             </div>
             <div className="meta-row">
               <span className="meta-label">Focus</span>
@@ -38,11 +38,11 @@ export default async function Home() {
         </div>
 
         <div className="col-project">
-          <p className="project-eyebrow">Current project</p>
+          <p className="project-eyebrow">Side project</p>
 
           <div className="status-pill">
             <span className="status-dot"></span>
-            Private beta
+            Personal project
           </div>
 
           <h2 className="project-name">
@@ -62,7 +62,7 @@ export default async function Home() {
             <li>Agentic pipeline with human review gates</li>
             <li>First-party knowledge store built from real interviews</li>
             <li>Standardized outline and prose quality controls</li>
-            <li>Runs on Copilot infrastructure with Claude models</li>
+            <li>Runs on GitHub Agentic Workflows with Claude models</li>
             <li>Delivered as a Next.js app on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a></li>
           </ul>
 
@@ -71,7 +71,7 @@ export default async function Home() {
               Open Synapse <span className="arrow">→</span>
             </a>
             <span className="cta-note">
-              Desktop · Private beta · Open source soon
+              Desktop
             </span>
           </div>
         </div>
