@@ -17,13 +17,13 @@ export default function Grocery() {
         <div className="col-identity">
           <div>
             <div className="accent-rule"></div>
-            <h1 className="lede">A grocery list that<br /><em>never glitches.</em></h1>
+            <h1 className="lede">A grocery list,<br /><em>built the way I like.</em></h1>
             <p className="bio">
-              A two-person shopping list where every item is its own database
-              row with targeted updates — so one person checking something off
-              can never overwrite an item the other just added. The UI updates
-              optimistically and reconciles against the server, so a flaky
-              moment in the store self-heals instead of sticking.
+              I didn&apos;t like the grocery apps I tried, so I built one.
+              Every item is its own database row with targeted updates, so one
+              person checking something off doesn&apos;t overwrite an item the
+              other just added. The UI updates optimistically and reconciles
+              against the server on the next poll.
             </p>
           </div>
           <div className="meta-strip">
