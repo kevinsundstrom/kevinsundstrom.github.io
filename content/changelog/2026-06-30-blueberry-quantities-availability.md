@@ -1,5 +1,5 @@
 ---
-project: grocery
+project: blueberry
 version: Quantities & availability
 date: 2026-06-30
 ---

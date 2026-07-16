@@ -1,5 +1,5 @@
 ---
-project: grocery
+project: blueberry
 version: PWA
 date: 2026-07-05
 ---

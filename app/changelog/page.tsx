@@ -25,7 +25,7 @@ export default function Changelog() {
             <a href="https://github.com/kevinsundstrom/mdinterface">
               <strong>mdinterface</strong>
             </a>{' '}
-            and <a href="/grocery"><strong>grocery</strong></a>.
+            and <a href="/blueberry"><strong>blueberry</strong></a>.
           </p>
         </div>
 

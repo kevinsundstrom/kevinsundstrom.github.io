@@ -3,20 +3,20 @@ import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Grocery — Kevin Sundstrom',
+  title: 'blueberry — Kevin Sundstrom',
   description:
     'A shared grocery list for a household — aisle-order sorting, recipe import, meal plan with a calendar feed.',
 };
 
-export default function Grocery() {
+export default function Blueberry() {
   return (
     <div className="shell">
-      <SiteHeader active="/grocery" />
+      <SiteHeader active="/blueberry" />
 
       <main className="project-page">
         <div className="project-intro">
           <div className="accent-rule"></div>
-          <h1 className="lede">Grocery <span className="name-emoji" aria-hidden="true">🫐</span></h1>
+          <h1 className="lede">blueberry <span className="name-emoji" aria-hidden="true">🫐</span></h1>
           <p className="bio">
             I didn&apos;t like the grocery apps I tried, so I built one that
             works the way I like. A shared list for a household — installed
@@ -70,6 +70,10 @@ export default function Grocery() {
           <div className="entry-body">
             <div className="detail-rows">
               <div className="detail-row">
+                <span className="detail-label">Source</span>
+                <span><a href="https://github.com/kevinsundstrom/blueberry">github.com/kevinsundstrom/blueberry</a> · MIT</span>
+              </div>
+              <div className="detail-row">
                 <span className="detail-label">Stack</span>
                 <span>Next.js · Neon Postgres · Vercel — no webfonts, small bundle, fast on store cellular</span>
               </div>
@@ -83,7 +87,7 @@ export default function Grocery() {
               </div>
               <div className="detail-row">
                 <span className="detail-label">Status</span>
-                <span>In daily household use · release notes on the <a href="/changelog">changelog</a></span>
+                <span>Open source · in daily household use · release notes on the <a href="/changelog">changelog</a></span>
               </div>
             </div>
           </div>

@@ -1,11 +1,11 @@
 ---
-project: grocery
+project: blueberry
 version: Initial build
 date: 2026-06-27
 tag: Closed source
 ---
 
-A shared grocery list for two people, sorted by the store's aisle order, with recipe import. See the [project page](/grocery) for the full picture.
+A shared grocery list for two people, sorted by the store's aisle order, with recipe import. See the [project page](/blueberry) for the full picture.
 
 - One shared list. Both phones see the same state, syncing every few seconds and on focus.
 - Every item is its own database row with targeted updates — adding is an insert, checking off is a one-field update — so concurrent actions from two phones never collide. The UI updates optimistically and reconciles on the next poll.
