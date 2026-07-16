@@ -12,7 +12,7 @@ export default function SiteHeader({ active = '/' }: { active?: string }) {
         <a href="/changelog" className={cls('/changelog')}>Changelog</a>
         <a href="/mdinterface" className={cls('/mdinterface')}>mdinterface</a>
         <a href="/blueberry" className={cls('/blueberry')}>Blueberry</a>
-        <a href="https://synapse.kevinsundstrom.com">Synapse ↗</a>
+        <a href="/synapse" className={cls('/synapse')}>Synapse</a>
         <a href="mailto:kevsundstrom@gmail.com">Contact</a>
       </nav>
       <MobileNav active={active} />

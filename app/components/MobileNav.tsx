@@ -22,7 +22,7 @@ export default function MobileNav({ active = '/' }: { active?: string }) {
         <a href="/changelog" className={cls('/changelog')} onClick={() => setOpen(false)}>Changelog</a>
         <a href="/mdinterface" className={cls('/mdinterface')} onClick={() => setOpen(false)}>mdinterface</a>
         <a href="/blueberry" className={cls('/blueberry')} onClick={() => setOpen(false)}>Blueberry</a>
-        <a href="https://synapse.kevinsundstrom.com" onClick={() => setOpen(false)}>Synapse ↗</a>
+        <a href="/synapse" className={cls('/synapse')} onClick={() => setOpen(false)}>Synapse</a>
         <a href="mailto:kevsundstrom@gmail.com" onClick={() => setOpen(false)}>Contact</a>
       </div>
     </>

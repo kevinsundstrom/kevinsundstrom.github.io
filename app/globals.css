@@ -506,3 +506,4 @@ main.project-page { display: block; padding: 72px 0 96px; }
 }
 .cta-note a { color: var(--ink-ghost); text-decoration: underline; text-underline-offset: 3px; transition: color 0.15s; }
 .cta-note a:hover { color: var(--ink-muted); }
+.project-intro .lede .synapse-logo { width: 0.85em; height: 0.85em; margin-left: 0.04em; }
