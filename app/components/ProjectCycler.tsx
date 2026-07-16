@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { Fragment, useState, type ReactNode } from 'react';
 
 // Client Component — cycles the featured side-project card with manual
 // controls. Cards are server-rendered JSX; fragments land as direct children
@@ -37,7 +37,10 @@ export default function ProjectCycler({
           </button>
         </div>
       </div>
-      {cards[i]}
+      {/* Keyed so switching cards remounts the subtree — otherwise React
+          patches structurally-identical cards in place and the CSS rise
+          animation never re-runs. */}
+      <Fragment key={i}>{cards[i]}</Fragment>
     </>
   );
 }
