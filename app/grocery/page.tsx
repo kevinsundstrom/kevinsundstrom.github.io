@@ -5,7 +5,7 @@ import SiteFooter from '../components/SiteFooter';
 export const metadata: Metadata = {
   title: 'Grocery — Kevin Sundstrom',
   description:
-    'A shared grocery list for two people, sorted by aisle order, with recipe import and live availability. Built to never glitch mid-shop.',
+    'A shared grocery list for a household — aisle-order sorting, recipe import, meal plan with a calendar feed.',
 };
 
 export default function Grocery() {
@@ -13,69 +13,81 @@ export default function Grocery() {
     <div className="shell">
       <SiteHeader active="/grocery" />
 
-      <main>
-        <div className="col-identity">
-          <div>
-            <div className="accent-rule"></div>
-            <h1 className="lede">A grocery list,<br /><em>built the way I like.</em></h1>
-            <p className="bio">
-              I didn&apos;t like the grocery apps I tried, so I built one.
+      <main className="project-page">
+        <div className="project-intro">
+          <div className="accent-rule"></div>
+          <h1 className="lede">Grocery <span className="name-emoji" aria-hidden="true">🫐</span></h1>
+          <p className="bio">
+            I didn&apos;t like the grocery apps I tried, so I built one that
+            works the way I like. A shared list for a household — installed
+            like an app, synced between phones, sorted in the order you walk
+            the store.
+          </p>
+        </div>
+
+        <section className="project-section">
+          <aside className="section-rail">
+            <span className="rail-label">How it works</span>
+          </aside>
+          <div className="entry-body">
+            <p>
               Every item is its own database row with targeted updates, so one
               person checking something off doesn&apos;t overwrite an item the
               other just added. The UI updates optimistically and reconciles
-              against the server on the next poll.
+              against the server on the next poll. Both phones see the same
+              state, syncing every few seconds and on focus.
+            </p>
+            <p>
+              Item order stays stable while you shop — checking something off
+              mutes it in place rather than reshuffling the list. Sessions are
+              built to not expire mid-shop: one passphrase per phone, then a
+              cookie that rolls forward on every real app open.
             </p>
           </div>
-          <div className="meta-strip">
-            <div className="meta-row">
-              <span className="meta-label">Status</span>
-              <span className="meta-val">Closed source · In daily household use</span>
-            </div>
-            <div className="meta-row">
-              <span className="meta-label">Stack</span>
-              <span className="meta-val">Next.js · Neon Postgres · Vercel</span>
-            </div>
-            <div className="meta-row">
-              <span className="meta-label">Tested</span>
-              <span className="meta-val">40 tests against real route handlers + in-process Postgres</span>
+        </section>
+
+        <section className="project-section">
+          <aside className="section-rail">
+            <span className="rail-label">Features</span>
+          </aside>
+          <div className="entry-body">
+            <ul>
+              <li>Recipe import — paste an ingredient list or a URL; ingredients are parsed into sections and reviewed before anything is added</li>
+              <li>Quantity handling that combines duplicates (½ cup + ½ cup → 1 cup) and shows ambiguous amounts as-is instead of guessing</li>
+              <li>Purchase-unit picker that turns recipe amounts into what you buy — &ldquo;2 tbsp chipotle in adobo&rdquo; becomes a 7 oz can</li>
+              <li>Availability dots for your store, via the Kroger API</li>
+              <li>Weekly meal plan exposed as an iCal feed — ours shows up on a Skylight calendar</li>
+              <li>Saved recipes, favorites, and a trash with recovery</li>
+              <li>iOS Shortcut for sending a recipe from any app&apos;s share sheet</li>
+            </ul>
+          </div>
+        </section>
+
+        <section className="project-section">
+          <aside className="section-rail">
+            <span className="rail-label">Details</span>
+          </aside>
+          <div className="entry-body">
+            <div className="detail-rows">
+              <div className="detail-row">
+                <span className="detail-label">Stack</span>
+                <span>Next.js · Neon Postgres · Vercel — no webfonts, small bundle, fast on store cellular</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Form</span>
+                <span>Installable PWA — manifest, service worker, offline banner</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Tests</span>
+                <span>40 tests run the real route handlers against an in-process Postgres</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Status</span>
+                <span>In daily household use · release notes on the <a href="/changelog">changelog</a></span>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="col-project">
-          <p className="project-eyebrow">Side project</p>
-
-          <div className="status-pill">
-            <span className="status-dot"></span>
-            In daily use
-          </div>
-
-          <h2 className="project-name">Grocery <span className="name-emoji" aria-hidden="true">🫐</span></h2>
-          <p className="project-name-sub">an installable PWA for two phones, one list</p>
-
-          <p className="project-desc">
-            One shared list that both phones see, syncing every few seconds and
-            on focus. Items auto-sort into sections matched to the local
-            store&apos;s aisle order, so the list reads in the order you walk.
-            No webfonts, no framework bloat — it stays fast on store cellular.
-          </p>
-
-          <ul className="feature-list">
-            <li>Recipe import — paste an ingredient list or a URL, review sections before anything is added</li>
-            <li>Quantity parsing that combines fractions and ranges instead of guessing</li>
-            <li>Purchase-unit picker with AI suggestions (a recipe&apos;s &ldquo;2 tbsp chipotle in adobo&rdquo; becomes a 7 oz can)</li>
-            <li>Live availability checks against the Kroger API</li>
-            <li>Stable order while you shop — checking off mutes in place, no reshuffling under your thumb</li>
-            <li>Session handling built so you never get logged out standing in an aisle</li>
-          </ul>
-
-          <div className="cta-block">
-            <a href="/changelog" className="btn-primary">
-              Read the changelog <span className="arrow">→</span>
-            </a>
-            <span className="cta-note">Private household app · release notes are public</span>
-          </div>
-        </div>
+        </section>
       </main>
 
       <SiteFooter />
