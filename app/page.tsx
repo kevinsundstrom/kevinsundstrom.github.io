@@ -29,6 +29,13 @@ const projectCards = [
       <li>Runs on GitHub Agentic Workflows with Claude models</li>
       <li>Delivered as a Next.js app on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a></li>
     </ul>
+
+    <div className="cta-block">
+      <a href="/synapse" className="btn-primary">
+        About Synapse <span className="arrow">→</span>
+      </a>
+      <span className="cta-note">Private while in active development</span>
+    </div>
   </>,
 
   // mdinterface

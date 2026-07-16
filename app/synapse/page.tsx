@@ -37,12 +37,14 @@ export default function Synapse() {
           </aside>
           <div className="entry-body">
             <p>
-              Planning, knowledge, assembly, and draft agents work in
-              sequence. The planning agent shapes the brief, the knowledge
-              agent draws on a first-party store built from real interviews,
-              and the assembly and draft agents produce the piece — with
-              human review gates between stages, so a person approves the
-              work before it moves forward.
+              Interview transcripts feed a living knowledge store: an
+              ingestion agent summarizes each transcript, and approved
+              summaries roll up into persistent topic-level docs. When a
+              content brief comes in, an orchestrator maps it against that
+              knowledge and produces a coverage map and outline — the first
+              human checkpoint. Draft and review agents then write and audit
+              the piece — the second checkpoint. Nothing ships without a
+              person approving both.
             </p>
           </div>
         </section>
