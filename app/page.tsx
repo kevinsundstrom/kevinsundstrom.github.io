@@ -15,7 +15,7 @@ const projectCards = [
       Synapse
       <svg className="synapse-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" aria-hidden="true">
         <polygon fill="currentColor" points="52,4 28,42 40,42 36,76 60,34 44,34" />
-        <polygon fill="#c8411a" points="36,76 60,34 44,34 46,42" />
+        <polygon fill="#219ebc" points="36,76 60,34 44,34 46,42" />
       </svg>
     </h2>
     <p className="project-desc">
