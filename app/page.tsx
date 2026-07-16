@@ -143,9 +143,7 @@ export default async function Home({
           </div>
         </div>
 
-        <div className="col-project">
-          <ProjectCycler cards={projectCards} initialIndex={initialIndex} />
-        </div>
+        <ProjectCycler cards={projectCards} initialIndex={initialIndex} />
       </main>
 
       <SiteFooter />

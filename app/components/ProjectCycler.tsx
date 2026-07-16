@@ -1,10 +1,11 @@
 'use client';
 
-import { Fragment, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 // Client Component — cycles the featured side-project card with manual
-// controls. Cards are server-rendered JSX; fragments land as direct children
-// of .col-project so the existing column layout applies unchanged.
+// controls. Renders the .col-project column itself so it can suppress the
+// entrance animation once the visitor starts flipping: the rise plays on
+// page load only, and card switches just show the next card.
 export default function ProjectCycler({
   cards,
   initialIndex = 0,
@@ -13,34 +14,28 @@ export default function ProjectCycler({
   initialIndex?: number;
 }) {
   const [i, setI] = useState(initialIndex);
+  const [interacted, setInteracted] = useState(false);
   const n = cards.length;
+  const go = (step: number) => {
+    setInteracted(true);
+    setI((prev) => (prev + step + n) % n);
+  };
 
   return (
-    <>
+    <div className={`col-project${interacted ? ' no-anim' : ''}`}>
       <div className="cycler-head">
         <p className="project-eyebrow">Side projects</p>
         <div className="cycler-nav">
-          <button
-            type="button"
-            aria-label="Previous project"
-            onClick={() => setI((i + n - 1) % n)}
-          >
+          <button type="button" aria-label="Previous project" onClick={() => go(-1)}>
             ←
           </button>
           <span className="cycler-count">{i + 1} / {n}</span>
-          <button
-            type="button"
-            aria-label="Next project"
-            onClick={() => setI((i + 1) % n)}
-          >
+          <button type="button" aria-label="Next project" onClick={() => go(1)}>
             →
           </button>
         </div>
       </div>
-      {/* Keyed so switching cards remounts the subtree — otherwise React
-          patches structurally-identical cards in place and the CSS rise
-          animation never re-runs. */}
-      <Fragment key={i}>{cards[i]}</Fragment>
-    </>
+      {cards[i]}
+    </div>
   );
 }
